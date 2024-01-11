@@ -1,12 +1,11 @@
 <template>
   <v-app-bar fixed>
-    <v-app-bar-nav-icon>
-    </v-app-bar-nav-icon>
+    <v-icon class="v-icon">mdi-desk</v-icon>
     <v-app-bar-title>airDnS</v-app-bar-title>
-    <v-btn variant="outlined">
+    <v-btn variant="outlined" class = "login-btn">
       Login
     </v-btn>
-    <v-btn variant="outlined">
+    <v-btn variant="outlined" class = "signUp-btn">
       Sign Up
     </v-btn>
   </v-app-bar>
@@ -18,5 +17,11 @@ export default {
 </script>
 
 <style>
+.login-btn {
+  margin-right: 24px;
+}
+.v-icon {
+  padding-left: 20px;
+}
 
 </style>

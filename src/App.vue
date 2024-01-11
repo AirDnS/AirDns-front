@@ -1,10 +1,16 @@
 <template>
   <div id="app">
     <v-app>
-      <HomeHeader></HomeHeader>
-      <v-main class = "Room">
-        <RoomMain></RoomMain>
-      </v-main>
+      <header>
+        <HomeHeader></HomeHeader>
+      </header>
+      <main>
+          <RoomMain></RoomMain>
+      </main>
+      <footer>
+        <HomeFooter>
+        </HomeFooter>
+      </footer>
     </v-app>
   </div>
 </template>
@@ -12,20 +18,27 @@
 <script>
 import HomeHeader from "@/components/Home/HomeHeader.vue";
 import RoomMain from "@/components/Room/RoomMain.vue";
+import HomeFooter from "@/components/Home/HomeFooter.vue";
 
 export default {
   components: {
     "HomeHeader": HomeHeader,
     "RoomMain": RoomMain,
+    "HomeFooter": HomeFooter
   }
 }
 </script>
 
 <style>
-.Room{
-  position: absolute;
-  left: 50%;
-  top: 20%;
-  transform: translate(-50%,-50%);
+header {
+  height: 60px;
+}
+
+main {
+  min-height: 700px;
+}
+
+footer {
+  height: 60px;
 }
 </style>
