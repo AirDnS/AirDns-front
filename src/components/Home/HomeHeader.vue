@@ -8,6 +8,9 @@
         <v-btn variant="outlined">
           Login
         </v-btn>
+        <v-btn variant="outlined">
+          Sign Up
+        </v-btn>
       </v-app-bar>
     </v-container>
   </v-app>
@@ -17,5 +20,8 @@ export default {}
 </script>
 
 <style>
+button {
+  border-style: groove;
+}
 
 </style>
