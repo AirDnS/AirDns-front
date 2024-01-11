@@ -1,24 +1,31 @@
 <template>
-  <div id="home">
-    <HomeHeader></HomeHeader>
-    <HomeSearch></HomeSearch>
-    <StudyRoomList></StudyRoomList>
-    <HomeFooter></HomeFooter>
+  <div id="app">
+    <v-app>
+      <HomeHeader></HomeHeader>
+      <v-main class = "Room">
+        <RoomMain></RoomMain>
+      </v-main>
+    </v-app>
   </div>
 </template>
 
 <script>
 import HomeHeader from "@/components/Home/HomeHeader.vue";
-import HomeSearch from "@/components/Home/HomeSearch.vue";
-import StudyRoomList from "@/components/Home/StudyRoomList.vue";
-import HomeFooter from "@/components/Home/HomeFooter.vue";
+import RoomMain from "@/components/Room/RoomMain.vue";
 
 export default {
   components: {
     "HomeHeader": HomeHeader,
-    "HomeSearch": HomeSearch,
-    "StudyRoomList": StudyRoomList,
-    "HomeFooter": HomeFooter
+    "RoomMain": RoomMain,
   }
 }
 </script>
+
+<style>
+.Room{
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translate(-50%,-50%);
+}
+</style>
