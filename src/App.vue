@@ -1,23 +1,24 @@
 <template>
-  <v-app>
-    <v-main>
-      <HelloWorld/>
-    </v-main>
-  </v-app>
+  <div id="home">
+    <HomeHeader></HomeHeader>
+    <HomeSearch></HomeSearch>
+    <StudyRoomList></StudyRoomList>
+    <HomeFooter></HomeFooter>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HomeHeader from "@/components/Home/HomeHeader.vue";
+import HomeSearch from "@/components/Home/HomeSearch.vue";
+import StudyRoomList from "@/components/Home/StudyRoomList.vue";
+import HomeFooter from "@/components/Home/HomeFooter.vue";
 
 export default {
-  name: 'App',
-
   components: {
-    HelloWorld,
-  },
-
-  data: () => ({
-    //
-  }),
+    "HomeHeader": HomeHeader,
+    "HomeSearch": HomeSearch,
+    "StudyRoomList": StudyRoomList,
+    "HomeFooter": HomeFooter
+  }
 }
 </script>
