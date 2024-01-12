@@ -2,9 +2,6 @@
   <v-app-bar fixed>
     <v-icon class="v-icon">mdi-desk</v-icon>
     <v-app-bar-title>airDnS</v-app-bar-title>
-    <v-btn variant="outlined" class = "login-btn" v-on:click="goLogin">
-      Login
-    </v-btn>
   </v-app-bar>
 </template>
 <script>
