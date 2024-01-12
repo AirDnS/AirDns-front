@@ -2,8 +2,11 @@ import {createRouter, createWebHistory} from "vue-router";
 import HomeMain from "@/components/home/HomeMain.vue";
 import HomeHeader from "@/components/home/HomeHeader.vue";
 import HomeFooter from "@/components/home/HomeFooter.vue";
-import LoginMain from "@/components/user/LoginMain.vue";
-import LoginHeader from "@/components/user/LoginHeader.vue";
+import LoginMain from "@/components/login/LoginMain.vue";
+import LoginHeader from "@/components/login/LoginHeader.vue";
+import RoomDetailMain from "@/components/roomdetail/RoomDetailMain.vue";
+import RoomDetailHeader from "@/components/roomdetail/RoomDetailHeader.vue";
+import RoomDetailFooter from "@/components/roomdetail/RoomDetailFooter.vue";
 
 
 const routes = [
@@ -21,6 +24,15 @@ const routes = [
         components: {
             default: LoginMain,
             header : LoginHeader
+        }
+    },
+    {
+        path: "/detail",
+        name: "RoomDetail",
+        components: {
+            default: RoomDetailMain,
+            header : RoomDetailHeader,
+            footer : RoomDetailFooter
         }
     }
 ];
