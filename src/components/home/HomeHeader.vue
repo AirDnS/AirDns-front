@@ -5,9 +5,6 @@
     <v-btn variant="outlined" class = "login-btn" v-on:click="goLogin">
       Login
     </v-btn>
-    <v-btn variant="outlined" class = "signUp-btn">
-      Sign Up
-    </v-btn>
   </v-app-bar>
 </template>
 <script>

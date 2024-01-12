@@ -6,7 +6,8 @@
         <v-text-field v-model="password" label="password"></v-text-field>
         <a href="#" class="text-body-2 font-weight-regular">Forgot Password?</a>
 
-        <v-btn type="submit" color="primary" block class="mt-2">Sign in</v-btn>
+        <v-btn type="submit" variant="outlined" block class="mt-2">Sign in</v-btn>
+        <v-btn variant="outlined" block class="mt-2">kakao Login</v-btn>
       </v-form>
       <div class="mt-2">
         <p class="text-body-2">Don't have an account? <a href="#">Sign Up</a></p>
