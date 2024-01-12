@@ -1,9 +1,8 @@
 import {createRouter, createWebHistory} from "vue-router";
-import LoginMain from "@/components/user/LoginMain.vue";
+import UserLogin from "@/components/user/UserLogin.vue";
 import HomeMain from "@/components/home/HomeMain.vue";
 import HomeHeader from "@/components/home/HomeHeader.vue";
 import HomeFooter from "@/components/home/HomeFooter.vue";
-import LoginHeader from "@/components/user/LoginHeader.vue";
 
 
 const routes = [
@@ -18,10 +17,7 @@ const routes = [
     {
         path: "/login", // login.vue로 이동할 Path
         name: "UserLogin", // router name
-        components: {
-            default : LoginMain,
-            header : LoginHeader
-        } // Path로 이동될 Component
+        component: UserLogin, // Path로 이동될 Component
     }
 ];
 
