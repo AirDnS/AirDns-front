@@ -15,9 +15,9 @@
 </template>
 
 <script>
-import RoomSearch from "@/components/Room/RoomSearch.vue";
-import RoomList from "@/components/Room/RoomList.vue";
-import RoomFilter from "@/components/Room/RoomFilter.vue";
+import RoomSearch from "@/components/room/RoomSearch.vue";
+import RoomList from "@/components/room/RoomList.vue";
+import RoomFilter from "@/components/room/RoomFilter.vue";
 
 export default {
   components: {
