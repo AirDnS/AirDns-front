@@ -5,21 +5,12 @@
   </v-app-bar>
 </template>
 <script>
-import router from "@/routers";
 
 export default {
-  methods: {
-    goLogin() {
-      router.push('login')
-    }
-  }
 }
 </script>
 
 <style>
-.login-btn {
-  margin-right: 24px;
-}
 .v-icon {
   padding-left: 20px;
 }

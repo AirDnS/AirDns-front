@@ -14,12 +14,10 @@
       </v-card-text>
       <!-- 카드 하단에 버튼 배치 -->
       <v-card-actions>
-        <v-btn color="red white--text">확인</v-btn>
-        <v-btn outlined color="red">취소</v-btn>
-        <v-btn color="#9C27B0" dark>취소</v-btn>
+        <v-btn width="300px" variant="outlined" color="red white--text" v-on:click="goDetail">상세 정보 확인</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card  class="room_card">
+    <v-card class="room_card">
       <!-- 카드 상단에 이미지 배치 -->
       <v-img src="src/assets/temp_room_img.png" aspect-ritio="2"></v-img>
 
@@ -32,9 +30,7 @@
       </v-card-text>
       <!-- 카드 하단에 버튼 배치 -->
       <v-card-actions>
-        <v-btn color="red white--text">확인</v-btn>
-        <v-btn outlined color="red">취소</v-btn>
-        <v-btn color="#9C27B0" dark>취소</v-btn>
+        <v-btn width="300px" variant="outlined" color="red white--text">상세 정보 확인</v-btn>
       </v-card-actions>
     </v-card>
 
@@ -50,18 +46,23 @@
           <p class="mb-0">카드 디자인에 출력될 텍스트를 입력합니다.</p>
         </div>
       </v-card-text>
-      <!-- 카드 하단에 버튼 배치 -->
       <v-card-actions>
-        <v-btn color="red white--text">확인</v-btn>
-        <v-btn outlined color="red">취소</v-btn>
-        <v-btn color="#9C27B0" dark>취소</v-btn>
+        <v-btn width="300px" variant="outlined" color="red white--text">상세 정보 확인</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
 </template>
 
 <script>
-export default {}
+import router from "@/routers";
+
+export default {
+  methods: {
+    goDetail() {
+      router.push('detail')
+    }
+  }
+}
 </script>
 
 <style>
