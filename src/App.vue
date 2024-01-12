@@ -2,33 +2,21 @@
   <div id="app">
     <v-app>
       <header>
-        <HomeHeader></HomeHeader>
+        <router-view name="header"></router-view>
       </header>
       <main>
-          <RoomMain></RoomMain>
+        <router-view></router-view>
       </main>
       <footer>
-        <HomeFooter>
-        </HomeFooter>
+        <router-view name="footer"></router-view>
       </footer>
     </v-app>
   </div>
 </template>
 
 <script>
-import HomeHeader from "@/components/Home/HomeHeader.vue";
-import RoomMain from "@/components/Room/RoomMain.vue";
-import HomeFooter from "@/components/Home/HomeFooter.vue";
-
-export default {
-  components: {
-    "HomeHeader": HomeHeader,
-    "RoomMain": RoomMain,
-    "HomeFooter": HomeFooter
-  }
-}
+export default {}
 </script>
-
 <style>
 header {
   height: 60px;
@@ -41,4 +29,6 @@ main {
 footer {
   height: 60px;
 }
+
 </style>
+
