@@ -5,12 +5,20 @@
     <v-text-field
         label="checkOutTime"
     ></v-text-field>
-    <v-btn color="error" type="submit" block class="mt-2">예약하기</v-btn>
+    <v-btn color="error" type="submit" block class="mt-2" v-on:click="goReservationChecking">예약하기</v-btn>
   </v-form>
 </template>
 
 <script>
-export default {}
+import router from "@/routers";
+
+export default {
+  methods: {
+    goReservationChecking() {
+      router.push('reservation')
+    }
+  }
+}
 </script>
 <style>
 .reservation-form {
