@@ -18,12 +18,23 @@
       <div class="reservation-checking5">
       </div>
     </div>
+    <div class="reservation-confirm">
+      <v-btn color="#1f4ef5" type="submit" block class="mt-2" v-on:click="goPaymentChecking">결제하기</v-btn>
+    </div>
   </div>
 </template>
 <script>
+import router from "@/routers";
 export default {
+  methods: {
+    goReservationChecking() {
+      router.push('reservation')
+    }
+  }
 
 };
+
+
 </script>
 <style>
 .reservation-checking-box {
@@ -80,4 +91,10 @@ export default {
   grid-column: 2/3;
   grid-row: 1/5;
 }
+.reservation-confirm {
+  position: absolute;
+  bottom: 35%;
+}
+
+
 </style>
