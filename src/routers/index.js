@@ -7,6 +7,8 @@ import LoginHeader from "@/components/login/LoginHeader.vue";
 import RoomDetailMain from "@/components/roomdetail/RoomDetailMain.vue";
 import RoomDetailHeader from "@/components/roomdetail/RoomDetailHeader.vue";
 import RoomDetailFooter from "@/components/roomdetail/RoomDetailFooter.vue";
+import ReservationCheckMain from "@/components/reservation/ReservationCheckMain.vue";
+import ReservationCheckHeader from "@/components/reservation/ReservationCheckHeader.vue";
 
 
 const routes = [
@@ -33,6 +35,14 @@ const routes = [
             default: RoomDetailMain,
             header : RoomDetailHeader,
             footer : RoomDetailFooter
+        }
+    },
+    {
+        path: "/reservation",
+        name: "ReservationChecking",
+        components: {
+            default : ReservationCheckMain,
+            header : ReservationCheckHeader
         }
     }
 ];

@@ -1,14 +1,16 @@
 <template>
-  <v-sheet class = "review-list" :elevation="10" >
+  <v-sheet class="review-list" :elevation="10">
     <v-btn elevation="10" width="1200px" color="red white--text">리뷰 추가</v-btn>
-    <v-card>
-      <v-list variant="outlined"
-              class="review-item"
-              elevation="10" :items="items"></v-list>
-    </v-card>
+    <v-list variant="outlined"
+            class="review-item"
+            elevation="10">
+      <v-list-item :key="data.value"
+                   :title="data.title"
+                   v-for="data in items">
+      </v-list-item>
+    </v-list>
   </v-sheet>
 </template>
-
 <script>
 export default {
   data: () => ({
