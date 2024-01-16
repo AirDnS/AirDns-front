@@ -9,9 +9,12 @@ import RoomDetailHeader from "@/components/roomdetail/RoomDetailHeader.vue";
 import RoomDetailFooter from "@/components/roomdetail/RoomDetailFooter.vue";
 import ReservationCheckMain from "@/components/reservation/ReservationCheckMain.vue";
 import ReservationCheckHeader from "@/components/reservation/ReservationCheckHeader.vue";
+import UserDetailMain from "@/components/userdetail/UserDetailMain.vue";
+import UserDetailHeader from "@/components/userdetail/UserDetailHeader.vue";
 import CheckoutView from "@/components/payment/CheckoutView.vue";
 import SuccessView from "@/components/payment/SuccessView.vue";
 import FailView from "@/components/payment/FailView.vue";
+
 
 const routes = [
     {
@@ -48,6 +51,14 @@ const routes = [
         }
     },
     {
+
+        path: "/userdetail",
+        name: "UserDetailPage",
+        components: {
+            default : UserDetailMain,
+            header : UserDetailHeader
+        }
+    }
 
         path: "/payment",
         name: "redirectToCheckout",
