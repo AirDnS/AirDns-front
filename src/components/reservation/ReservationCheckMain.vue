@@ -5,42 +5,56 @@
         <h1>[ 확인 및 결제 ]</h1>
       </div>
       <div class="reservation-checking2">
-        <h2> 예약 정보 </h2>
+        <h2>예약 정보</h2>
       </div>
       <div class="reservation-checking3">
         <h3>-날짜</h3>
-        <h3>:2023.10.20 10시 30분 ~ 2023.10.20 12시 30분 </h3>
+        <h3>:2023.10.20 10시 30분 ~ 2023.10.20 12시 30분</h3>
       </div>
       <div class="reservation-checking4">
         <h3>-인원</h3>
         <h3>:3명</h3>
+        <h3>결제 금액: 5,000원</h3>
+
       </div>
     </div>
     <div class="reservation-checking-container2">
-      <div class="reservation-checking5">
-      </div>
+      <div class="reservation-checking5"></div>
     </div>
     <div class="reservation-confirm">
-      <v-btn color="#1f4ef5" type="submit" block class="mt-2" v-on:click="requestPayment">결제하기</v-btn>
+      <v-btn
+          color="#1f4ef5"
+          type="submit"
+          block
+          class="mt-2"
+          v-on:click="requestPayment"
+      >예약하기</v-btn>
     </div>
+
   </div>
+  <div id="payment-method"></div>
 </template>
 <script>
 
 import router from "@/routers";
+
 export default {
   methods: {
-    requestPayment() {
+    async requestPayment() {
       router.push('payment')
-
-    }
-  }
-
+    },
+  },
 };
 
 
 </script>
 <style>
+.payment {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 .reservation-checking-box {
   margin: auto;
   display: flex;
@@ -50,18 +64,17 @@ export default {
 .reservation-checking-container {
   width: 430px;
   display: grid;
-  border-bottom:1px solid;
+  border-bottom: 1px solid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(4, 100px);
   gap: 15px;
   margin-top: 20px;
-
 }
-.reservation-checking-container2{
+.reservation-checking-container2 {
   width: 380px;
   height: 300px;
   display: grid;
-  border:1px solid;
+  border: 1px solid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(4, 100px);
   gap: 15px;
@@ -103,13 +116,10 @@ export default {
 }
 
 .reservation-checking5 {
-
 }
 .reservation-confirm {
   position: absolute;
   bottom: 28%;
   width: 350px;
 }
-
-
 </style>
