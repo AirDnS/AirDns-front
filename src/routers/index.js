@@ -9,6 +9,9 @@ import RoomDetailHeader from "@/components/roomdetail/RoomDetailHeader.vue";
 import RoomDetailFooter from "@/components/roomdetail/RoomDetailFooter.vue";
 import ReservationCheckMain from "@/components/reservation/ReservationCheckMain.vue";
 import ReservationCheckHeader from "@/components/reservation/ReservationCheckHeader.vue";
+import UserDetailMain from "@/components/userdetail/UserDetailMain.vue";
+import UserDetailHeader from "@/components/userdetail/UserDetailHeader.vue";
+
 
 
 const routes = [
@@ -43,6 +46,14 @@ const routes = [
         components: {
             default : ReservationCheckMain,
             header : ReservationCheckHeader
+        }
+    },
+    {
+        path: "/userdetail",
+        name: "UserDetailPage",
+        components: {
+            default : UserDetailMain,
+            header : UserDetailHeader
         }
     }
 ];
