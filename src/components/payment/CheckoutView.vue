@@ -15,7 +15,7 @@
       </div>
       <!-- 결제하기 버튼 -->
       <div class="result wrapper">
-        <button @click="requestPayment" class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
+        <button @click="requestPayment" class="button" id="payment-button">결제하기</button>
       </div>
     </div>
   </div>
