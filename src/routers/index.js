@@ -20,6 +20,7 @@ import FailView from "@/components/payment/FailView.vue";
 const routes = [
     {
         path:"/",
+        name:"HomePage",
         components: {
             default : HomeMain,
             header : HomeHeader,
