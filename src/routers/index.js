@@ -9,7 +9,14 @@ import RoomDetailHeader from "@/components/roomdetail/RoomDetailHeader.vue";
 import RoomDetailFooter from "@/components/roomdetail/RoomDetailFooter.vue";
 import ReservationCheckMain from "@/components/reservation/ReservationCheckMain.vue";
 import ReservationCheckHeader from "@/components/reservation/ReservationCheckHeader.vue";
+
 import LoginRedirect from "@/components/login/LoginRedirect.vue";
+
+import UserDetailMain from "@/components/userdetail/UserDetailMain.vue";
+import UserDetailHeader from "@/components/userdetail/UserDetailHeader.vue";
+import CheckoutView from "@/components/payment/CheckoutView.vue";
+import SuccessView from "@/components/payment/SuccessView.vue";
+import FailView from "@/components/payment/FailView.vue";
 
 
 const routes = [
@@ -50,15 +57,45 @@ const routes = [
         path: "/reservation",
         name: "ReservationChecking",
         components: {
-            default : ReservationCheckMain,
-            header : ReservationCheckHeader
+            default: ReservationCheckMain,
+            header: ReservationCheckHeader
+        }
+    },
+    {
+
+        path: "/userdetail",
+        name: "UserDetailPage",
+        components: {
+            default : UserDetailMain,
+            header : UserDetailHeader
         }
     },
     {
         path: '/oauth2/redirect',
         name: "LoginRedirect",
-        components: LoginRedirect
-    }
+        components: {
+            default : LoginRedirect
+        }
+    },
+    {
+        path: "/payment",
+        name: "redirectToCheckout",
+        components: {
+            default: CheckoutView
+        }
+
+    },
+    {
+        path: '/success', // 성공 페이지 경로
+        name: 'paymentSuccess',
+        component: SuccessView,
+    },
+    {
+        path: '/fail', // 실패 페이지 경로
+        name: 'paymentFail',
+        component: FailView,
+    },
+
 ];
 
 const router = createRouter({
