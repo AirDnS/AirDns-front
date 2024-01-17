@@ -1,14 +1,8 @@
 <template>
   <div class="d-flex align-center justify-center" style="height: 650px">
     <v-sheet width="400" class="mx-auto">
-      <v-form fast-fail @submit.prevent="login">
-        <v-text-field v-model="username" label="email"></v-text-field>
-        <v-text-field v-model="password" label="password"></v-text-field>
-        <a href="#" class="text-body-2 font-weight-regular">Forgot Password?</a>
-
         <v-btn type="submit" variant="outlined" block class="mt-2">Sign in</v-btn>
-        <v-btn variant="outlined" block class="mt-2">kakao Login</v-btn>
-      </v-form>
+        <v-btn variant="outlined" block class="mt-2" v-on:click="kakaoLogin">kakao Login</v-btn>
       <div class="mt-2">
         <p class="text-body-2">Don't have an account? <a href="#">Sign Up</a></p>
       </div>
@@ -17,6 +11,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -28,6 +23,9 @@ export default {
     login() {
       // Your login logic here
     },
+    kakaoLogin() {
+      window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/oauth2/redirect&mode=login";
+    }
   },
 };
 </script>
