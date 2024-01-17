@@ -9,9 +9,15 @@ import RoomDetailHeader from "@/components/roomdetail/RoomDetailHeader.vue";
 import RoomDetailFooter from "@/components/roomdetail/RoomDetailFooter.vue";
 import ReservationCheckMain from "@/components/reservation/ReservationCheckMain.vue";
 import ReservationCheckHeader from "@/components/reservation/ReservationCheckHeader.vue";
+
+import LoginRedirect from "@/components/login/LoginRedirect.vue";
+
+import UserDetailMain from "@/components/userdetail/UserDetailMain.vue";
+import UserDetailHeader from "@/components/userdetail/UserDetailHeader.vue";
 import CheckoutView from "@/components/payment/CheckoutView.vue";
 import SuccessView from "@/components/payment/SuccessView.vue";
 import FailView from "@/components/payment/FailView.vue";
+
 
 const routes = [
     {
@@ -25,6 +31,14 @@ const routes = [
     {
         path: "/login", // login.vue로 이동할 Path
         name: "LoginPage", // router name
+        components: {
+            default: LoginMain,
+            header : LoginHeader
+        }
+    },
+    {
+        path: "/logout", // login.vue로 이동할 Path
+        name: "LogoutPage", // router name
         components: {
             default: LoginMain,
             header : LoginHeader
@@ -48,6 +62,19 @@ const routes = [
         }
     },
     {
+
+        path: "/userdetail",
+        name: "UserDetailPage",
+        components: {
+            default : UserDetailMain,
+            header : UserDetailHeader
+        }
+    },
+    {
+        path: '/oauth2/redirect',
+        name: "LoginRedirect",
+        components: LoginRedirect
+    }
 
         path: "/payment",
         name: "redirectToCheckout",
