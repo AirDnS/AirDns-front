@@ -74,14 +74,13 @@ const routes = [
         path: '/oauth2/redirect',
         name: "LoginRedirect",
         components: LoginRedirect
-    }
-
+    },
+    {
         path: "/payment",
         name: "redirectToCheckout",
         components: {
             default: CheckoutView
         }
-
     },
     {
         path: '/success', // 성공 페이지 경로
