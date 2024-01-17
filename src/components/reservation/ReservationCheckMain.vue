@@ -35,28 +35,13 @@
   <div id="payment-method"></div>
 </template>
 <script>
-// NOTE: 위젯으로 결제 하려면
-// import { loadPaymentWidget, ANONYMOUS } from "@tosspayments/payment-widget-sdk";
+
 import router from "@/routers";
 
 export default {
   methods: {
     async requestPayment() {
       router.push('payment')
-      // const toss = await loadPaymentWidget(
-      //     "test_ck_Ba5PzR0ArnWdaxZloyQ18vmYnNeD",
-      //     ANONYMOUS
-      ;
-
-      // toss.renderPaymentMethods(
-      //     "#payment-method",
-      //     {
-      //       value: 10000,
-      //       currency: "KRW",
-      //       country: "KR",
-      //     },
-      //     { variantKey: "widgetA" }
-      // );
     },
   },
 };
