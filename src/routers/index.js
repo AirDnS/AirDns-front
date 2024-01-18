@@ -17,6 +17,7 @@ import CheckoutView from "@/components/payment/CheckoutView.vue";
 import SuccessView from "@/components/payment/SuccessView.vue";
 import FailView from "@/components/payment/FailView.vue";
 import RoomCreate from "@/components/room/RoomCreate.vue";
+import LogoutRedirect from "@/components/Logout/LogoutRedirect.vue";
 
 const routes = [
     {
@@ -31,14 +32,6 @@ const routes = [
     {
         path: "/login", // login.vue로 이동할 Path
         name: "LoginPage", // router name
-        components: {
-            default: LoginMain,
-            header : LoginHeader
-        }
-    },
-    {
-        path: "/logout", // login.vue로 이동할 Path
-        name: "LogoutPage", // router name
         components: {
             default: LoginMain,
             header : LoginHeader
@@ -77,10 +70,17 @@ const routes = [
         }
     },
     {
-        path: '/oauth2/redirect',
+        path: '/login/oauth2/redirect',
         name: "LoginRedirect",
         components: {
             default: LoginRedirect
+        }
+    },
+    {
+        path: '/unlink/oauth2/redirect',
+        name: "LogoutRedirect",
+        components: {
+            default: LogoutRedirect
         }
     },
     {

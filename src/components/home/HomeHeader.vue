@@ -5,16 +5,15 @@
     <v-btn variant="outlined" class = "login-btn" v-on:click="goCreateRoom">
       방등록
     </v-btn>
-    <v-btn variant="outlined" class = "login-btn" v-on:click="goUserDetail">
+    <v-btn variant="outlined" class="userDetail-btn" v-on:click="goUserDetail">
       회원정보
     </v-btn>
-    <v-btn variant="outlined" class = "login-btn" v-on:click="goLogin">
-      Login
-    </v-btn>
-    <v-btn variant="outlined" class = "logout-btn" v-on:click="goLogout">
+    <v-btn variant="outlined" class="logout-btn" v-on:click="goLogout">
       Logout
     </v-btn>
-
+    <v-btn variant="outlined" class="login-btn" v-on:click="goLogin">
+      Login
+    </v-btn>
   </v-app-bar>
 </template>
 <script>
@@ -26,8 +25,11 @@ export default {
       router.push('login')
     },
     goLogout() {
-      window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/oauth2/redirect&mode=unlink";
-      },
+      if(this.$cookies.get("Authorization")) {
+        this.$cookies.remove("Authorization");
+        window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/unlink/oauth2/redirect&mode=unlink";
+      }
+    },
     goUserDetail() {
       router.push('userdetail')
     },
@@ -42,6 +44,15 @@ export default {
 .login-btn {
   margin-right: 24px;
 }
+
+.logout-btn {
+  margin-right: 24px;
+}
+
+.userDetail-btn {
+  margin-right: 24px;
+}
+
 .v-icon {
   padding-left: 20px;
 }
