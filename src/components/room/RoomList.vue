@@ -9,7 +9,7 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn width="300px" variant="outlined" color="red white--text">상세 정보 확인</v-btn>
+        <v-btn width="300px" variant="outlined" color="red white--text" v-on:click="goRoomDetail">상세 정보 확인</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -18,6 +18,7 @@
 <script>
 
 import axios from "axios";
+import router from "@/routers";
 
 export default {
   data() {
@@ -40,6 +41,9 @@ export default {
             console.log("test");
           })
     },
+    goRoomDetail : function () {
+      router.push({name : 'RoomDetail'})
+    }
   },
   created() {
     this.getRoomList();

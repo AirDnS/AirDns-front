@@ -2,6 +2,9 @@
   <v-app-bar fixed>
     <v-icon class="v-icon">mdi-desk</v-icon>
     <v-app-bar-title>airDnS</v-app-bar-title>
+    <v-btn variant="outlined" class = "login-btn" v-on:click="goCreateRoom">
+      방등록
+    </v-btn>
     <v-btn variant="outlined" class="userDetail-btn" v-on:click="goUserDetail">
       회원정보
     </v-btn>
@@ -29,6 +32,9 @@ export default {
     },
     goUserDetail() {
       router.push('userdetail')
+    },
+    goCreateRoom() {
+      router.push({name:'CreateRoom'})
     }
   }
 }
