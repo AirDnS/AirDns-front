@@ -1,11 +1,11 @@
 <template>
   <v-container class="room_list">
-    <v-card class="room_card" v-for = "(v, i) in roomList" :key = "i">
-      <v-img :src = "`${v.imageUrl}`.substring(0,`${v.imageUrl}`.indexOf(','))" aspect-ritio="2"></v-img>
+    <v-card class="room_card" v-for="(v, i) in roomList" :key="i">
+      <v-img :src="`${v.imageUrl}`.substring(0,`${v.imageUrl}`.indexOf(','))" aspect-ritio="2"></v-img>
       <v-card-text>
         <div>
-          <h2 class="title primary--text mb-2">{{v.name}}</h2>
-          <p class="mb-0">{{v.address}}</p>
+          <h2 class="title primary--text mb-2">{{ v.name }}</h2>
+          <p class="mb-0">{{ v.address }}</p>
         </div>
       </v-card-text>
       <v-card-actions>
@@ -23,12 +23,13 @@ import router from "@/routers";
 export default {
   data() {
     return {
-      roomList : "null",
-      imageUrlList : "null"
+      item: "",
+      roomList: "null",
+      imageUrlList: "null"
     }
   },
   methods: {
-    getRoomList : function (){
+    getRoomList: function () {
       axios.get(`http://localhost:8080/api/v1/rooms`)
           .then((result) => {
             this.roomList = result.data.data.content;
@@ -41,13 +42,35 @@ export default {
             console.log("test");
           })
     },
-    goRoomDetail : function () {
-      router.push({name : 'RoomDetail'})
+    goRoomDetail: function () {
+      router.push({name: 'RoomDetail'})
     }
   },
   created() {
     this.getRoomList();
   },
+  mounted() {
+    this.emitter.on("send", (data) => {
+      this.item = data;
+    })
+  },
+  watch: {
+    item: function (data) {
+      axios.get(`http://localhost:8080/api/v1/rooms`, {
+            params: {
+              keyword: data
+            }})
+          .then((result) => {
+            this.roomList = result.data.data.content;
+          })
+          .catch((error) => {
+            window.alert(error)
+          })
+          .then(() => {
+            console.log("test")
+          })
+    }
+  }
 }
 </script>
 
