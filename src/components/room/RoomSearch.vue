@@ -1,16 +1,26 @@
 <template>
   <div class="search-field">
   <v-card class="search-card">
-    <!-- 검색창과 아이콘 -->
-    <v-text-field class="search_input">
+    <v-text-field v-model="item" class="search_input">
     </v-text-field>
-    <v-btn variant="outlined" class="search-btn"> 검색
+    <v-btn variant="outlined" v-on:click="searchingItem" class="search-btn" > 검색
     </v-btn>
   </v-card>
   </div>
 </template>
 <script>
 export default {
+  data() {
+    return {
+      item : ""
+    }
+  },
+  methods : {
+    searchingItem: function () {
+      this.emitter.emit("send",this.item);
+    }
+  }
+
 }
 </script>
 
