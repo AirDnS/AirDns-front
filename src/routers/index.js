@@ -16,6 +16,7 @@ import UserDetailHeader from "@/components/userdetail/UserDetailHeader.vue";
 import CheckoutView from "@/components/payment/CheckoutView.vue";
 import SuccessView from "@/components/payment/SuccessView.vue";
 import FailView from "@/components/payment/FailView.vue";
+import RoomCreate from "@/components/room/RoomCreate.vue";
 
 const routes = [
     {
@@ -50,6 +51,13 @@ const routes = [
             default: RoomDetailMain,
             header : RoomDetailHeader,
             footer : RoomDetailFooter
+        }
+    },
+    {
+        path: "/createRoom",
+        name: "CreateRoom",
+        components: {
+            default: RoomCreate,
         }
     },
     {
