@@ -24,7 +24,10 @@ export default {
     "RoomSearch": RoomSearch,
     "RoomFilter" : RoomFilter,
     "RoomList": RoomList
-  }
+  },
+
+
+
 }
 </script>
 
