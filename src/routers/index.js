@@ -93,7 +93,9 @@ const routes = [
     {
         path: '/success', // 성공 페이지 경로
         name: 'paymentSuccess',
-        component: SuccessView,
+        components: {
+            default: SuccessView
+        }
     },
     {
         path: '/fail', // 실패 페이지 경로

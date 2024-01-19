@@ -1,67 +1,62 @@
 <template>
-  <!-- 결제 성공 시 -->
-  <section v-if="confirmed">
-    <div class="result wrapper">
-      <div class="box_section">
-        <h2 style="padding: 20px 0px 10px 0px">
-          <img
-              width="35"
-              src="https://static.toss.im/3d-emojis/u1F389_apng.png"
-          />
-          결제 성공
-        </h2>
-        <p>paymentKey = {{ this.$route.query.paymentKey }}</p>
-        <p>orderId = {{ this.$route.query.orderId }}</p>
-        <p>amount = {{ this.$route.query.amount }}</p>
-        <div class="result wrapper">
-          <button class="button" onclick="location.href='https://docs.tosspayments.com/guides/payment-widget/integration';"
-                  style="margin-top:30px; margin-right: 10px">연동 문서</button>
-          <button class="button" onclick="location.href='https://discord.gg/A4fRFXQhRu';"
-                  style="margin-top:30px;background-color: #e8f3ff;color:#1b64da ">실시간 문의</button>
-        </div>
-      </div>
-    </div>
-  </section>
+  <div>
+    <p>paymentKey = {{ this.$route.query.paymentKey }}</p>
+    <p>orderId = {{ this.$route.query.orderId }}</p>
+    <p>amount = {{ this.$route.query.amount }}</p>
+    <p>payName = {{ this.$route.query.payName }}</p>
+
+    <div>a</div>
+  </div>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { confirmPayment } from "@/confirmPayment";
+import axios from "axios";
 
 export default {
-  setup() {
-    const route = useRoute();
-    const router = useRouter();
-    const confirmed = ref(false);
-
-    onMounted(async () => {
-      const requestData = {
-        orderId: route.query.orderId,
-        amount: route.query.amount,
-        paymentKey: route.query.paymentKey,
-      };
-
-      async function confirm() {
-        try {
-          const { response, json } = await confirmPayment(requestData)
-          console.log(json)
-          if (!response.ok) {
-            router.push(`/fail?message=${json.message}&code=${json.code}`);
-          } else {
-            confirmed.value = true;
-          }
-          // eslint-disable-next-line no-empty
-        } catch (error) {
-        }
-      }
-
-      confirm();
-    });
-
+  data() {
     return {
-      confirmed
+      requestData: {
+        paymentKey: "",
+        orderId: "",
+        amount: "",
+        payName:""
+      },
     };
+  },
+  methods: {
+    confirmPayment() {
+      this.requestData.paymentKey = this.$route.query.paymentKey;
+      this.requestData.orderId = this.$route.query.orderId;
+      this.requestData.amount = this.$route.query.amount;
+      this.requestData.payName = this.$route.query.payName;
+
+      // API 호출 및 로깅
+      axios
+      .post(
+          `http://localhost:8080/api/v1/payments/confirm`,
+          this.requestData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: localStorage.getItem("accessToken"),
+            },
+          }
+      )
+      .then((res) => {
+        console.log("API Response:", res.data);
+      })
+      .catch((error) => {
+        console.log("API Error:", error);
+      })
+      .finally(() => {
+        console.log("API Call completed");
+      });
+    },
+  },
+  mounted() {
+    console.log("Initial requestData:", this.requestData);
+    // 페이지 로드 시 API 호출
+    this.confirmPayment();
   },
 };
 </script>
