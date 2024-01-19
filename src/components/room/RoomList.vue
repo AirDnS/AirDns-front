@@ -1,7 +1,10 @@
 <template>
   <v-container class="room_list">
     <v-card class="room_card" v-for="(v, i) in roomList" :key="i">
-      <v-img :src="`${v.imageUrl}`.substring(0,`${v.imageUrl}`.indexOf(','))" aspect-ritio="2"></v-img>
+      <v-img :src=" `${v.imageUrl}`.length ? `${v.imageUrl}`.substring(0, `${v.imageUrl}`.indexOf(',') === -1 ?
+        `${v.imageUrl}`.length : `${v.imageUrl}`.indexOf(',')) :
+         `https://airdns-bucket.s3.ap-northeast-2.amazonaws.com/3_down-filled-triangular-arrow.png`"
+             aspect-ritio="2"></v-img>
       <v-card-text>
         <div>
           <h2 class="title primary--text mb-2">{{ v.name }}</h2>
@@ -25,7 +28,7 @@ export default {
     return {
       item: "",
       roomList: "null",
-      imageUrlList: "null"
+      imageUrl: "",
     }
   },
   methods: {
