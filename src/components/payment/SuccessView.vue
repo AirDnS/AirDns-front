@@ -3,8 +3,6 @@
     <p>paymentKey = {{ this.$route.query.paymentKey }}</p>
     <p>orderId = {{ this.$route.query.orderId }}</p>
     <p>amount = {{ this.$route.query.amount }}</p>
-    <p>payName = {{ this.$route.query.payName }}</p>
-
     <div>a</div>
   </div>
 </template>
@@ -19,7 +17,6 @@ export default {
         paymentKey: "",
         orderId: "",
         amount: "",
-        payName:""
       },
     };
   },
@@ -28,9 +25,7 @@ export default {
       this.requestData.paymentKey = this.$route.query.paymentKey;
       this.requestData.orderId = this.$route.query.orderId;
       this.requestData.amount = this.$route.query.amount;
-      this.requestData.payName = this.$route.query.payName;
 
-      // API 호출 및 로깅
       axios
       .post(
           `http://localhost:8080/api/v1/payments/confirm`,
@@ -55,7 +50,6 @@ export default {
   },
   mounted() {
     console.log("Initial requestData:", this.requestData);
-    // 페이지 로드 시 API 호출
     this.confirmPayment();
   },
 };
