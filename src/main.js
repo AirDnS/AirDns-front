@@ -4,6 +4,7 @@ import vuetify from './plugins/vuetify'
 import {loadFonts} from './plugins/webfontloader'
 import routers from "./routers";
 import axios from 'axios'
+import "@/scss/style.scss";
 import VueCookies from 'vue-cookies'
 import mitt from 'mitt'
 
