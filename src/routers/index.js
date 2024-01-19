@@ -74,8 +74,8 @@ const routes = [
         path: '/oauth2/redirect',
         name: "LoginRedirect",
         components: LoginRedirect
-    }
-
+    },
+    {
         path: "/payment",
         name: "redirectToCheckout",
         components: {
