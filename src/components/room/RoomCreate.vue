@@ -58,8 +58,7 @@
               </v-chip>
               <span
                   v-else-if="index === 2"
-                  class="text-overline text-grey-darken-3 mx-2"
-              >+{{ files.length - 2 }} File(s)
+                  class="text-overline text-grey-darken-3 mx-2">
               </span>
             </template>
           </template>
@@ -101,7 +100,6 @@ export default {
         equipment: [],
       },
       files: [],
-      options: [],
       optionsId: [],
       example12: {
         mode: 'tags',
