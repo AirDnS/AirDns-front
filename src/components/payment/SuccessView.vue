@@ -3,7 +3,6 @@
     <p>paymentKey = {{ this.$route.query.paymentKey }}</p>
     <p>orderId = {{ this.$route.query.orderId }}</p>
     <p>amount = {{ this.$route.query.amount }}</p>
-    <div>a</div>
   </div>
 </template>
 
