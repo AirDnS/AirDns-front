@@ -50,6 +50,7 @@
 
 <script>
 import Multiselect from "@vueform/multiselect";
+import axios from "axios";
 
 export default {
   components: {
@@ -57,13 +58,18 @@ export default {
   },
   data: function () {
     return {
+      accessToken : {
+        accessToken : ""
+      },
+      value: [
+      ],
+      label: "",
+      equipmentData : "null",
+      options : [],
+      optionsId : [],
       example12: {
         mode: 'tags',
         groups: true,
-        value: [
-          {value: 'BackboneJS', label: 'BackboneJS'},
-          {value: 'EmberJS', label: 'EmberJS'},
-        ],
         placeholder: 'Select options',
         closeOnSelect: false,
         searchable: true,
@@ -82,10 +88,26 @@ export default {
     }
   },
   methods: {
-    getEquipnmet :function () {
+    getEquipment : function () {
+      this.accessToken = localStorage.getItem('accessToken');
+      axios.get('http://localhost:8080/api/v1/equipments', {
+        headers : {
+          "Authorization" : this.accessToken
+        },
+      })
+          .then((res) => {
+            this.equipmentData = res.data
+            console.log(res.data.data);
+          })
+    },
+    categoryParsing: function () {
     }
   },
   created() {
+    this.getEquipment();
+    this.categoryParsing();
+  },
+  watch() {
   }
 }
 </script>
