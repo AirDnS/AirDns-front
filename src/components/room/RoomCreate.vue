@@ -27,6 +27,7 @@
             variant="outlined"
             placeholder="평수기준으로 입력해주세요"
         ></v-text-field>
+        <div class="output">Data: {{ example12.value }}</div>
         <Multiselect
             v-model="example12.value"
             v-bind="example12"
@@ -50,6 +51,7 @@
 
 <script>
 import Multiselect from "@vueform/multiselect";
+import axios from "axios";
 
 export default {
   components: {
@@ -57,35 +59,47 @@ export default {
   },
   data: function () {
     return {
+      accessToken : {
+        accessToken : ""
+      },
+      value: [
+      ],
+      equipmentData : "null",
+      options : [],
+      optionsId : [],
       example12: {
         mode: 'tags',
+        label: 'name',
+        valueProp: 'id',
+        value: [],
         groups: true,
-        value: [
-          {value: 'BackboneJS', label: 'BackboneJS'},
-          {value: 'EmberJS', label: 'EmberJS'},
-        ],
         placeholder: 'Select options',
         closeOnSelect: false,
         searchable: true,
-        object: true,
-        options: [
-          {
-            label: 'DC',
-            options: ['Batman', 'Robin', 'Joker'],
-          },
-          {
-            label: 'Marvel',
-            options: ['Spiderman', 'Iron Man', 'Captain America'],
-          },
-        ]
+        options: []
       },
     }
   },
   methods: {
-    getEquipnmet :function () {
+    getEquipment : function () {
+      this.accessToken = localStorage.getItem('accessToken');
+      axios.get('http://localhost:8080/api/v1/equipments', {
+        headers : {
+          "Authorization" : this.accessToken
+        },
+      })
+      .then((res) => {
+        this.example12.options = res.data.data;
+      })
+    },
+    categoryParsing: function () {
     }
   },
   created() {
+    this.getEquipment();
+    this.categoryParsing();
+  },
+  watch: {
   }
 }
 </script>
