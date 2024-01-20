@@ -77,15 +77,21 @@
         </v-card>
       </v-dialog>
     </div>
-    <v-text-field  class = "four" height="70px">
+    <v-text-field  class = "four"  v-model="text" height="70px">
     </v-text-field>
-    <v-btn variant="outlined" v-on:click="searchingItem" class="five" > 검색
+    <v-btn variant="outlined" v-on:click="sendRoomList" class="five" > 검색
     </v-btn>
   </v-card>
   </div>
 </template>
 <script>
+import Multiselect from "@vueform/multiselect";
+import axios from "axios";
+
 export default {
+  components: {
+    Multiselect,
+  },
   data() {
     return {
       priceFlag : false,
@@ -93,30 +99,52 @@ export default {
       equipmentFlag : false,
       priceMin : 0,
       priceMax : 50000,
-      priceValue: [1000, 50000],
+      priceValue: [0, 50000],
       sizeMin : 0,
       sizeMax : 50,
-      sizeValue: [10, 30],
-      example12: {
-        mode: 'tags',
-        label: 'name',
-        valueProp: 'id',
-        value: [],
-        groups: true,
-        placeholder: 'Select options',
-        closeOnSelect: false,
-        searchable: true,
-        options: []
-      },
+      sizeValue: [0, 50],
+      example12: {},
       equipment: [],
+      sendItem: {},
+      text : "",
     }
   },
   methods : {
-    searchingItem: function () {
-      this.emitter.emit("send",this.item);
+    sendRoomList: function () {
+      const keyword = this.text;
+      const priceArr = this.priceValue.join(',');
+      const sizeArr = this.sizeValue.join(',');
+      const equipmentArr = this.equipment.join(',');
+      console.log(priceArr)
+      console.log(sizeArr)
+      console.log(equipmentArr)
+      axios.get(`http://localhost:8080/api/v1/rooms`, {
+        params: {
+          keyword: keyword,
+          price: priceArr,
+          size: sizeArr,
+          equipment: equipmentArr
+        }
+      })
+          .then((result) => {
+            console.log(result)
+            this.sendItem = result.data.data.content;
+            this.emitter.emit("send",this.sendItem);
+          })
+          .catch((error) => {
+            window.alert(error)
+          })
+          .then(() => {
+            console.log("test")
+          })
+    },
+    getEquipment:function (){
+      this.example12 = JSON.parse(localStorage.getItem("equipment"))
     }
+  },
+  created() {
+    this.getEquipment();
   }
-
 }
 </script>
 

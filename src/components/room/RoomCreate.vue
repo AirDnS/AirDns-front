@@ -101,30 +101,13 @@ export default {
       },
       files: [],
       optionsId: [],
-      example12: {
-        mode: 'tags',
-        label: 'name',
-        valueProp: 'id',
-        value: [],
-        groups: true,
-        placeholder: 'Select options',
-        closeOnSelect: false,
-        searchable: true,
-        options: []
-      },
+      example12: {},
     }
   },
   methods: {
     getEquipment: function () {
-      this.accessToken = localStorage.getItem('accessToken');
-      axios.get('http://localhost:8080/api/v1/equipments', {
-        headers: {
-          "Authorization": this.accessToken
-        },
-      })
-          .then((res) => {
-            this.example12.options = res.data.data;
-          })
+      this.example12 = JSON.parse(localStorage.getItem("equipment"));
+
     },
     postCreateRoom: function () {
       this.accessToken = localStorage.getItem('accessToken')

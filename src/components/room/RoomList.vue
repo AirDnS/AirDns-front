@@ -1,5 +1,5 @@
 <template>
-  <v-container class="room_list">
+  <v-container class="room_list v-on:">
     <v-card class="room_card" v-for="(v, i) in roomList" :key="i">
       <v-img :src=" `${v.imageUrl}`.length ? `${v.imageUrl}`.substring(0, `${v.imageUrl}`.indexOf(',') === -1 ?
         `${v.imageUrl}`.length : `${v.imageUrl}`.indexOf(',')) :
@@ -29,6 +29,17 @@ export default {
       item: "",
       roomList: "null",
       imageUrl: "",
+      example12: {
+        mode: 'tags',
+        label: 'name',
+        valueProp: 'id',
+        value: [],
+        groups: true,
+        placeholder: 'Select options',
+        closeOnSelect: false,
+        searchable: true,
+        options: []
+      },
     }
   },
   methods: {
@@ -45,35 +56,26 @@ export default {
             console.log("test");
           })
     },
+    getEquipment: function () {
+      axios.get('http://localhost:8080/api/v1/equipments')
+          .then((res) => {
+            this.example12.options = res.data.data;
+            localStorage.setItem("equipment", JSON.stringify(this.example12));
+          })
+    },
     goRoomDetail: function () {
       router.push({name: 'RoomDetail'})
-    }
+    },
   },
   created() {
     this.getRoomList();
+    this.getEquipment();
   },
   mounted() {
-    this.emitter.on("send", (data) => {
-      this.item = data;
+    this.emitter.on("send", (sendItem) => {
+      this.roomList = sendItem;
     })
   },
-  watch: {
-    item: function (data) {
-      axios.get(`http://localhost:8080/api/v1/rooms`, {
-            params: {
-              keyword: data
-            }})
-          .then((result) => {
-            this.roomList = result.data.data.content;
-          })
-          .catch((error) => {
-            window.alert(error)
-          })
-          .then(() => {
-            console.log("test")
-          })
-    }
-  }
 }
 </script>
 
