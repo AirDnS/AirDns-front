@@ -25,7 +25,7 @@
 export default {}
 </script>
 
-<style>
+<style scoped>
 .like-container {
   display: flex;
   justify-content: space-around;
@@ -37,18 +37,10 @@ export default {}
   align-items: center;
 }
 
-.like-button > button {
-  padding-right: 15px;
-}
-
 .hate-button {
   display: flex;
   flex-direction: row;
   align-items: center;
-}
-
-.hate-button > button {
-  padding-right: 15px;
 }
 
 </style>

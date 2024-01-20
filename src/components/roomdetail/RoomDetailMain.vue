@@ -43,7 +43,7 @@
         </v-card>
       </v-col>
     </v-col>
-    <v-col class="my-sidebar">
+    <v-col class="my-sidebar" v-show="hasUser">
       <v-card>
           <v-card-text>
             <RoomReservation>
@@ -66,11 +66,15 @@ export default {
       roomsId: "null",
       imageList: "null",
       roomData: "null",
-      test: "null"
+      test: "null",
+      hasUser: false
     }
   },
   mounted() {
     this.emitter.emit("roomsId", this.roomsId);
+    if (localStorage.getItem('accessToken') != null) {
+      this.hasUser = true;
+    }
   },
   components: {
     'RoomReservation': RoomReservation,
@@ -103,7 +107,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .detail-image-box {
   margin: auto;
   display: flex;
@@ -115,48 +119,6 @@ export default {
 
 .room-image {
   margin-top: 10px;
-}
-
-.detail-desc-box {
-  display: flex;
-  justify-content: center;
-}
-
-.desc-container {
-  width: 800px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(3, 100px);
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.detail-desc1 {
-  grid-column: 1/2;
-  grid-row: 1/2;
-  display: flex;;
-  flex-direction: column;
-  text-align: center;
-}
-
-.detail-desc2 {
-  grid-column: 1/2;
-  grid-row: 2/4;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  overflow: auto;
-}
-
-.detail-desc3 {
-  grid-column: 2/3;
-  grid-row: 1/3;
-}
-
-.detail-desc4 {
-  grid-column: 2/3;
-  grid-row: 3/4;
-  display: flex;
 }
 
 .my-sidebar {
