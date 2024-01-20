@@ -43,7 +43,7 @@
         </v-card>
       </v-col>
     </v-col>
-    <v-col class="my-sidebar">
+    <v-col class="my-sidebar" v-show="hasUser">
       <v-card>
           <v-card-text>
             <RoomReservation>
@@ -66,11 +66,15 @@ export default {
       roomsId: "null",
       imageList: "null",
       roomData: "null",
-      test: "null"
+      test: "null",
+      hasUser: false
     }
   },
   mounted() {
     this.emitter.emit("roomsId", this.roomsId);
+    if (localStorage.getItem('accessToken') != null) {
+      this.hasUser = true;
+    }
   },
   components: {
     'RoomReservation': RoomReservation,
