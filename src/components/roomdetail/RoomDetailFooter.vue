@@ -12,16 +12,36 @@
         <div class="py-2">
           <div class="text-h6">{{ data.nickName }} <span class="text-caption ml-1">{{ data.createdAt }}</span> </div>
 
-          <div class="font-weight-light text-medium-emphasis">
+          <div class="font-weight-light text-medium-emphasis" style="white-space: pre-line" v-if="modReviewsId != data.reviewsId">
             {{data.content}}
           </div>
+          <v-textarea
+            class="pa-0"
+            v-if="modReviewsId == data.reviewsId"
+            v-model="modReviewContent"
+            variant="underlined"
+            rows="1"
+            auto-grow
+            hide-details="true"
+          >
+          <!-- {{ data.content }} -->
+          </v-textarea>
         </div>
+        
         <template v-slot:append>
+          <v-btn
+            color="grey-lighten-1"
+            icon="mdi-pencil"
+            variant="text"
+            @click="modReviewButton"
+            :data-id="data.reviewsId"
+            :data-content="data.content"
+          ></v-btn>
           <v-btn
             color="grey-lighten-1"
             icon="mdi-delete"
             variant="text"
-            @click="deleteReview"
+            @click="deleteReviewButton"
             :data-id="data.reviewsId"
           ></v-btn>
         </template>
@@ -33,7 +53,7 @@
       class="mx-3">
       <v-textarea 
       label="후기"
-      v-model=reviewContent
+      v-model=addReviewContent
       clearable
       auto-grow
       rows="1"
@@ -44,15 +64,49 @@
       <v-spacer></v-spacer>
       <v-btn
         @click="setReview"
-        :disabled="!reviewContent.trim()"
-        :loading="isLoading"
+        :disabled="!addReviewContent.trim()"
         color="deep-purple-accent-4">
         작성하기
       </v-btn>
     </v-card-actions>
     </v-row>
   </v-row>
+
+
+
+<!-- Dialog -->
+  <v-dialog
+    v-model="delDialog"
+    persistent
+    width="auto"
+  >
+    <v-card>
+      <v-card-title class="text-h5 pa-10">
+        리뷰를 삭제하시겠습니까?
+      </v-card-title>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="blue-darken-1"
+          variant="text"
+          @click="delDialog = false"
+        >
+          아니오
+        </v-btn>
+        <v-btn
+          color="red-darken-1"
+          variant="text"
+          @click="deleteReview"
+        >
+          네
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
 </template>
+
+
 <script>
 import axios from "axios";
 
@@ -61,10 +115,11 @@ export default {
     return {
       roomsId: "null",
       reviewData: [],
-      reviewContent: "",
-      isValid: false,
-      isLoading: false,
-      accessToken: null,
+      addReviewContent: "",
+      modReviewsId: null,
+      modReviewContent: "",
+      delReviewsId: null,
+      delDialog: false,
     }
   },
   methods: {
@@ -83,13 +138,13 @@ export default {
     },
     setReview: function () {
       let params = {
-        content: this.reviewContent
+        content: this.addReviewContent
       }
 
       axios.post(`http://localhost:8080/api/v1/rooms/${this.roomsId}/review`, params)
           .then((result) => {
             console.log( result.data.data );
-            this.reviewContent = "";
+            this.addReviewContent = "";
             this.getReview();
           })
           .catch((error) => {
@@ -98,10 +153,42 @@ export default {
           .finally(() => {
           })
     },
-    deleteReview: function (e) {
-      let reviewsId = e.currentTarget.dataset.id;
-      console.log( reviewsId );
-      axios.delete(`http://localhost:8080/api/v1/rooms/${this.roomsId}/review/${reviewsId}`)
+    modReviewButton: function (e) {
+      if (this.modReviewsId != null && this.modReviewsId == e.currentTarget.dataset.id) {
+        this.modReview();
+        this.modReviewsId = null;
+        this.modReviewContent = null;
+      } else {
+        this.modReviewsId = e.currentTarget.dataset.id;
+        this.modReviewContent = e.currentTarget.dataset.content;
+      }
+      
+      
+    },
+    modReview: function () {
+      let params = {
+        content: this.modReviewContent
+      }
+
+      let reviewsId = this.modReviewsId;
+
+      axios.patch(`http://localhost:8080/api/v1/rooms/${this.roomsId}/review/${reviewsId}`, params)
+          .then(() => {
+            this.getReview();
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+          })
+    },
+    deleteReviewButton: function (e) {
+      this.delDialog = true;
+      this.delReviewsId = e.currentTarget.dataset.id;
+    },
+    deleteReview: function () {
+      this.delDialog = false;
+      axios.delete(`http://localhost:8080/api/v1/rooms/${this.roomsId}/review/${this.delReviewsId}`)
             .then((result) => {
               console.log( result.data.message );
               this.getReview();
