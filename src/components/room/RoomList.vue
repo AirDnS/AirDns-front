@@ -1,67 +1,88 @@
 <template>
-  <v-container class="room_list">
-    <!-- 카드 UI 사용을 선언하는 v-card 엘리먼트 -->
-    <v-card class="room_card">
-      <!-- 카드 상단에 이미지 배치 -->
-      <v-img src="src/assets/temp_room_img.png" aspect-ritio="2"></v-img>
-
-      <!-- 카드 중간에 텍스트 배치 -->
+  <v-container class="room_list v-on:">
+    <v-card class="room_card" v-for="(v, i) in roomList" :key="i">
+      <v-img :src=" `${v.imageUrl}`.length ? `${v.imageUrl}`.substring(0, `${v.imageUrl}`.indexOf(',') === -1 ?
+        `${v.imageUrl}`.length : `${v.imageUrl}`.indexOf(',')) :
+         `https://airdns-bucket.s3.ap-northeast-2.amazonaws.com/3_down-filled-triangular-arrow.png`"
+             aspect-ritio="2"></v-img>
       <v-card-text>
         <div>
-          <h2 class="title primary--text mb-2">카드 UI</h2>
-          <p class="mb-0">카드 디자인에 출력될 텍스트를 입력합니다.</p>
-        </div>
-      </v-card-text>
-      <!-- 카드 하단에 버튼 배치 -->
-      <v-card-actions>
-        <v-btn width="300px" variant="outlined" color="red white--text" v-on:click="goDetail">상세 정보 확인</v-btn>
-      </v-card-actions>
-    </v-card>
-    <v-card class="room_card">
-      <!-- 카드 상단에 이미지 배치 -->
-      <v-img src="src/assets/temp_room_img.png" aspect-ritio="2"></v-img>
-
-      <!-- 카드 중간에 텍스트 배치 -->
-      <v-card-text>
-        <div>
-          <h2 class="title primary--text mb-2">카드 UI</h2>
-          <p class="mb-0">카드 디자인에 출력될 텍스트를 입력합니다.</p>
-        </div>
-      </v-card-text>
-      <!-- 카드 하단에 버튼 배치 -->
-      <v-card-actions>
-        <v-btn width="300px" variant="outlined" color="red white--text">상세 정보 확인</v-btn>
-      </v-card-actions>
-    </v-card>
-
-
-    <v-card class="room_card">
-      <!-- 카드 상단에 이미지 배치 -->
-      <v-img src="src/assets/temp_room_img.png" aspect-ritio="2"></v-img>
-
-      <!-- 카드 중간에 텍스트 배치 -->
-      <v-card-text>
-        <div>
-          <h2 class="title primary--text mb-2">카드 UI</h2>
-          <p class="mb-0">카드 디자인에 출력될 텍스트를 입력합니다.</p>
+          <h2 class="title primary--text mb-2">{{ v.name }}</h2>
+          <p class="mb-0">{{ v.address }}</p>
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn width="300px" variant="outlined" color="red white--text">상세 정보 확인</v-btn>
+        <v-btn width="300px" variant="outlined" color="red white--text" v-on:click="goRoomDetail(`${v.roomsId}`)">상세 정보
+          확인
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
 </template>
 
 <script>
+
+import axios from "axios";
 import router from "@/routers";
+// import router from "@/routers";
 
 export default {
-  methods: {
-    goDetail() {
-      router.push('detail')
+  data() {
+    return {
+      roomList: "null",
+      imageUrl: "",
+      example12: {
+        mode: 'tags',
+        label: 'name',
+        valueProp: 'id',
+        value: [],
+        groups: true,
+        placeholder: 'Select options',
+        closeOnSelect: false,
+        searchable: true,
+        options: []
+      },
     }
-  }
+  },
+  methods: {
+    getRoomList: function () {
+      axios.get(`http://localhost:8080/api/v1/rooms`)
+          .then((result) => {
+            this.roomList = result.data.data.content;
+            console.log(this.roomList);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+            console.log("test");
+          })
+    },
+    getEquipment: function () {
+      axios.get('http://localhost:8080/api/v1/equipments')
+          .then((res) => {
+            this.example12.options = res.data.data;
+            localStorage.setItem("equipment", JSON.stringify(this.example12));
+          })
+    },
+    goRoomDetail: function (roomsId) {
+      router.push({
+        name: 'RoomDetail',
+        state: {
+          data: roomsId,
+        }
+      })
+    }
+  },
+  created() {
+    this.getRoomList();
+    this.getEquipment();
+  },
+  mounted() {
+    this.emitter.on("send", (sendItem) => {
+      this.roomList = sendItem;
+    })
+  },
 }
 </script>
 
@@ -72,6 +93,9 @@ export default {
   grid-template-rows: 250px 250px;
   gap: 15px;
 }
+
+.room_card {
+  display: grid;
+  grid-template-rows: 120px 80px 50px;
+}
 </style>
-<script setup>
-</script>

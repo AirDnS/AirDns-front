@@ -9,7 +9,6 @@ import RoomDetailHeader from "@/components/roomdetail/RoomDetailHeader.vue";
 import RoomDetailFooter from "@/components/roomdetail/RoomDetailFooter.vue";
 import ReservationCheckMain from "@/components/reservation/ReservationCheckMain.vue";
 import ReservationCheckHeader from "@/components/reservation/ReservationCheckHeader.vue";
-
 import LoginRedirect from "@/components/login/LoginRedirect.vue";
 
 import UserDetailMain from "@/components/userdetail/UserDetailMain.vue";
@@ -17,11 +16,13 @@ import UserDetailHeader from "@/components/userdetail/UserDetailHeader.vue";
 import CheckoutView from "@/components/payment/CheckoutView.vue";
 import SuccessView from "@/components/payment/SuccessView.vue";
 import FailView from "@/components/payment/FailView.vue";
-
+import RoomCreate from "@/components/room/RoomCreate.vue";
+import LogoutRedirect from "@/components/Logout/LogoutRedirect.vue";
 
 const routes = [
     {
         path:"/",
+        name:"HomePage",
         components: {
             default : HomeMain,
             header : HomeHeader,
@@ -37,14 +38,6 @@ const routes = [
         }
     },
     {
-        path: "/logout", // login.vue로 이동할 Path
-        name: "LogoutPage", // router name
-        components: {
-            default: LoginMain,
-            header : LoginHeader
-        }
-    },
-    {
         path: "/detail",
         name: "RoomDetail",
         components: {
@@ -54,15 +47,21 @@ const routes = [
         }
     },
     {
-        path: "/reservation",
-        name: "ReservationChecking",
+        path: "/createRoom",
+        name: "CreateRoom",
         components: {
-            default: ReservationCheckMain,
-            header: ReservationCheckHeader
+            default: RoomCreate,
         }
     },
     {
-
+        path: "/reservation",
+        name: "ReservationChecking",
+        components: {
+            default : ReservationCheckMain,
+            header : ReservationCheckHeader
+        }
+    },
+    {
         path: "/userdetail",
         name: "UserDetailPage",
         components: {
@@ -71,9 +70,18 @@ const routes = [
         }
     },
     {
-        path: '/oauth2/redirect',
+        path: '/login/oauth2/redirect',
         name: "LoginRedirect",
-        components: LoginRedirect
+        components: {
+            default: LoginRedirect
+        }
+    },
+    {
+        path: '/unlink/oauth2/redirect',
+        name: "LogoutRedirect",
+        components: {
+            default: LogoutRedirect
+        }
     },
     {
         path: "/payment",
@@ -81,19 +89,19 @@ const routes = [
         components: {
             default: CheckoutView
         }
-
     },
     {
         path: '/success', // 성공 페이지 경로
         name: 'paymentSuccess',
-        component: SuccessView,
+        components: {
+            default: SuccessView
+        }
     },
     {
         path: '/fail', // 실패 페이지 경로
         name: 'paymentFail',
         component: FailView,
     },
-
 ];
 
 const router = createRouter({
