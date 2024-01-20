@@ -4,8 +4,6 @@
       <v-btn variant="outlined" block class="mt-2" v-on:click="kakaoLogin">
           kakao Login
       </v-btn>
-      <v-btn variant="outlined" block class="mt-2" v-on:click="naverLogin">Naver Login</v-btn>
-      <v-btn variant="outlined" block class="mt-2" v-on:click="googleLogin">Google Login</v-btn>
     </v-sheet>
   </div>
 </template>
@@ -19,10 +17,6 @@ export default {
     kakaoLogin() {
       window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=https://airdns.netlify.app/login/oauth2/redirect&mode=login";
     },
-    naverLogin() {
-    },
-    googleLogin() {
-    }
   },
 };
 </script>
