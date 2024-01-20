@@ -27,7 +27,7 @@ export default {
     goLogout() {
       if(this.$cookies.get("Authorization")) {
         this.$cookies.remove("Authorization");
-        window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/unlink/oauth2/redirect&mode=unlink";
+        window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=https://airdns.netlify.app/unlink/oauth2/redirect&mode=unlink";
       }
     },
     goUserDetail() {
