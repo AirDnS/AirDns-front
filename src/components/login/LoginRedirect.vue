@@ -10,11 +10,11 @@ import router from "@/routers";
 import axios from "axios";
 
 export default {
-  created() {
+  async created() {
     const token = this.$route.query.token;
     if(token){
       localStorage.setItem("accessToken", token);
-      axios.get('http://localhost:8080/api/v1/users' ,
+      await axios.get('http://localhost:8080/api/v1/users' ,
           {
             headers: {
               "Authorization": localStorage.getItem('accessToken')
