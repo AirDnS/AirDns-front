@@ -11,8 +11,5 @@ export default {
 </script>
 
 <style>
-.v-icon {
-  padding-left: 20px;
-}
 
 </style>

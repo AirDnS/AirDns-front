@@ -11,7 +11,6 @@ import router from "@/routers";
 export default {
   created() {
     const token = this.$route.query.token;
-
     if(token){
       localStorage.setItem("accessToken", token);
       window.alert('로그인에 성공했습니다')

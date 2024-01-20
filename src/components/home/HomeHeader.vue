@@ -53,7 +53,7 @@ export default {
   margin-right: 24px;
 }
 
-.v-icon {
+.v-toolbar__content {
   padding-left: 20px;
 }
 
