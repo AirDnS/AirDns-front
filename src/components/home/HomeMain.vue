@@ -5,9 +5,6 @@
       </RoomSearch>
     </div>
     <div class="box-item">
-      <RoomFilter></RoomFilter>
-    </div>
-    <div class="box-item">
       <RoomList>
       </RoomList>
     </div>
@@ -17,12 +14,10 @@
 <script>
 import RoomSearch from "@/components/room/RoomSearch.vue";
 import RoomList from "@/components/room/RoomList.vue";
-import RoomFilter from "@/components/room/RoomFilter.vue";
 
 export default {
   components: {
     "RoomSearch": RoomSearch,
-    "RoomFilter" : RoomFilter,
     "RoomList": RoomList
   },
 

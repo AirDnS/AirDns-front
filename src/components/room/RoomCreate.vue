@@ -58,8 +58,7 @@
               </v-chip>
               <span
                   v-else-if="index === 2"
-                  class="text-overline text-grey-darken-3 mx-2"
-              >+{{ files.length - 2 }} File(s)
+                  class="text-overline text-grey-darken-3 mx-2">
               </span>
             </template>
           </template>
@@ -101,32 +100,14 @@ export default {
         equipment: [],
       },
       files: [],
-      options: [],
       optionsId: [],
-      example12: {
-        mode: 'tags',
-        label: 'name',
-        valueProp: 'id',
-        value: [],
-        groups: true,
-        placeholder: 'Select options',
-        closeOnSelect: false,
-        searchable: true,
-        options: []
-      },
+      example12: {},
     }
   },
   methods: {
     getEquipment: function () {
-      this.accessToken = localStorage.getItem('accessToken');
-      axios.get('http://localhost:8080/api/v1/equipments', {
-        headers: {
-          "Authorization": this.accessToken
-        },
-      })
-          .then((res) => {
-            this.example12.options = res.data.data;
-          })
+      this.example12 = JSON.parse(localStorage.getItem("equipment"));
+
     },
     postCreateRoom: function () {
       this.accessToken = localStorage.getItem('accessToken')
