@@ -39,6 +39,19 @@
 import router from "@/routers";
 
 export default {
+  data() {
+    return {
+      roomsId: null,
+      checkInTime: null,
+      checkOutTime: null,
+    }
+  },
+  mounted() {
+    this.roomsId = history.state.roomsId;
+    this.checkInTime = history.state.checkInTime;
+    this.checkOutTime = history.state.checkOutTime;
+    console.log(this.roomsId);
+  },
   methods: {
     async requestPayment() {
       router.push('payment')

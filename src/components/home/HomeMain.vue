@@ -19,7 +19,10 @@ export default {
   components: {
     "RoomSearch": RoomSearch,
     "RoomList": RoomList
-  }
+  },
+
+
+
 }
 </script>
 
