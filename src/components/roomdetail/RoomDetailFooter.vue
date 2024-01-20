@@ -141,7 +141,7 @@ export default {
         content: this.addReviewContent
       }
 
-      axios.post(`http://localhost:8080/api/v1/rooms/${this.roomsId}/review`, params)
+      axios.post(`http://localhost:8080/api/v1/rooms/${this.roomsId}/review`, params, this.authHeader())
           .then((result) => {
             console.log( result.data.data );
             this.addReviewContent = "";
@@ -172,7 +172,7 @@ export default {
 
       let reviewsId = this.modReviewsId;
 
-      axios.patch(`http://localhost:8080/api/v1/rooms/${this.roomsId}/review/${reviewsId}`, params)
+      axios.patch(`http://localhost:8080/api/v1/rooms/${this.roomsId}/review/${reviewsId}`, params, this.authHeader())
           .then(() => {
             this.getReview();
           })
@@ -188,7 +188,7 @@ export default {
     },
     deleteReview: function () {
       this.delDialog = false;
-      axios.delete(`http://localhost:8080/api/v1/rooms/${this.roomsId}/review/${this.delReviewsId}`)
+      axios.delete(`http://localhost:8080/api/v1/rooms/${this.roomsId}/review/${this.delReviewsId}`, this.authHeader())
             .then((result) => {
               console.log( result.data.message );
               this.getReview();
