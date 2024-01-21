@@ -59,6 +59,7 @@
     </main>
     <footer>
       <button @click="goBack" class="bordered-button">뒤로 가기</button>
+      <button @click="updateProfileOnBackend" class="bordered-button">유저 정보 수정</button>
       <button @click="updateRoleOnBackend" class="bordered-button">권한 변경</button>
     </footer>
   </div>
@@ -67,6 +68,7 @@
 <script>
 import router from "@/routers";
 import axios from "axios";
+
 export default {
   data() {
     return {
@@ -79,48 +81,58 @@ export default {
     };
   },
   created() {
-
-    axios.get('http://localhost:8080/api/v1/users', {
-      headers: {
-        'Authorization': `Bearer `, // Bearer 에 토큰값 입력
-      },
-    })
-        .then(response => {
-          console.log(response.data);
-          this.user = response.data.data;
-        })
-        .catch(error => {
-          console.error(error);
-        });
+    this.fetchUserInfo();
   },
   methods: {
-    goBack() {
-      // 메인 화면으로 이동
-      router.push('/')
-    },
-    updateRoleOnBackend() {
-      axios({
-        method: 'patch',
-        url: 'http://localhost:8080/api/v1/users/role',
-        data: {
-          // 여기에 업데이트할 데이터를 추가합니다.
-        },
+    fetchUserInfo() {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        window.alert('토큰이 존재하지 않습니다.');
+        return;
+      }
+
+      axios.get('http://localhost:8080/api/v1/users', {
         headers: {
-          'Authorization': `Bearer `, // Bearer 에 토큰값 입력
-          'Content-Type': 'application/json', // 다른 헤더 필요시 추가
+          'Authorization': `${accessToken}`,
         },
       })
           .then(response => {
-            alert("권한 변경 성공");
+            console.log(response.data);
+            this.user = response.data.data;
+          })
+          .catch(error => {
+            console.error(error);
+          });
+    },
+    goBack() {
+      router.push('/');
+    },
+    updateProfileOnBackend() {
+      router.push('updateuserinfo');
+    },
+    updateRoleOnBackend() {
+      const accessToken = localStorage.getItem('accessToken');
+
+      axios.patch('http://localhost:8080/api/v1/users/role', {
+      }, {
+        headers: {
+          'Authorization': `${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
+          .then(response => {
+            window.alert("권한 변경 성공");
             console.log(response.data);
           })
           .catch(error => {
+            window.alert("권한 변경 실패");
             console.error(error);
           });
     },
   },
 };
 </script>
+
 
 <style scoped>
 .margin-bottom {
