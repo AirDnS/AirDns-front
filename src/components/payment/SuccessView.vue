@@ -1,5 +1,6 @@
 <template>
   <div class="payment-info">
+    <h2> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; PAYMENT COMPLETED</h2>
     <p>PAYMENT KEY = {{ this.$route.query.paymentKey }}<br/></p>
     <p>RESERVATION ID = {{ this.$route.query.orderId }}<br/></p>
     <p>결제 금액 = {{ this.$route.query.amount }}</p>
