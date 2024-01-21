@@ -34,7 +34,7 @@ export default {
       paymentMethodWidget: null,
       clientKey: "test_ck_Ba5PzR0ArnWdaxZloyQ18vmYnNeD",
       customerKey: nanoid(),
-      amount: 6000,
+      amount: 5000,
     };
   },
   methods: {
