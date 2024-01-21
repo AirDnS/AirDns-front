@@ -75,7 +75,7 @@ export default {
         return;
       }
 
-      axios.get('http://localhost:8080/api/v1/users', {
+      axios.get('http://43.200.245.57:8080/api/v1/users', {
         headers: {
           'Authorization': `${accessToken}`,
         },
@@ -96,7 +96,7 @@ export default {
         return;
       }
 
-      axios.patch('http://localhost:8080/api/v1/users/profile', this.user, {
+      axios.patch('http://43.200.245.57:8080/api/v1/users/profile', this.user, {
         headers: {
           'Authorization': `${accessToken}`,
           'Content-Type': 'application/json',

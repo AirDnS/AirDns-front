@@ -83,7 +83,7 @@ export default {
   methods: {
     getRoomDetail: async function () {
       console.log(this.roomsId)
-      await axios.get(`http://localhost:8080/api/v1/rooms/${this.roomsId}`)
+      await axios.get(`http://43.200.245.57:8080/api/v1/rooms/${this.roomsId}`)
           .then((result) => {
             this.roomData = result.data.data;
             this.imageList = result.data.data.imageUrl;

@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     getRoomList: function () {
-      axios.get(`http://localhost:8080/api/v1/rooms`)
+      axios.get(`http://43.200.245.57:8080/api/v1/rooms`)
           .then((result) => {
             this.roomList = result.data.data.content;
             console.log(this.roomList);
@@ -59,7 +59,7 @@ export default {
           })
     },
     getEquipment: function () {
-      axios.get('http://localhost:8080/api/v1/equipments')
+      axios.get('http://43.200.245.57:8080/api/v1/equipments')
           .then((res) => {
             this.example12.options = res.data.data;
             localStorage.setItem("equipment", JSON.stringify(this.example12));

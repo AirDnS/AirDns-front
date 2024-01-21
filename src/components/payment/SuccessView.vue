@@ -44,7 +44,7 @@ export default {
 
       axios
       .post(
-          `http://localhost:8080/api/v1/payments/confirm`,
+          `http://43.200.245.57:8080/api/v1/payments/confirm`,
           this.requestData,
           {
             headers: {
