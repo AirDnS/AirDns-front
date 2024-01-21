@@ -18,6 +18,8 @@ import SuccessView from "@/components/payment/SuccessView.vue";
 import FailView from "@/components/payment/FailView.vue";
 import RoomCreate from "@/components/room/RoomCreate.vue";
 import LogoutRedirect from "@/components/Logout/LogoutRedirect.vue";
+import UpdateUserInfoMain from "@/components/updateuserinfo/UpdateUserInfoMain.vue";
+import UpdateUserInfoHeader from "@/components/updateuserinfo/UpdateUserInfoHeader.vue";
 
 const routes = [
     {
@@ -101,6 +103,14 @@ const routes = [
         path: '/fail', // 실패 페이지 경로
         name: 'paymentFail',
         component: FailView,
+    },
+    {
+        path: "/updateuserinfo",
+        name: "UserUpdatePage",
+        components: {
+            default : UpdateUserInfoMain,
+            header : UpdateUserInfoHeader
+        }
     },
 ];
 
