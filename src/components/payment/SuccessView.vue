@@ -1,13 +1,9 @@
 <template>
-  <!--  <h2> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; PAYMENT SUCCEEDED</h2>-->
   <div class="payment-info">
     <p>PAYMENT KEY = {{ this.$route.query.paymentKey }}<br/></p>
     <p>RESERVATION ID = {{ this.$route.query.orderId }}<br/></p>
-<!--    <p>reservationId = {{ this.$route.query.reservationId }}<br/></p>-->
     <p>결제 금액 = {{ this.$route.query.amount }}</p>
   </div>
-  <!--  <div class="info-check">-->
-  <!--    <button @click="a" class="button" id="payment-button">결제 내역 확인</button>-->
   <div class="info-check">
     <v-btn
         color="#ffffff"
