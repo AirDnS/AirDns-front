@@ -30,7 +30,7 @@ export default {
     if (localStorage.getItem('accessToken') != null) {
       this.hasUser = true;
       console.log(JSON.parse(localStorage.getItem('userInfo'))["role"]);
-      if (JSON.parse(localStorage.getItem('userInfo'))["role"] == "HOST") {
+      if (JSON.parse(localStorage.getItem('userInfo'))["role"] === "HOST") {
         this.isHost = true;
       }
     }
