@@ -2,7 +2,7 @@
   <div class="search-field">
   <v-card class="search-card">
     <div class = "one">
-      <v-dialog v-model="priceFlag" persistent width="auto">
+      <v-dialog v-model="priceFlag" persistent>
         <template v-slot:activator="{ props }">
           <v-btn  v-bind="props"> price </v-btn>
         </template>
@@ -29,7 +29,7 @@
       </v-dialog>
     </div>
     <div class = "two">
-      <v-dialog v-model="sizeFlag" persistent width="auto">
+      <v-dialog v-model="sizeFlag">
         <template v-slot:activator="{ props }">
           <v-btn  v-bind="props"> size </v-btn>
         </template>
@@ -56,7 +56,7 @@
       </v-dialog>
     </div>
     <div class = "three">
-      <v-dialog v-model="equipmentFlag" persistent width="auto">
+      <v-dialog v-model="equipmentFlag" persistent>
         <template v-slot:activator="{ props }">
           <v-btn  v-bind="props"> equipment </v-btn>
         </template>
@@ -138,9 +138,13 @@ export default {
             console.log("test")
           })
     },
-    getEquipment:function (){
-      this.example12 = JSON.parse(localStorage.getItem("equipment"))
-    }
+    getEquipment: function () {
+      axios.get('http://43.200.245.57:8080/api/v1/equipments')
+          .then((res) => {
+            this.example12.options = res.data.data;
+            localStorage.setItem("equipment", JSON.stringify(this.example12));
+          })
+    },
   },
   created() {
     this.getEquipment();
@@ -184,9 +188,8 @@ export default {
 }
 
 .test-modal {
-  display: flex;
   align-content: center;
-  width: 600px;
+  width: 300px;
   height: 180px;
 }
 

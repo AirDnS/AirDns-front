@@ -58,13 +58,6 @@ export default {
             console.log("test");
           })
     },
-    getEquipment: function () {
-      axios.get('http://43.200.245.57:8080/api/v1/equipments')
-          .then((res) => {
-            this.example12.options = res.data.data;
-            localStorage.setItem("equipment", JSON.stringify(this.example12));
-          })
-    },
     goRoomDetail: function (roomsId) {
       router.push({
         name: 'RoomDetail',
@@ -76,7 +69,6 @@ export default {
   },
   created() {
     this.getRoomList();
-    this.getEquipment();
   },
   mounted() {
     this.emitter.on("send", (sendItem) => {
