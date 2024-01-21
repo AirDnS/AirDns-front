@@ -15,7 +15,9 @@
       </div>
       <!-- 결제하기 버튼 -->
       <div class="result wrapper">
-        <button @click="requestPayment" class="button" id="payment-button">결제하기</button>
+        <div class="result-wrapper">
+          <button @click="requestPayment" class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
+        </div>
       </div>
     </div>
   </div>
@@ -70,3 +72,10 @@ export default {
   },
 };
 </script>
+<style>
+.result-wrapper{
+  width: 100px;
+  margin-left: 10px;
+  color: blue;
+}
+</style>

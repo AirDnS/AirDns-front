@@ -1,8 +1,24 @@
 <template>
-  <div>
-    <p>paymentKey = {{ this.$route.query.paymentKey }}</p>
-    <p>orderId = {{ this.$route.query.orderId }}</p>
-    <p>amount = {{ this.$route.query.amount }}</p>
+  <div class="payment-info">
+    <p>PAYMENT KEY = {{ this.$route.query.paymentKey }}<br/></p>
+    <p>RESERVATION ID = {{ this.$route.query.orderId }}<br/></p>
+    <p>결제 금액 = {{ this.$route.query.amount }}</p>
+  </div>
+  <div class="info-check">
+    <v-btn
+        color="#ffffff"
+        type="submit"
+        block
+        class="mt-2"
+        v-on:click="b"
+    >다른 예약 진행하기</v-btn>
+    <v-btn
+        color="#696969"
+        type="submit"
+        block
+        class="mt-2"
+        v-on:click="c"
+    >예약 상세 정보</v-btn>
   </div>
 </template>
 
@@ -53,3 +69,23 @@ export default {
   },
 };
 </script>
+
+<style>
+.payment-info {
+  padding: 10px 10px 10px 10px;
+  width: 500px;
+  margin-left: 20px;
+  display: block;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid #696969;
+  flex-direction: column;
+}
+
+.info-check{
+  margin-top: 20px;
+  margin-left: 90px;
+  bottom: 28%;
+  width: 350px;
+}
+</style>
