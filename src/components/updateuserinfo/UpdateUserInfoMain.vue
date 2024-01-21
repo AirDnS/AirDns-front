@@ -61,6 +61,8 @@ export default {
         address: "",
         contact: ""
       },
+      info: {
+      }
     };
   },
   created() {
@@ -104,6 +106,10 @@ export default {
       })
           .then(response => {
             console.log(response.data);
+            this.info = localStorage.getItem('userInfo');
+            this.info.role = 'HOST';
+            localStorage.removeItem('userInfo');
+            localStorage.setItem('userInfo', this.info)
             window.alert("회원 정보가 수정되었습니다.");
             router.push('/');
           })
@@ -113,7 +119,7 @@ export default {
           });
     },
     goBack() {
-      router.push('/');
+      router.push({name: 'HomePage'});
     },
   },
 };
