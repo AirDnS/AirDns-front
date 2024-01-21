@@ -118,7 +118,7 @@ export default {
       console.log(this.files);
       frm.append('data',blob)
       frm.append('files', this.files)
-      axios.post(`http://localhost:8080/api/v1/rooms`, frm,
+      axios.post(`http://43.200.245.57:8080/api/v1/rooms`, frm,
           {
             headers: {
               "Content-Type": "multipart/form-data",

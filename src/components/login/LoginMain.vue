@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     kakaoLogin() {
-      window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=https://airdns.netlify.app/login/oauth2/redirect&mode=login";
+      window.location.href = "http://43.200.245.57:8080/oauth2/authorization/kakao?redirect_uri=https://airdns.netlify.app/login/oauth2/redirect&mode=login";
     },
   },
 };

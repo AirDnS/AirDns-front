@@ -118,7 +118,7 @@ export default {
       console.log(priceArr)
       console.log(sizeArr)
       console.log(equipmentArr)
-      axios.get(`http://localhost:8080/api/v1/rooms`, {
+      axios.get(`http://43.200.245.57:8080/api/v1/rooms`, {
         params: {
           keyword: keyword,
           price: priceArr,
