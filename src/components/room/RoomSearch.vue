@@ -103,7 +103,17 @@ export default {
       sizeMin : 0,
       sizeMax : 50,
       sizeValue: [0, 50],
-      example12: {},
+      example12: {
+        mode: 'tags',
+        label: 'name',
+        valueProp: 'id',
+        value: [],
+        groups: true,
+        placeholder: '장비를 선택해주세요.',
+        closeOnSelect: false,
+        searchable: true,
+        options: []
+      },
       equipment: [],
       sendItem: {},
       text : "",

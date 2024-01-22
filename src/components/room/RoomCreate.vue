@@ -32,7 +32,7 @@
             variant="outlined"
             placeholder="평수 기준으로 입력해주세요"
         ></v-text-field>
-        <!--        <div class="output">Data: {{ example12.value }}</div>-->
+               <!-- <div class="output">Data: {{ data.equipment }}</div> -->
         <Multiselect
             v-model="data.equipment"
             v-bind="example12"
@@ -101,13 +101,23 @@ export default {
       },
       files: [],
       optionsId: [],
-      example12: {},
+      example12: {
+        mode: 'tags',
+        label: 'name',
+        valueProp: 'id',
+        value: [],
+        groups: true,
+        placeholder: '장비를 선택해주세요.',
+        closeOnSelect: false,
+        searchable: true,
+        options: []
+      },
     }
   },
   methods: {
     getEquipment: function () {
-      this.example12 = JSON.parse(localStorage.getItem("equipment"));
-
+      this.example12.options = JSON.parse(localStorage.getItem("equipment")).options;
+      console.log(JSON.parse(localStorage.getItem("equipment")).options);
     },
     postCreateRoom: function () {
       this.accessToken = localStorage.getItem('accessToken')
