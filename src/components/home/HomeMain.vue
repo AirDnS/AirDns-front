@@ -28,7 +28,7 @@ export default {
 
 <style>
 .box-container {
-  width: 1080px;
+  width: 1150px;
   margin: auto;
   display: flex;
   flex-direction: column;

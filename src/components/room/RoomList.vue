@@ -1,5 +1,5 @@
 <template>
-  <v-container class="room_list v-on:">
+  <v-container class="room_list v-on:" style="min-width: max-content;">
     <v-card class="room_card" v-for="(v, i) in roomList" :key="i">
       <v-img :src=" `${v.imageUrl}`.length ? `${v.imageUrl}`.substring(0, `${v.imageUrl}`.indexOf(',') === -1 ?
         `${v.imageUrl}`.length : `${v.imageUrl}`.indexOf(',')) :
