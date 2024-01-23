@@ -67,7 +67,7 @@
 
 <script>
 import router from "@/routers";
-import axios from "axios";
+import axios from "@/axios";
 
 export default {
   data() {
@@ -91,7 +91,7 @@ export default {
         return;
       }
 
-      axios.get('http://43.200.245.57:8080/api/v1/users', {
+      axios.get('/api/v1/users', {
         headers: {
           'Authorization': `${accessToken}`,
         },
@@ -113,7 +113,7 @@ export default {
     updateRoleOnBackend() {
       const accessToken = localStorage.getItem('accessToken');
 
-      axios.patch('http://43.200.245.57:8080/api/v1/users/role', {
+      axios.patch('/api/v1/users/role', {
       }, {
         headers: {
           'Authorization': `${accessToken}`,

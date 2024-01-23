@@ -22,7 +22,7 @@
 
 <script>
 
-import axios from "axios";
+import axios from "@/axios";
 import router from "@/routers";
 // import router from "@/routers";
 
@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     getRoomList: function () {
-      axios.get(`http://43.200.245.57:8080/api/v1/rooms`)
+      axios.get(`/api/v1/rooms`)
           .then((result) => {
             this.roomList = result.data.data.content;
             console.log(this.roomList);

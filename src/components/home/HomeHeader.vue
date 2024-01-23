@@ -40,7 +40,7 @@ export default {
       router.push('login')
     },
     goLogout() {
-        window.location.href = "http://43.200.245.57:8080/oauth2/authorization/kakao?redirect_uri=http://airdns.s3-website.ap-northeast-2.amazonaws.com/unlink/oauth2/redirect&mode=unlink";
+        window.location.href = process.env.VUE_APP_API_URL + "/oauth2/authorization/kakao?redirect_uri=" + process.env.VUE_APP_URL + "/unlink/oauth2/redirect&mode=unlink";
     },
     goUserDetail() {
       router.push('userdetail')
