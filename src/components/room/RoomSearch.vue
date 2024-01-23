@@ -86,7 +86,7 @@
 </template>
 <script>
 import Multiselect from "@vueform/multiselect";
-import axios from "axios";
+import axios from "@/axios";
 
 export default {
   components: {
@@ -128,7 +128,7 @@ export default {
       console.log(priceArr)
       console.log(sizeArr)
       console.log(equipmentArr)
-      axios.get(`http://43.200.245.57:8080/api/v1/rooms`, {
+      axios.get(`/api/v1/rooms`, {
         params: {
           keyword: keyword,
           price: priceArr,
@@ -149,7 +149,7 @@ export default {
           })
     },
     getEquipment: function () {
-      axios.get('http://43.200.245.57:8080/api/v1/equipments')
+      axios.get('/api/v1/equipments')
           .then((res) => {
             this.example12.options = res.data.data;
             localStorage.setItem("equipment", JSON.stringify(this.example12));

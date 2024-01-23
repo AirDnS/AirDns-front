@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/axios";
 
 export default {
   data() {
@@ -44,7 +44,7 @@ export default {
 
       axios
       .post(
-          `http://43.200.245.57:8080/api/v1/payments/confirm`,
+          `/api/v1/payments/confirm`,
           this.requestData,
           {
             headers: {

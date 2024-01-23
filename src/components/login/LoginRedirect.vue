@@ -7,14 +7,14 @@
 <script>
 
 import router from "@/routers";
-import axios from "axios";
+import axios from "@/axios";
 
 export default {
   async created() {
     const token = this.$route.query.token;
     if(token){
       localStorage.setItem("accessToken", token);
-      await axios.get('http://43.200.245.57:8080/api/v1/users' ,
+      await axios.get('/api/v1/users' ,
           {
             headers: {
               "Authorization": localStorage.getItem('accessToken')
