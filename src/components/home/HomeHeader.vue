@@ -1,7 +1,12 @@
 <template>
   <v-app-bar fixed>
-    <v-icon class="v-icon airdns-logo">mdi-desk</v-icon>
-    <v-app-bar-title>airDnS</v-app-bar-title>
+    <RouterLink to="/" style="text-decoration: none; color: inherit;">
+      <div class="airdns-logo">
+        <v-icon class="v-icon">mdi-desk</v-icon>
+        <v-app-bar-title>airDnS</v-app-bar-title>
+      </div>
+    </RouterLink>
+    <v-spacer></v-spacer>
     <v-btn variant="outlined" class = "login-btn" v-on:click="goCreateRoom" v-show="isHost">
       방등록
     </v-btn>

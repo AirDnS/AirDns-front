@@ -1,9 +1,11 @@
 <template>
   <div>
-    <div class="logo">
-      <v-icon class="v-icon airdns-logo">mdi-desk</v-icon>
-      <v-app-bar-title>airDnS</v-app-bar-title>
-    </div>
+    <RouterLink to="/" style="text-decoration: none; color: inherit;">
+      <div class="airdns-logo">
+          <v-icon class="v-icon">mdi-desk</v-icon>
+          <v-app-bar-title>airDnS</v-app-bar-title>
+      </div>
+    </RouterLink>
     <!-- ---------------------------------------------- -->
     <!---Navigation -->
     <!-- ---------------------------------------------- -->
@@ -65,16 +67,6 @@ export default {
 }
 </script>
 <style scoped>
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    height: 64px;
-  }
-  
-  .v-app-bar-title {
-    margin-left: 4px;
-  }
   
 .scrollnavbar .v-list--one-line .v-list-item--active {
     background: rgb(var(--v-theme-secondary));

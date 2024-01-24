@@ -1,20 +1,14 @@
 <template>
   <v-app-bar fixed>
-    <v-icon class="v-icon airdns-logo">mdi-desk</v-icon>
-    <v-app-bar-title v-on:click="goHome">airDnS</v-app-bar-title>
+    <RouterLink to="/" style="text-decoration: none; color: inherit;">
+      <div class="airdns-logo">
+        <v-icon class="v-icon">mdi-desk</v-icon>
+        <v-app-bar-title>airDnS</v-app-bar-title>
+      </div>
+    </RouterLink>
   </v-app-bar>
 </template>
 <script>
-
-import router from "@/routers";
-
-export default {
-  methods : {
-    goHome() {
-       router.push({name:'HomePage'});
-    }
-  }
-}
 </script>
 
 <style>
