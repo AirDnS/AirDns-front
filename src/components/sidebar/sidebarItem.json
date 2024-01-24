@@ -1,0 +1,20 @@
+[
+  {
+    "title": "회원 정보",
+    "perm": "all",
+    "icon": "mdi-account-edit",
+    "to": "/userdetail"
+  },
+  {
+    "title": "방 관리",
+    "perm": "host",
+    "icon": "mdi-table",
+    "to": "/roomlist"
+  },
+  {
+    "title": "예약 조회",
+    "perm": "all",
+    "icon": "mdi-list-status",
+    "to": "/reservationlist"
+  }
+]

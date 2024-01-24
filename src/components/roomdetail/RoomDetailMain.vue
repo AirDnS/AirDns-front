@@ -18,7 +18,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col>
+      <v-col v-show="roomData.desc">
         <v-card>
           <v-card-text>
             <p class="mb-3 content">
@@ -26,7 +26,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col>
+      <v-col v-show="roomData.equipment?.length">
         <v-card pa=3>
           <v-card-text>
             <div v-for="(equipment, index)  in roomData.equipment" :key="index" class="equipment-wrapper mb-3">
