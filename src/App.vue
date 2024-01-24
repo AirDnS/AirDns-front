@@ -1,15 +1,13 @@
 <template>
   <div id="app">
     <v-app>
-      <header>
+      <v-main ma="4">
         <router-view name="header"></router-view>
-      </header>
-      <main>
-        <router-view></router-view>
-      </main>
-      <footer>
+        <v-container fluid class="page-wrapper">
+          <router-view></router-view>
+        </v-container>
         <router-view name="footer"></router-view>
-      </footer>
+      </v-main>
     </v-app>
   </div>
 </template>

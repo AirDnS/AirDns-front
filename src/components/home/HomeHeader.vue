@@ -1,12 +1,12 @@
 <template>
   <v-app-bar fixed>
-    <v-icon class="v-icon">mdi-desk</v-icon>
+    <v-icon class="v-icon airdns-logo">mdi-desk</v-icon>
     <v-app-bar-title>airDnS</v-app-bar-title>
     <v-btn variant="outlined" class = "login-btn" v-on:click="goCreateRoom" v-show="isHost">
       방등록
     </v-btn>
     <v-btn variant="outlined" class="userDetail-btn" v-on:click="goUserDetail" v-show="hasUser">
-      회원정보
+      회원 정보
     </v-btn>
     <v-btn variant="outlined" class="logout-btn" v-on:click="goLogout" v-show="hasUser">
       Logout
@@ -63,10 +63,6 @@ export default {
 
 .userDetail-btn {
   margin-right: 24px;
-}
-
-.v-toolbar__content {
-  padding-left: 20px;
 }
 
 </style>

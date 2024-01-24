@@ -7,12 +7,14 @@ import LoginHeader from "@/components/login/LoginHeader.vue";
 import RoomDetailMain from "@/components/roomdetail/RoomDetailMain.vue";
 import RoomDetailHeader from "@/components/roomdetail/RoomDetailHeader.vue";
 import RoomDetailFooter from "@/components/roomdetail/RoomDetailFooter.vue";
+import RoomListMain from "@/components/roomlist/RoomListMain.vue";
+import ReservationListMain from "@/components/reservationlist/ReservationListMain.vue";
 import ReservationCheckMain from "@/components/reservation/ReservationCheckMain.vue";
 import ReservationCheckHeader from "@/components/reservation/ReservationCheckHeader.vue";
 import LoginRedirect from "@/components/login/LoginRedirect.vue";
 
 import UserDetailMain from "@/components/userdetail/UserDetailMain.vue";
-import UserDetailHeader from "@/components/userdetail/UserDetailHeader.vue";
+import SidebarHeader from "@/components/sidebar/SidebarHeader.vue";
 import CheckoutView from "@/components/payment/CheckoutView.vue";
 import SuccessView from "@/components/payment/SuccessView.vue";
 import FailView from "@/components/payment/FailView.vue";
@@ -68,7 +70,23 @@ const routes = [
         name: "UserDetailPage",
         components: {
             default : UserDetailMain,
-            header : UserDetailHeader
+            header : SidebarHeader
+        }
+    },
+    {
+        path: "/roomlist",
+        name: "RoomListPage",
+        components: {
+            default : RoomListMain,
+            header : SidebarHeader
+        }
+    },
+    {
+        path: "/reservationlist",
+        name: "ReservationListPage",
+        components: {
+            default : ReservationListMain,
+            header : SidebarHeader
         }
     },
     {
