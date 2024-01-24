@@ -41,8 +41,7 @@
             color="grey-lighten-1"
             icon="mdi-delete"
             variant="text"
-            @click="deleteReviewButton"
-            :data-id="data.reviewsId"
+            @click="deleteReview(data.reviewsId)"
           ></v-btn>
         </template>
       </v-card-item>
@@ -72,38 +71,6 @@
     </v-row>
   </v-row>
 
-
-
-<!-- Dialog -->
-  <v-dialog
-    v-model="delDialog"
-    persistent
-    width="auto"
-  >
-    <v-card>
-      <v-card-title class="text-h5 pa-10">
-        리뷰를 삭제하시겠습니까?
-      </v-card-title>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="blue-darken-1"
-          variant="text"
-          @click="delDialog = false"
-        >
-          아니오
-        </v-btn>
-        <v-btn
-          color="red-darken-1"
-          variant="text"
-          @click="deleteReview"
-        >
-          네
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
 </template>
 
 
@@ -118,8 +85,6 @@ export default {
       addReviewContent: "",
       modReviewsId: null,
       modReviewContent: "",
-      delReviewsId: null,
-      delDialog: false,
     }
   },
   methods: {
@@ -182,14 +147,24 @@ export default {
           .finally(() => {
           })
     },
-    deleteReviewButton: function (e) {
-      this.delDialog = true;
-      this.delReviewsId = e.currentTarget.dataset.id;
-    },
-    deleteReview: function () {
-      this.delDialog = false;
-      axios.delete(`/api/v1/rooms/${this.roomsId}/review/${this.delReviewsId}`, this.authHeader())
+    deleteReview: function (delReviewsId) {
+      this.$swal.fire({
+        title: "정말 삭제하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "네",
+        cancelButtonText: "아니오"
+      }).then((swalResult) => {
+        if (swalResult.isConfirmed) {
+
+          axios.delete(`/api/v1/rooms/${this.roomsId}/review/` + delReviewsId, this.authHeader())
             .then((result) => {
+              this.$swal.fire({
+                title: "삭제되었습니다!",
+                icon: "success"
+              });
               console.log( result.data.message );
               this.getReview();
             })
@@ -198,6 +173,9 @@ export default {
             })
             .finally(() => {
             })
+
+        }
+      });
     },
   },
   created() {

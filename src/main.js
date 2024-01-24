@@ -8,6 +8,9 @@ import "@/scss/style.scss";
 import VueCookies from 'vue-cookies'
 import mitt from 'mitt'
 
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 loadFonts()
 
 const emitter = mitt();
@@ -15,6 +18,7 @@ const app = createApp(App)
 app.use(routers)
 app.use(vuetify)
 app.use(VueCookies)
+app.use(VueSweetalert2);
 app.config.globalProperties.$axios = axios
 app.config.globalProperties.emitter = emitter
 app.mount('#app')
