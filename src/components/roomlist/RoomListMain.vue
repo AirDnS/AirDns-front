@@ -15,6 +15,7 @@
               <th class="text-no-wrap font-weight-medium text-subtitle-1">설명</th>
               <th class="text-no-wrap font-weight-medium text-subtitle-1 text-end">가격</th>
               <th class="text-no-wrap font-weight-medium text-subtitle-1 text-end">크기</th>
+              <th class="text-no-wrap font-weight-medium text-subtitle-1">활성화 여부</th>
               <th class="icon-column"></th>
             </tr>
           </thead>
@@ -26,13 +27,12 @@
               class="month-item"
             >
               <td class="text-center">{{ item.roomsId }}</td>
-              <td>
-                <h4 class="font-weight-bold text-no-wrap">
+              <td style="min-width: 200px;">
+                <h4 class="font-weight-bold">
                   {{ item.name }}
                 </h4>
                 <h6
                   class="
-                    text-no-wrap
                     font-weight-regular
                     text-body-2 text-grey-darken-1
                   "
@@ -72,14 +72,20 @@
                 {{ item.size }}
                 </h5>
               </td>
+              <td>
+                {{ item.isClose }}
+              </td>
               <td class="icon-column">
                 <v-btn @click="goRoomEdit(item.roomsId)" icon="mdi mdi-pencil" size="x-small"></v-btn>
                 <v-btn @click="goRoomPage(item.roomsId)" icon="mdi mdi-arrow-right-bold-outline" size="x-small"></v-btn>
+                <v-btn @click="deleteRoom(item.roomsId)" icon="mdi mdi-delete" size="x-small"></v-btn>
               </td>
             </tr>
           </tbody>
         </template>
+        
       </v-table>
+			<v-pagination class="pagination mb-2 mt-6" size="small" v-model="pageable.pageNumber" :length="pageable.pageSize" @update:modelValue="getRoomList"></v-pagination>
     </v-card-text>
   </v-card>
 </template>
@@ -90,15 +96,25 @@ import router from "@/routers";
 export default {
   data() {
     return {
-      table: []
+      pageable: {
+        pageNumber: 0,
+        pageSize: 5,
+      },
+			table: []
     }
   },
   methods: {
     getRoomList: function () {
-      axios.get(`/api/v1/rooms`)
+      const params = {
+        page: this.pageable.pageNumber
+      }
+        
+
+      axios.get(`/api/v1/rooms`, {params})
           .then((result) => {
             this.table = result.data.data.content;
-            console.log(this.table);
+            this.pageable = result.data.data.pageable
+            console.log(this.pageable);
           })
           .catch((error) => {
             console.log(error);
@@ -123,6 +139,34 @@ export default {
         }
       })
     },
+    deleteRoom(roomsId) {
+      this.$swal.fire({
+        title: "정말 삭제하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "네",
+        cancelButtonText: "아니오"
+      }).then((swalResult) => {
+        if (swalResult.isConfirmed) {
+          axios.delete(`/api/v1/rooms/` + roomsId, this.authHeader())
+            .then((result) => {
+              this.$swal.fire({
+                title: "삭제되었습니다!",
+                icon: "success"
+              });
+              console.log( result.data.message );
+              this.getRoomList();
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .finally(() => {
+            })
+        }
+      });
+    }
   },
   mounted() {
     this.getRoomList();
@@ -135,7 +179,7 @@ export default {
 <style scoped>
 .icon-column {
     text-align: center;
-    min-width: 110px;
+    min-width: 160px;
 }
 .icon-column > .v-btn + .v-btn {
   margin-left: 5px;
