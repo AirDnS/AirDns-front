@@ -83,13 +83,27 @@
                 </v-chip>
               </td>
               <td class="icon-column">
-                <v-btn @click="goRoomPage(item.roomsId)" icon="mdi mdi-arrow-right-bold-outline" size="x-small"></v-btn>
-                <v-btn @click="deleteReservation(item.id)" icon="mdi mdi-delete" size="x-small"></v-btn>
+                <v-menu location="bottom">
+                  <template v-slot:activator="{ props }">
+                    <v-btn icon="mdi mdi-dots-horizontal" variant="plain" size="x-small" v-bind="props"></v-btn>
+                  </template>
+                  <v-list density="compact" min-width="160">
+                    <v-list-item @click="goRoomPage(item.roomsId)">
+                      <template v-slot:prepend><v-icon end icon="mdi mdi-arrow-right-bold-outline" size="small"></v-icon></template>
+                      <v-list-item-title class="font-weight-medium text-no-wrap text-body-2 text-grey-darken-3">바로가기</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="deleteReservation(item.id)">
+                      <template v-slot:prepend><v-icon end icon="mdi mdi-delete" size="small"></v-icon></template>
+                      <v-list-item-title class="font-weight-medium text-no-wrap text-body-2 text-grey-darken-3">삭제</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </td>
             </tr>
           </tbody>
         </template>
       </v-table>
+			<!-- <v-pagination class="pagination mb-2 mt-6" size="small" v-model="pageable.pageNumber" :length="pageable.pageSize" @update:modelValue="getReservationList"></v-pagination> -->
     </v-card-text>
   </v-card>
 
@@ -101,6 +115,10 @@ import router from "@/routers";
 export default {
   data() {
     return {
+      pageable: {
+        pageNumber: 0,
+        pageSize: 5,
+      },
       select: "예약중",
       items: ["예약중", "전체"],
       table: [],
@@ -111,9 +129,14 @@ export default {
   },
   methods: {
     getReservationList: function () {
+      // const params = {
+      //   page: this.pageable.pageNumber
+      // }        
+      // , {params}
       axios.get(`/api/v1/reservation`, this.authHeader())
           .then((result) => {
             this.table = result.data.data;
+            // this.pageable = result.data.data.pageable;
             this.table.forEach(element => {
               if (new Date(element.checkOut) > Date.now()) {
                 element.status = "예약중";
@@ -180,9 +203,6 @@ export default {
 <style scoped>
 .icon-column {
     text-align: center;
-    min-width: 110px;
-}
-.icon-column > .v-btn + .v-btn {
-  margin-left: 5px;
+    min-width: 60px;
 }
 </style>

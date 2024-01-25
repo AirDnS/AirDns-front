@@ -15,7 +15,7 @@
               <th class="text-no-wrap font-weight-medium text-subtitle-1">설명</th>
               <th class="text-no-wrap font-weight-medium text-subtitle-1 text-end">가격</th>
               <th class="text-no-wrap font-weight-medium text-subtitle-1 text-end">크기</th>
-              <th class="text-no-wrap font-weight-medium text-subtitle-1">활성화 여부</th>
+              <th class="text-no-wrap font-weight-medium text-subtitle-1 text-center">상태</th>
               <th class="icon-column"></th>
             </tr>
           </thead>
@@ -76,9 +76,25 @@
                 {{ item.isClose }}
               </td>
               <td class="icon-column">
-                <v-btn @click="goRoomEdit(item.roomsId)" icon="mdi mdi-pencil" size="x-small"></v-btn>
-                <v-btn @click="goRoomPage(item.roomsId)" icon="mdi mdi-arrow-right-bold-outline" size="x-small"></v-btn>
-                <v-btn @click="deleteRoom(item.roomsId)" icon="mdi mdi-delete" size="x-small"></v-btn>
+                <v-menu location="bottom">
+                  <template v-slot:activator="{ props }">
+                    <v-btn icon="mdi mdi-dots-horizontal" variant="plain" size="x-small" v-bind="props"></v-btn>
+                  </template>
+                  <v-list density="compact" min-width="160">
+                    <v-list-item @click="goRoomEdit(item.roomsId)">
+                      <template v-slot:prepend><v-icon end icon="mdi mdi-pencil" size="small"></v-icon></template>
+                      <v-list-item-title class="font-weight-medium text-no-wrap text-body-2 text-grey-darken-3">수정</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="goRoomPage(item.roomsId)">
+                      <template v-slot:prepend><v-icon end icon="mdi mdi-arrow-right-bold-outline" size="small"></v-icon></template>
+                      <v-list-item-title class="font-weight-medium text-no-wrap text-body-2 text-grey-darken-3">바로가기</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="deleteRoom(item.roomsId)">
+                      <template v-slot:prepend><v-icon end icon="mdi mdi-delete" size="small"></v-icon></template>
+                      <v-list-item-title class="font-weight-medium text-no-wrap text-body-2 text-grey-darken-3">삭제</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </td>
             </tr>
           </tbody>
@@ -107,13 +123,12 @@ export default {
     getRoomList: function () {
       const params = {
         page: this.pageable.pageNumber
-      }
-        
+      }        
 
       axios.get(`/api/v1/rooms`, {params})
           .then((result) => {
             this.table = result.data.data.content;
-            this.pageable = result.data.data.pageable
+            this.pageable = result.data.data.pageable;
             console.log(this.pageable);
           })
           .catch((error) => {
@@ -179,9 +194,6 @@ export default {
 <style scoped>
 .icon-column {
     text-align: center;
-    min-width: 160px;
-}
-.icon-column > .v-btn + .v-btn {
-  margin-left: 5px;
+    min-width: 60px;
 }
 </style>
