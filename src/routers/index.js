@@ -19,6 +19,7 @@ import CheckoutView from "@/components/payment/CheckoutView.vue";
 import SuccessView from "@/components/payment/SuccessView.vue";
 import FailView from "@/components/payment/FailView.vue";
 import RoomCreate from "@/components/room/RoomCreate.vue";
+import RoomEdit from "@/components/room/RoomEdit.vue";
 import LogoutRedirect from "@/components/Logout/LogoutRedirect.vue";
 import UpdateUserInfoMain from "@/components/updateuserinfo/UpdateUserInfoMain.vue";
 import UpdateUserInfoHeader from "@/components/updateuserinfo/UpdateUserInfoHeader.vue";
@@ -55,6 +56,14 @@ const routes = [
         name: "CreateRoom",
         components: {
             default: RoomCreate,
+        }
+    },
+    {
+        path: "/editRoom",
+        name: "EditRoom",
+        components: {
+            default: RoomEdit,
+            header : RoomDetailHeader
         }
     },
     {
