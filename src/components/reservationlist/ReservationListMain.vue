@@ -84,7 +84,7 @@
               </td>
               <td class="icon-column">
                 <v-btn @click="goRoomPage(item.roomsId)" icon="mdi mdi-arrow-right-bold-outline" size="x-small"></v-btn>
-                <v-btn @click="deleteReservationButton(item.id)" icon="mdi mdi-delete" size="x-small"></v-btn>
+                <v-btn @click="deleteReservation(item.id)" icon="mdi mdi-delete" size="x-small"></v-btn>
               </td>
             </tr>
           </tbody>
@@ -92,38 +92,6 @@
       </v-table>
     </v-card-text>
   </v-card>
-
-  
-
-<!-- Dialog -->
-<v-dialog
-    v-model="delDialog"
-    persistent
-    width="auto"
-  >
-    <v-card>
-      <v-card-title class="text-h5 pa-10">
-        리뷰를 삭제하시겠습니까?
-      </v-card-title>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="blue-darken-1"
-          variant="text"
-          @click="delDialog = false"
-        >
-          아니오
-        </v-btn>
-        <v-btn
-          color="red-darken-1"
-          variant="text"
-          @click="deleteReservation"
-        >
-          네
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 
 </template>
 <script>
@@ -171,23 +139,35 @@ export default {
         }
       })
     },
-    deleteReservationButton: function (reservationId) {
-      this.delDialog = true;
-      this.delReservationId = reservationId;
-    },
-    deleteReservation: function () {
-      this.delDialog = false;
-      axios.delete(`/api/v1/rooms/${this.roomsId}/review/${this.delReservationId}`, this.authHeader())
+    deleteReservation: function (reservationId) {
+      this.$swal.fire({
+        title: "정말 삭제하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "네",
+        cancelButtonText: "아니오"
+      }).then((swalResult) => {
+        if (swalResult.isConfirmed) {
+          console.log(reservationId);
+          axios.patch(`/api/v1/reservation/` + reservationId, {}, this.authHeader())
             .then((result) => {
+              this.$swal.fire({
+                title: "삭제되었습니다!",
+                icon: "success"
+              });
               console.log( result.data.message );
-              this.getReservation();
+              this.getReservationList();
             })
             .catch((error) => {
               console.log(error);
             })
             .finally(() => {
             })
-    },
+        }
+      });
+    }
   },
   mounted() {
     this.getReservationList();
