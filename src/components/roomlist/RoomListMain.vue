@@ -3,7 +3,7 @@
     <v-card-text>
       <div class="d-sm-flex align-center">
         <div>
-          <h2 class="title text-h6 font-weight-medium">등록 방 목록</h2>
+          <h2 class="title text-h6 font-weight-medium">방 목록</h2>
         </div>
       </div>
       <v-table fixed-header class="month-table mt-7">
@@ -83,7 +83,7 @@
                   <v-list density="compact" min-width="160">
                     <v-list-item @click="goRoomEdit(item.roomsId)">
                       <template v-slot:prepend><v-icon end icon="mdi mdi-pencil" size="small"></v-icon></template>
-                      <v-list-item-title class="font-weight-medium text-no-wrap text-body-2 text-grey-darken-3">수정</v-list-item-title>
+                      <v-list-item-title class="font-weight-medium text-no-wrap text-body-2 text-grey-darken-3">방 관리</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="goRoomPage(item.roomsId)">
                       <template v-slot:prepend><v-icon end icon="mdi mdi-arrow-right-bold-outline" size="small"></v-icon></template>
@@ -140,7 +140,7 @@ export default {
     },
     goRoomEdit(roomsId) {
       router.push({
-        name: 'RoomDetail',
+        name: 'EditRoom',
         state: {
           data: roomsId,
         }
