@@ -6,9 +6,9 @@
     </div>
   </v-row>
 
-  <v-row class="mx-5" style="justify-content: center;">
+  <v-row class="mx-5 rooms-detail-card">
     <v-col class="pa-0">
-      <v-col style="min-width: 500px;">
+      <v-col>
         <v-card>
           <v-card-text>
             <h2 class="title font-weight-medium mb-2 text-h4">
@@ -43,7 +43,7 @@
         </v-card>
       </v-col>
     </v-col>
-    <v-col class="my-sidebar" v-show="hasUser">
+    <v-col style="max-width: 355px" v-show="hasUser">
       <v-card>
           <v-card-text>
             <RoomReservation>
@@ -87,8 +87,10 @@ export default {
           .then((result) => {
             this.roomData = result.data.data;
             this.imageList = result.data.data.imageUrl;
+            console.log(this.roomData);
             
             this.emitter.emit("price", this.roomData.price);
+            this.emitter.emit("reservatedTimeList", this.roomData.reservatedTimeList);
           })
           .catch((error) => {
             console.log(error);
@@ -122,8 +124,8 @@ export default {
 }
 
 .my-sidebar {
-  -ms-flex: 0 0 500px;
-  flex: 0 0 500px;
+  -ms-flex: 0 0 0px;
+  flex: 0 0 0px;
 }
 
 .equipment {
@@ -140,6 +142,17 @@ export default {
 .content {
   font-size: 1.5em;
   line-height: 2.5rem;
+}
+
+.rooms-detail-card {
+  justify-content: center;
+}
+
+@media only screen and (max-width: 900px) {
+  .rooms-detail-card {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 </style>

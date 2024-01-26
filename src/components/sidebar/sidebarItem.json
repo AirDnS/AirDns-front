@@ -6,7 +6,7 @@
     "to": "/userdetail"
   },
   {
-    "title": "방 관리",
+    "title": "방 조회",
     "perm": "host",
     "icon": "mdi-table",
     "to": "/roomlist"
