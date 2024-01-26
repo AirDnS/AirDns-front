@@ -8,8 +8,15 @@ import "@/scss/style.scss";
 import VueCookies from 'vue-cookies'
 import mitt from 'mitt'
 
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+
+import PerfectScrollbar from 'vue3-perfect-scrollbar'
+import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
+
 
 loadFonts()
 
@@ -19,8 +26,10 @@ app.use(routers)
 app.use(vuetify)
 app.use(VueCookies)
 app.use(VueSweetalert2);
+app.use(PerfectScrollbar);
 app.config.globalProperties.$axios = axios
 app.config.globalProperties.emitter = emitter
+app.component('VueDatePicker', VueDatePicker);
 app.mount('#app')
 
 // axios.interceptors.request.use(config => {

@@ -1,13 +1,9 @@
 <template>
-  <v-form fast-fail @submit.prevent class="reservation-form">
-    <v-text-field 
-      v-model="checkInTime"
-      label="CheckInTime">
-    </v-text-field>
-    <v-text-field 
-      v-model="checkOutTime"
-      label="checkOutTime">
-    </v-text-field>
+    <CustomDatePicker 
+      :reservatedTimeList="this.reservatedTimeList"
+      @select="selectReservationDate"
+    ></CustomDatePicker>
+    <v-btn color="error" type="submit" block class="mt-2" v-on:click="goReservationChecking">예약하기</v-btn>
     <v-row>
       <v-col>
         <v-btn icon="mdi mdi-help-circle-outline" variant="plain" size="x-small" @click="showReservatedList" v-if="reservatedTimeList.length > 0"></v-btn>
@@ -17,14 +13,16 @@
         <p class="mb-3 text-no-wrap text-right text-body-2 text-grey-darken-1" v-if="price">시간당 가격 : {{ price }} ₩</p>
       </v-col>
     </v-row>
-    <v-btn color="error" type="submit" block class="mt-2" v-on:click="goReservationChecking">예약하기</v-btn>
-  </v-form>
-</template>
+  </template>
 
 <script>
 import router from "@/routers";
+import CustomDatePicker from "@/components/unit/CustomDatePicker.vue"
 
 export default {
+  components: {
+    CustomDatePicker
+  },
   data() {
     return {
       roomsId: null,
@@ -32,8 +30,8 @@ export default {
       checkOutTime: null,
       price: null,
       reservatedTimeList: [],
+      reservationParams: {}
     }
-
   },
   mounted() {
     this.emitter.on("roomsId", (data) => {
@@ -47,13 +45,17 @@ export default {
     });
     
     this.emitter.on("reservatedTimeList", (data) => {
-      this.reservatedTimeList = data;
-      console.log(this.reservatedTimeList);
+      this.checkInTime = data.startDate;
+      this.checkOutTime = data.endDate;
     });
 
   },
   methods: {
+    selectReservationDate(data) {
+      this.reservationParams = data;
+    },
     goReservationChecking() {
+      
       const map = {
         roomsId: this.roomsId,
         checkInTime: this.checkInTime,
@@ -76,8 +78,5 @@ export default {
 }
 </script>
 <style>
-.reservation-form {
-  margin: 8px;
-}
 
 </style>

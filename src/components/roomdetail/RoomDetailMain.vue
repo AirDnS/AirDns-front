@@ -6,7 +6,7 @@
     </div>
   </v-row>
 
-  <v-row class="mx-5 rooms-detail-card" style="justify-content: center;">
+  <v-row class="mx-5 rooms-detail-card">
     <v-col class="pa-0">
       <v-col>
         <v-card>
@@ -43,7 +43,7 @@
         </v-card>
       </v-col>
     </v-col>
-    <v-col class="my-sidebar" v-show="hasUser">
+    <v-col style="max-width: 355px" v-show="hasUser">
       <v-card>
           <v-card-text>
             <RoomReservation>
@@ -124,8 +124,8 @@ export default {
 }
 
 .my-sidebar {
-  -ms-flex: 0 0 500px;
-  flex: 0 0 500px;
+  -ms-flex: 0 0 0px;
+  flex: 0 0 0px;
 }
 
 .equipment {
@@ -144,9 +144,14 @@ export default {
   line-height: 2.5rem;
 }
 
+.rooms-detail-card {
+  justify-content: center;
+}
+
 @media only screen and (max-width: 900px) {
   .rooms-detail-card {
     flex-direction: column;
+    align-items: center;
   }
 }
 

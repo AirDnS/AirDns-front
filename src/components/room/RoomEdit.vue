@@ -9,25 +9,25 @@
       >
         <v-tab value="option-1">
           <v-icon start>
-            mdi-account
+            mdi-information-outline
           </v-icon>
           기본 정보
         </v-tab>
         <v-tab value="option-2">
           <v-icon start>
-            mdi-lock
+            mdi-image-frame
           </v-icon>
           이미지 수정
         </v-tab>
         <v-tab value="option-3">
           <v-icon start>
-            mdi-access-point
+            mdi-list-status
           </v-icon>
           예약 관리
         </v-tab>
         <v-tab value="option-4">
           <v-icon start>
-            mdi-access-point
+            mdi-pine-tree
           </v-icon>
           휴무 관리
         </v-tab>
@@ -103,9 +103,15 @@
                 </v-col>
               </v-row>
               
-              <v-row>
+              <Multiselect
+                  size="12"
+                  v-model="roomData.equipment"
+                  v-bind="equipmentSelect"
+              ></Multiselect>
+
+              <v-row class="mt-3">
                 <v-col cols="2">
-                  <v-list-subheader>방 평수</v-list-subheader>
+                  <v-list-subheader>활성화</v-list-subheader>
                 </v-col>
                 <v-col cols="10">
                   <v-switch 
@@ -123,10 +129,6 @@
                   </v-switch>
                 </v-col>
               </v-row>
-              <Multiselect
-                  v-model="roomData.equipment"
-                  v-bind="equipmentSelect"
-              ></Multiselect>
               <br>
               <v-btn
                   block
@@ -243,11 +245,11 @@
                   </v-file-input>
                       
                   <v-row>
-                      <template v-for="v in files" :key="v">
-                    <v-col>
+                    <template v-for="v in files" :key="v">
+                      <v-col>
                         <v-img :src="previewImage(v)" width="500px" height="280px" class="room-image"></v-img>
-                    </v-col>
-                      </template>
+                      </v-col>
+                    </template>
                   </v-row>
                 </v-expansion-panel-text>
               </v-expansion-panel>
@@ -262,25 +264,54 @@
         </v-window-item>
         <v-window-item value="option-3">
           <v-card flat>
-            <v-card-text>
-              <p>
-                Fusce a quam. Phasellus nec sem in justo pellentesque facilisis. Nam eget dui. Proin viverra, ligula sit amet ultrices semper, ligula arcu tristique sapien, a accumsan nisi mauris ac eros. In dui magna, posuere eget, vestibulum et, tempor auctor, justo.
-              </p>
-
-              <p class="mb-0">
-                Cras sagittis. Phasellus nec sem in justo pellentesque facilisis. Proin sapien ipsum, porta a, auctor quis, euismod ut, mi. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nam at tortor in tellus interdum sagittis.
-              </p>
-            </v-card-text>
+            
+            <ReservationListMain></ReservationListMain>
           </v-card>
         </v-window-item>
-        <v-window-item value="option-4">
-          <v-card flat>
-            <v-card-text>
-              <p class="mb-0">
-                Cras sagittis. 
-              </p>
-            </v-card-text>
-          </v-card>
+        <v-window-item value="option-4">            
+          <v-dialog
+            v-model="dialog"
+            persistent
+            width="auto"
+            >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                color="primary"
+                v-bind="props"
+              >
+                휴무 추가
+              </v-btn>
+            </template>
+            <v-card class="pa-5">
+              <v-card-title>
+                <span class="text-h5 mt-5">휴무 시간 선택</span>
+              </v-card-title>
+
+              <CustomDatePicker 
+                :reservatedTimeList="this.roomData.reservatedTimeList"
+                @select="selectRestDate"
+              ></CustomDatePicker>
+
+              <v-card-actions class="pa-0">
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue-darken-1"
+                  variant="text"
+                  @click="dialog = false"
+                >
+                  닫기
+                </v-btn>
+                <v-btn
+                  color="blue-darken-1"
+                  variant="text"
+                  @click="addRestDate"
+                >
+                  추가
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
         </v-window-item>
       </v-window>
     </div>
@@ -291,16 +322,21 @@
 import Multiselect from "@vueform/multiselect";
 import axios from "@/axios";
 import router from "@/routers";
+import ReservationListMain from "@/components/reservationlist/ReservationListMain.vue";
+import CustomDatePicker from "@/components/unit/CustomDatePicker.vue"
 
 export default {
   components: {
     Multiselect,
+    ReservationListMain,
+    CustomDatePicker
   },
   data: function () {
     return {
       panel: [0],
       tab: 'option-1',
       isChangedIsClosed: true,
+      dialog: false,
       accessToken: {
         accessToken: ""
       },
@@ -326,6 +362,7 @@ export default {
         searchable: true,
         options: []
       },
+      selectRestTimes: {}
     }
   },
   methods: {
@@ -339,6 +376,9 @@ export default {
           .then((result) => {
             this.roomData = result.data.data;
             this.imageList = result.data.data.imageUrl;
+
+            console.log(this.disabledDates);
+            console.log(this.disabledDateTimes);
             console.log(this.roomData);
           })
           .catch((error) => {
@@ -423,13 +463,33 @@ export default {
       } catch {
         console.log("not image!")
       }
+    },
+    selectRestDate(data) {
+      this.selectRestTimes = data;
+    },
+    addRestDate: function () {
+      
+      this.dialog = false;
+      let params = this.selectRestTimes;
+      axios.post(`/api/v1/rooms/${this.roomsId}/addRestTime`, params, this.authHeader())
+          .then(() => {
+            this.isChangedIsClosed = true;
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+            console.log("test");
+          })
     }
+
   },
   created() {
     const {data} = history.state;
     this.roomsId = data;
     this.getRoomDetail();
     this.getEquipment();
+       
   }
 }
 </script>
