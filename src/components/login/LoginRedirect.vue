@@ -7,28 +7,18 @@
 <script>
 
 import router from "@/routers";
-import axios from "@/axios";
 
 export default {
   async created() {
-    const token = this.$route.query.token;
-    if(token){
-      localStorage.setItem("accessToken", token);
-      await axios.get('/api/v1/users' ,
-          {
-            headers: {
-              "Authorization": localStorage.getItem('accessToken')
-            }})
-          .then((res) => {
-            console.log(res.data.data)
-            localStorage.setItem("userInfo", JSON.stringify(res.data.data));
-          })
-          .catch((error) => {
-            window.alert(error)
-          })
-          .finally(() => {
-            console.log("getUserInfo")
-      })
+    var status = this.$route.query.status;
+    if(status === "Success"){
+      var userInfo = new Object();
+      userInfo.id = this.$route.query.userId;
+      userInfo.nickname = decodeURI(this.$route.query.nickname);
+      userInfo.address = decodeURI(this.$route.query.address);
+      userInfo.contact = this.$route.query.contact;
+      userInfo.role = this.$route.query.role;
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
       window.alert('로그인에 성공했습니다')
       router.push({name : 'HomePage'})
     }

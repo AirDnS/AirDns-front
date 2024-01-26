@@ -143,8 +143,11 @@ export default {
   },
   methods: {
     getReservationList: function () {
-      axios.get(`/api/v1/reservation`, this.authHeader())
+      axios.get(`/api/v1/reservation`, {
+        withCredentials: true,
+      })
           .then((result) => {
+            console.log(result.data.data);
             this.table = result.data.data;
             this.table.forEach(element => {
               if (new Date(element.checkOut) > Date.now()) {
