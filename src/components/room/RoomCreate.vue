@@ -1,6 +1,6 @@
 <template>
   <v-sheet class="pa-12" rounded>
-    <v-card class="mx-auto px-6 py-8" max-width="60%" :elevation="12">
+    <v-card class="mx-auto px-6 py-8" max-width="800px">
       <v-form @submit.prevent="postCreateRoom">
         <v-text-field
             v-model="data.name"

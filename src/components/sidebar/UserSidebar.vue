@@ -52,7 +52,6 @@ export default {
     },
     methods: {
       hasPerm(perm) {
-        console.log(perm);
         if (perm == "all") {
           return true;
         } else if (perm == "host") {

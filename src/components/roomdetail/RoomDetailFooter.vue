@@ -158,7 +158,6 @@ export default {
         cancelButtonText: "아니오"
       }).then((swalResult) => {
         if (swalResult.isConfirmed) {
-
           axios.delete(`/api/v1/rooms/${this.roomsId}/review/` + delReviewsId, this.authHeader())
             .then((result) => {
               this.$swal.fire({
@@ -173,7 +172,6 @@ export default {
             })
             .finally(() => {
             })
-
         }
       });
     },
