@@ -78,15 +78,8 @@ export default {
     },
     methods: {
         fetchUserInfo() {
-            const accessToken = localStorage.getItem('accessToken');
-            if (!accessToken) {
-                window.alert('토큰이 존재하지 않습니다.');
-                return;
-            }
             axios.get('/api/v1/users', {
-                headers: {
-                    'Authorization': `${accessToken}`,
-                },
+              withCredentials: true,
             })
                 .then(response => {
                 console.log(response.data);
@@ -103,12 +96,8 @@ export default {
             router.push('updateuserinfo');
         },
         updateRoleOnBackend() {
-            const accessToken = localStorage.getItem('accessToken');
             axios.patch('/api/v1/users/role', {}, {
-                headers: {
-                    'Authorization': `${accessToken}`,
-                    'Content-Type': 'application/json',
-                },
+              withCredentials: true
             })
                 .then(response => {
                 window.alert("권한 변경 성공");

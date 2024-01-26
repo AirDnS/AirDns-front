@@ -133,8 +133,9 @@ export default {
       //   page: this.pageable.pageNumber
       // }        
       // , {params}
-      axios.get(`/api/v1/reservation`, this.authHeader())
+      axios.get(`/api/v1/reservation`, {withCredentials: true})
           .then((result) => {
+            console.log(result.data.data);
             this.table = result.data.data;
             // this.pageable = result.data.data.pageable;
             this.table.forEach(element => {
