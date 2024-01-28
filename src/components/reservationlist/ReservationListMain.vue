@@ -175,7 +175,7 @@ export default {
       }).then((swalResult) => {
         if (swalResult.isConfirmed) {
           console.log(reservationId);
-          axios.patch(`/api/v1/reservation/` + reservationId, {}, this.authHeader())
+          axios.patch(`/api/v1/reservation/` + reservationId,  {withCredentials: true})
             .then((result) => {
               this.$swal.fire({
                 title: "삭제되었습니다!",

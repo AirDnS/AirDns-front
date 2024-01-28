@@ -61,8 +61,7 @@ export default {
         address: "",
         contact: ""
       },
-      info: {
-      }
+      info: {}
     };
   },
   created() {
@@ -78,9 +77,7 @@ export default {
       }
 
       axios.get('/api/v1/users', {
-        headers: {
-          'Authorization': `${accessToken}`,
-        },
+        withCredentials: true,
       })
           .then(response => {
             console.log(response.data);
@@ -99,8 +96,8 @@ export default {
       }
 
       axios.patch('/api/v1/users/profile', this.user, {
+        withCredentials: true,
         headers: {
-          'Authorization': `${accessToken}`,
           'Content-Type': 'application/json',
         },
       })
@@ -129,12 +126,14 @@ export default {
 .margin-bottom {
   margin-bottom: 10px;
 }
+
 .user-info-container {
   border: 1px solid #ccc;
   padding: 20px;
   max-width: 1200px;
   margin: auto;
 }
+
 .bordered-button {
   border: 1px solid #ccc;
   padding: 10px;

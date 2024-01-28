@@ -165,7 +165,7 @@ export default {
         cancelButtonText: "아니오"
       }).then((swalResult) => {
         if (swalResult.isConfirmed) {
-          axios.delete(`/api/v1/rooms/` + roomsId, this.authHeader())
+          axios.delete(`/api/v1/rooms/` + roomsId,  {withCredentials: true})
             .then((result) => {
               this.$swal.fire({
                 title: "삭제되었습니다!",

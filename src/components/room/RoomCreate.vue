@@ -130,9 +130,9 @@ export default {
       frm.append('files', this.files)
       axios.post(`/api/v1/rooms`, frm,
           {
+            withCredentials: true,
             headers: {
-              "Content-Type": "multipart/form-data",
-              "Authorization": this.accessToken
+              "Content-Type": "multipart/form-data"
             }
           }).then((res) => {
         window.alert("성공")

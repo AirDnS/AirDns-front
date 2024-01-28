@@ -7,16 +7,16 @@
       </div>
     </RouterLink>
     <v-spacer></v-spacer>
-    <v-btn variant="outlined" class="login-btn" v-on:click="goCreateRoom">
+    <v-btn variant="outlined" class="login-btn" v-on:click="goCreateRoom" v-show="isHost">
       방등록
     </v-btn>
-    <v-btn variant="outlined" class="userDetail-btn" v-on:click="goUserDetail">
+    <v-btn variant="outlined" class="userDetail-btn" v-on:click="goUserDetail" v-show="hasUser">
       회원 정보
     </v-btn>
-    <v-btn variant="outlined" class="logout-btn" v-on:click="goLogout">
+    <v-btn variant="outlined" class="logout-btn" v-on:click="goLogout" v-show="hasUser">
       Logout
     </v-btn>
-    <v-btn variant="outlined" class="login-btn" v-on:click="goLogin">
+    <v-btn variant="outlined" class="login-btn" v-on:click="goLogin" v-show="!hasUser">
       Login
     </v-btn>
   </v-app-bar>
@@ -27,7 +27,17 @@ import router from "@/routers";
 export default {
   data() {
     return {
-      userInfo: {}
+      hasUser: false,
+      isHost: false,
+    }
+  },
+  mounted() {
+    if (localStorage.getItem("userInfo") != null) {
+      this.hasUser = true;
+      console.log(JSON.parse(localStorage.getItem('userInfo'))["role"]);
+      if (JSON.parse(localStorage.getItem('userInfo'))["role"] === "HOST") {
+        this.isHost = true;
+      }
     }
   },
   // 보안 상 Cookie JavaScript를 통해 관리를 하는 것은 안좋다 -> 쿠키 탈취문제(cross-site scripting XSS)
@@ -73,5 +83,6 @@ export default {
 .userDetail-btn {
   margin-right: 24px;
 }
+
 
 </style>

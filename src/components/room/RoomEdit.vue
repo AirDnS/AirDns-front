@@ -3,9 +3,9 @@
 
     <div class="d-flex flex-row">
       <v-tabs
-        v-model="tab"
-        direction="vertical"
-        color="primary"
+          v-model="tab"
+          direction="vertical"
+          color="primary"
       >
         <v-tab value="option-1">
           <v-icon start>
@@ -32,7 +32,7 @@
           휴무 관리
         </v-tab>
       </v-tabs>
-      
+
       <v-window v-model="tab" style="width: 100%">
         <v-window-item value="option-1" width="100%">
           <v-card flat class="mx-auto px-6 py-8" style="max-width: 700px;">
@@ -76,7 +76,7 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              
+
               <v-row>
                 <v-col cols="2">
                   <v-list-subheader>가격</v-list-subheader>
@@ -89,20 +89,20 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              
+
               <v-row>
                 <v-col cols="2">
                   <v-list-subheader>방 평수</v-list-subheader>
                 </v-col>
                 <v-col cols="10">
                   <v-text-field
-                    v-model="roomData.size"
-                    placeholder="방 평수"
-                    variant="outlined"
+                      v-model="roomData.size"
+                      placeholder="방 평수"
+                      variant="outlined"
                   ></v-text-field>
                 </v-col>
               </v-row>
-              
+
               <Multiselect
                   size="12"
                   v-model="roomData.equipment"
@@ -114,16 +114,16 @@
                   <v-list-subheader>활성화</v-list-subheader>
                 </v-col>
                 <v-col cols="10">
-                  <v-switch 
-                    color="primary" 
-                    v-model="roomData.isClosed" 
-                    @update:indeterminate="updateRoomIsClosed">
+                  <v-switch
+                      color="primary"
+                      v-model="roomData.isClosed"
+                      @update:indeterminate="updateRoomIsClosed">
                     <template v-slot:label v-if="!isChangedIsClosed">
                       변경 중
                       <v-progress-circular
-                        :indeterminate="!isChangedIsClosed"
-                        size="24"
-                        class="ms-2"
+                          :indeterminate="!isChangedIsClosed"
+                          size="24"
+                          class="ms-2"
                       ></v-progress-circular>
                     </template>
                   </v-switch>
@@ -152,18 +152,18 @@
                         기존 이미지
                       </v-col>
                       <v-col
-                        cols="8"
-                        class="text-grey"
+                          cols="8"
+                          class="text-grey"
                       >
                         <v-fade-transition leave-absolute>
                           <span
-                            v-if="expanded"
-                            key="0"
+                              v-if="expanded"
+                              key="0"
                           >
                           </span>
                           <span
-                            v-else
-                            key="1"
+                              v-else
+                              key="1"
                           >
                             {{ roomData.imageUrl.length }} 개 이미지
                           </span>
@@ -173,12 +173,13 @@
                   </template>
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                  
+
                   <v-row>
                     <template v-for="v in roomData.imageUrl" :key="v">
                       <v-col>
-                        <v-img :src ="`${v}`" width="500px" height="280px" class="room-image">
-                          <v-btn class="float-right" icon="mdi-minus-circle" variant="text" @click="removeImage(v)"></v-btn>
+                        <v-img :src="`${v}`" width="500px" height="280px" class="room-image">
+                          <v-btn class="float-right" icon="mdi-minus-circle" variant="text"
+                                 @click="removeImage(v)"></v-btn>
                         </v-img>
                       </v-col>
                     </template>
@@ -194,18 +195,18 @@
                         추가 이미지
                       </v-col>
                       <v-col
-                        cols="8"
-                        class="text-grey"
+                          cols="8"
+                          class="text-grey"
                       >
                         <v-fade-transition leave-absolute>
                           <span
-                            v-if="expanded"
-                            key="0"
+                              v-if="expanded"
+                              key="0"
                           >
                           </span>
                           <span
-                            v-else
-                            key="1"
+                              v-else
+                              key="1"
                           >
                             {{ files.length }} 개 이미지
                           </span>
@@ -216,13 +217,13 @@
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
                   <v-file-input
-                    label="파일 선택"
-                    variant="outlined"
-                    multiple
-                    v-model = "files"
-                    type="file"
-                    accept="image/*"
-                    @change="previewImage">
+                      label="파일 선택"
+                      variant="outlined"
+                      multiple
+                      v-model="files"
+                      type="file"
+                      accept="image/*"
+                      @change="previewImage">
                     <template v-slot:selection="{ fileNames }">
                       <template v-for="(fileName, index) in fileNames" :key="fileName">
                         <v-chip
@@ -241,9 +242,9 @@
                         </span>
                       </template>
                     </template>
-                  
+
                   </v-file-input>
-                      
+
                   <v-row>
                     <template v-for="v in files" :key="v">
                       <v-col>
@@ -259,25 +260,25 @@
               저장
             </v-btn>
 
-          
+
           </v-card>
         </v-window-item>
         <v-window-item value="option-3">
           <v-card flat>
-            
+
             <ReservationListMain></ReservationListMain>
           </v-card>
         </v-window-item>
-        <v-window-item value="option-4">            
+        <v-window-item value="option-4">
           <v-dialog
-            v-model="dialog"
-            persistent
-            width="auto"
-            >
+              v-model="dialog"
+              persistent
+              width="auto"
+          >
             <template v-slot:activator="{ props }">
               <v-btn
-                color="primary"
-                v-bind="props"
+                  color="primary"
+                  v-bind="props"
               >
                 휴무 추가
               </v-btn>
@@ -287,24 +288,24 @@
                 <span class="text-h5 mt-5">휴무 시간 선택</span>
               </v-card-title>
 
-              <CustomDatePicker 
-                :reservatedTimeList="this.roomData.reservatedTimeList"
-                @select="selectRestDate"
+              <CustomDatePicker
+                  :reservatedTimeList="this.roomData.reservatedTimeList"
+                  @select="selectRestDate"
               ></CustomDatePicker>
 
               <v-card-actions class="pa-0">
                 <v-spacer></v-spacer>
                 <v-btn
-                  color="blue-darken-1"
-                  variant="text"
-                  @click="dialog = false"
+                    color="blue-darken-1"
+                    variant="text"
+                    @click="dialog = false"
                 >
                   닫기
                 </v-btn>
                 <v-btn
-                  color="blue-darken-1"
-                  variant="text"
-                  @click="addRestDate"
+                    color="blue-darken-1"
+                    variant="text"
+                    @click="addRestDate"
                 >
                   추가
                 </v-btn>
@@ -393,20 +394,20 @@ export default {
       this.files = this.$refs.images.files[0]
       const frm = new FormData();
       const json = JSON.stringify(this.data);
-      const blob = new Blob([json], { type: "application/json" });
+      const blob = new Blob([json], {type: "application/json"});
       console.log(this.files);
-      frm.append('data',blob)
+      frm.append('data', blob)
       frm.append('files', this.files)
       axios.post(`/api/v1/rooms`, frm,
           {
+            withCredentials: true,
             headers: {
               "Content-Type": "multipart/form-data",
-              "Authorization": this.accessToken
             }
           }).then((res) => {
         window.alert("성공")
         console.log(res);
-        router.push({name:"HomePage"})
+        router.push({name: "HomePage"})
       }).catch((error) => {
         window.alert("실패")
         console.log(error)
@@ -419,7 +420,7 @@ export default {
       let params = {
         isClosed: this.roomData.isClosed
       }
-      axios.patch(`/api/v1/rooms/${this.roomsId}/changeClosed`, params)
+      axios.patch(`/api/v1/rooms/${this.roomsId}/changeClosed`, params, {withCredentials: true})
           .then(() => {
             this.isChangedIsClosed = true;
           })
@@ -435,9 +436,9 @@ export default {
         removeImages: this.removeImages
       };
       const frm = new FormData();
-      const blob = new Blob([params], { type: "application/json" });
+      const blob = new Blob([params], {type: "application/json"});
       console.log(this.files);
-      frm.append('data',blob)
+      frm.append('data', blob)
       frm.append('files', this.files)
       axios.patch(`/api/v1/rooms/${this.roomsId}/changeClosed`, frm)
           .then(() => {
@@ -452,7 +453,7 @@ export default {
 
     },
     removeImage: function (image) {
-      this.roomData.imageUrl = this.roomData.imageUrl.filter((item) => item!= image);
+      this.roomData.imageUrl = this.roomData.imageUrl.filter((item) => item != image);
       this.removeImages.push(image);
     },
 
@@ -468,10 +469,10 @@ export default {
       this.selectRestTimes = data;
     },
     addRestDate: function () {
-      
+
       this.dialog = false;
       let params = this.selectRestTimes;
-      axios.post(`/api/v1/rooms/${this.roomsId}/addRestTime`, params, this.authHeader())
+      axios.post(`/api/v1/rooms/${this.roomsId}/addRestTime`, params, {withCredentials: true})
           .then(() => {
             this.isChangedIsClosed = true;
           })
@@ -489,7 +490,7 @@ export default {
     this.roomsId = data;
     this.getRoomDetail();
     this.getEquipment();
-       
+
   }
 }
 </script>
