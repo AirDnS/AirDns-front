@@ -43,8 +43,7 @@ export default {
         };
     },
     mounted() {
-      if (localStorage.getItem('accessToken') != null) {
-        console.log(JSON.parse(localStorage.getItem('userInfo'))["role"]);
+      if (localStorage.getItem('userInfo') != null) {
         if (JSON.parse(localStorage.getItem('userInfo'))["role"] === "HOST") {
           this.isHost = true;
         }
