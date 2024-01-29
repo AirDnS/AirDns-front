@@ -88,6 +88,7 @@ export default {
             console.log(this.roomData);
             
             this.emitter.emit("price", this.roomData.price);
+            this.emitter.emit("roomsName", this.roomData.name);
             this.emitter.emit("reservatedTimeList", this.roomData.reservatedTimeList);
           })
           .catch((error) => {

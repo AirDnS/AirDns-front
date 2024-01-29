@@ -1,38 +1,40 @@
 <template>      
-  <v-container>
-    <v-row justify="space-around">
-      <VueDatePicker
-      v-model="selectedDate" 
-      inline 
-      model-type="yyyy-MM-dd" 
-      auto-apply
-      locale="ko"
-      :min-date="new Date()"
-      :enable-time-picker="false"
-      :disabled-dates="disabledDates"
-      @update:model-value="selectDate"
-      >
-      </VueDatePicker>
-    </v-row>
-  </v-container>
-  
-  <div style="width: 273px; white-space: nowrap;overflow: auto;">
+  <div>
+    <v-container>
+      <v-row justify="space-around">
+        <VueDatePicker
+        v-model="selectedDate" 
+        inline 
+        model-type="yyyy-MM-dd" 
+        auto-apply
+        locale="ko"
+        :min-date="new Date()"
+        :enable-time-picker="false"
+        :disabled-dates="disabledDates"
+        @update:model-value="selectDate"
+        >
+        </VueDatePicker>
+      </v-row>
+    </v-container>
     
-  <perfect-scrollbar style="height: 40px;">
-      <v-btn 
-      size="small" 
-      :disabled="selectRange[0]-1 > t || selectRange[1]+1 < t || (selectRange[0]+1 <= t && selectRange[1]-1 >= t)"
-      :color="calButtonColor(t)"
-      v-for="t in allowTimes" 
-      :key="t" 
-      @click="selectTimeButton(t)"
-      >
-        {{String(t).padStart(2, "0")}}:00
-      </v-btn>
-    </perfect-scrollbar>
+    <div style="width: 273px; white-space: nowrap;overflow: auto;">
+      
+    <perfect-scrollbar style="height: 40px;">
+        <v-btn 
+        size="small" 
+        :disabled="selectRange[0]-1 > t || selectRange[1]+1 < t || (selectRange[0]+1 <= t && selectRange[1]-1 >= t)"
+        :color="calButtonColor(t)"
+        v-for="t in allowTimes" 
+        :key="t" 
+        @click="selectTimeButton(t)"
+        >
+          {{String(t).padStart(2, "0")}}:00
+        </v-btn>
+      </perfect-scrollbar>
 
-    </div>
-  <h5 class="font-weight-medium text-body-2">선택 시간 : {{selectedDateMessage}} </h5>
+      </div>
+    <h5 class="font-weight-medium text-body-2">선택 시간 : {{selectedDateMessage}} </h5>
+  </div>
 </template>
 
 <script>
