@@ -1,7 +1,7 @@
 <template>
-    <v-row class="detail-image-box">
-    <div v-for="(v, i) in imageList" :key="i">
-      <v-img :src ="`${v}`" width="500px" height="280px" class="room-image">
+    <v-row class="detail-image-box" v-if="roomData.image?.length > 0">
+    <div v-for="v in roomData.image" :key="v.id">
+      <v-img :src ="`${v.imageUrl}`" width="500px" height="280px" class="room-image">
       </v-img>
     </div>
   </v-row>
@@ -64,7 +64,6 @@ export default {
   data() {
     return {
       roomsId: "null",
-      imageList: "null",
       roomData: "null",
       test: "null",
       hasUser: false
@@ -86,7 +85,6 @@ export default {
       await axios.get(`/api/v1/rooms/${this.roomsId}`)
           .then((result) => {
             this.roomData = result.data.data;
-            this.imageList = result.data.data.imageUrl;
             console.log(this.roomData);
             
             this.emitter.emit("price", this.roomData.price);
