@@ -30,6 +30,7 @@ import { nanoid } from "nanoid";
 export default {
   data() {
     return {
+      data: null,
       paymentWidget: null,
       paymentMethodWidget: null,
       clientKey: "test_ck_Ba5PzR0ArnWdaxZloyQ18vmYnNeD",
@@ -43,10 +44,10 @@ export default {
         if (this.paymentWidget){
           await this.paymentWidget.requestPayment({
             orderId: nanoid(),
-            orderName: "토스 티셔츠 외 2건",
-            customerName: "김토스",
-            customerEmail: "customer123@gmail.com",
-            customerMobilePhone: "01012341234",
+            orderName: this.data.reservationName,
+            customerName: this.data.userName,
+            customerEmail: this.data.userEmail,
+            customerMobilePhone: this.data.userContact,
             successUrl: `${window.location.origin}/success`,
             failUrl: `${window.location.origin}/fail`,
           });
@@ -70,6 +71,11 @@ export default {
     this.paymentMethodWidget = this.paymentWidget.renderPaymentMethods("#payment-method", { value: this.amount }, { variantKey: "DEFAULT" });
     this.paymentWidget.renderAgreement("#agreement", { variantKey: "AGREEMENT" });
   },
+  created() {
+    const {data} = history.state;
+    this.data = data;
+    this.amount = this.data.price
+  }
 };
 </script>
 <style>
