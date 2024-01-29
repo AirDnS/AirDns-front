@@ -7,6 +7,7 @@ import axios from 'axios'
 import "@/scss/style.scss";
 import VueCookies from 'vue-cookies'
 import mitt from 'mitt'
+import Vuelidate from 'vuelidate';
 
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -25,6 +26,7 @@ const app = createApp(App)
 app.use(routers)
 app.use(vuetify)
 app.use(VueCookies)
+app.use(Vuelidate)
 app.use(VueSweetalert2);
 app.use(PerfectScrollbar);
 app.config.globalProperties.$axios = axios
