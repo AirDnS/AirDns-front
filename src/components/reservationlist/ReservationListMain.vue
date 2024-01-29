@@ -5,7 +5,7 @@
         <div>
           <h2 class="title text-h6 font-weight-medium">예약 목록</h2>
         </div>
-        <v-spacer></v-spacer>
+        <!-- <v-spacer></v-spacer>
         <div class="ml-auto">
           <v-select
             v-model="select"
@@ -14,7 +14,7 @@
             dense
             hide-details
           ></v-select>
-        </div>
+        </div> -->
       </div>
       <v-table fixed-header class="month-table mt-7">
         <template v-slot:default>
@@ -41,7 +41,7 @@
               <td class="text-center">{{ item.id }}</td>
               <td>
                 <h4 class="font-weight-bold text-no-wrap">
-                  {{ item.roomsName }}
+                  {{ item.roomName }}
                 </h4>
                 <h6
                   class="
@@ -50,7 +50,7 @@
                     text-no-wrap text-body-2 text-grey-darken-1
                   "
                 >
-                  {{ item.roomsAddress }}
+                  {{ item.address }}
                 </h6>
               </td>
               <td>
@@ -95,9 +95,9 @@
                       <template v-slot:prepend><v-icon end icon="mdi mdi-arrow-right-bold-outline" size="small"></v-icon></template>
                       <v-list-item-title class="font-weight-medium text-no-wrap text-body-2 text-grey-darken-3">바로가기</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="deleteReservation(item.id)">
+                    <v-list-item @click="cancelReservation(item.id)">
                       <template v-slot:prepend><v-icon end icon="mdi mdi-delete" size="small"></v-icon></template>
-                      <v-list-item-title class="font-weight-medium text-no-wrap text-body-2 text-grey-darken-3">삭제</v-list-item-title>
+                      <v-list-item-title class="font-weight-medium text-no-wrap text-body-2 text-grey-darken-3">예약취소</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -122,8 +122,8 @@ export default {
         pageNumber: 1,
         totalPages: 1,
       },
-      select: "예약중",
-      items: ["예약중", "전체"],
+      // select: "예약중",
+      // items: ["예약중", "전체"],
       table: [],
       
       delReservationId: null,
@@ -139,14 +139,14 @@ export default {
         }})
           .then((result) => {
             this.table = result.data.data.content;
-            console.log(this.page.pageNumber);
             this.page.pageNumber = result.data.data.pageable.pageNumber + 1;
             this.page.totalPages = result.data.data.totalPages;
             
-            console.log(this.table);
-
             this.table.forEach(element => {
-              if (new Date(element.checkOut) > Date.now()) {
+              if (element.isCancelled == true) {
+                element.status = "취소";
+                element.statuscolor = "error";
+              } else if (new Date(element.checkOut) > Date.now()) {
                 element.status = "예약중";
                 element.statuscolor = "info";
               } else {
@@ -170,9 +170,10 @@ export default {
         }
       })
     },
-    deleteReservation: function (reservationId) {
+    cancelReservation: function (reservationId) {
       this.$swal.fire({
-        title: "정말 삭제하시겠습니까?",
+        title: "정말 취소하시겠습니까?",
+        text: "취소한 예약은 되돌릴 수 없습니다!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -182,10 +183,10 @@ export default {
       }).then((swalResult) => {
         if (swalResult.isConfirmed) {
           console.log(reservationId);
-          axios.patch(`/api/v1/reservation/` + reservationId,  {withCredentials: true})
+          axios.delete(`/api/v1/reservation/` + reservationId,  {withCredentials: true})
             .then((result) => {
               this.$swal.fire({
-                title: "삭제되었습니다!",
+                title: "취소되었습니다!",
                 icon: "success"
               });
               console.log( result.data.message );

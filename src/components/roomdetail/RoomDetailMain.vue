@@ -71,7 +71,7 @@ export default {
   },
   mounted() {
     this.emitter.emit("roomsId", this.roomsId);
-    if (localStorage.getItem('accessToken') != null) {
+    if (localStorage.getItem('userInfo') != null) {
       this.hasUser = true;
     }
   },

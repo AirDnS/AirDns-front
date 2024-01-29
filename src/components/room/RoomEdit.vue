@@ -268,7 +268,9 @@
         <v-window-item value="option-3">
           <v-card flat>
 
-            <ReservationListRoom></ReservationListRoom>
+            <ReservationListRoom
+              :roomsId="this.roomsId"
+            ></ReservationListRoom>
           </v-card>
         </v-window-item>
         <v-window-item value="option-4">
@@ -335,6 +337,7 @@ export default {
   },
   data: function () {
     return {
+      roomsId: null,
       panel: [0],
       tab: 'option-1',
       isChangingIsClosed: false,
