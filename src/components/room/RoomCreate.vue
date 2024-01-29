@@ -1,15 +1,15 @@
 <template>
   <v-sheet class="pa-12" rounded>
-    <v-card class="mx-auto px-6 py-8" max-width="800px">
+    <v-card class="mx-auto px-6 py-8" max-width="540px">
       <v-form @submit.prevent="postCreateRoom">
         <v-text-field
             v-model="data.name"
-            label="스터디 룸 이름"
+            label="방 이름"
             variant="outlined"
         ></v-text-field>
         <v-textarea
             v-model="data.desc"
-            label="스터디 룸 상세설명"
+            label="방 상세설명"
             auto-grow
             variant="outlined"
             row-height="25"
@@ -17,18 +17,18 @@
         ></v-textarea>
         <v-text-field
             v-model="data.address"
-            label="스터디 룸 주소"
+            label="방 주소"
             variant="outlined"
         ></v-text-field>
         <v-text-field
             v-model="data.price"
-            label="스터디 룸 가격"
+            label="방 가격"
             variant="outlined"
             placeholder="시간당 가격 기준으로 입력해주세요"
         ></v-text-field>
         <v-text-field
             v-model="data.size"
-            label="스터디 룸 사이즈"
+            label="방 평수"
             variant="outlined"
             placeholder="평수 기준으로 입력해주세요"
         ></v-text-field>
@@ -42,8 +42,10 @@
             label="File input"
             variant="outlined"
             multiple
-            ref = "images"
+            v-model="files"
             type="file"
+            accept="image/*"
+            @change="previewImage">
         >
           <template v-slot:selection="{ fileNames }">
             <template v-for="(fileName, index) in fileNames" :key="fileName">
@@ -53,16 +55,26 @@
                   label
                   size="small"
                   class="me-2"
+                  
               >
                 {{ fileName }}
               </v-chip>
               <span
                   v-else-if="index === 2"
                   class="text-overline text-grey-darken-3 mx-2">
+              +{{ files.length - 2 }} 파일
               </span>
             </template>
+            
           </template>
         </v-file-input>
+        <v-row>
+              <template v-for="v in files" :key="v">
+                <v-col>
+                  <v-img :src="previewImage(v)" width="500px" height="280px" class="room-image"></v-img>
+                </v-col>
+              </template>
+            </v-row>
         <br>
         <v-btn
             block
@@ -120,14 +132,13 @@ export default {
       console.log(JSON.parse(localStorage.getItem("equipment")).options);
     },
     postCreateRoom: function () {
-      this.accessToken = localStorage.getItem('accessToken')
-      this.files = this.$refs.images.files[0]
       const frm = new FormData();
       const json = JSON.stringify(this.data);
       const blob = new Blob([json], { type: "application/json" });
-      console.log(this.files);
-      frm.append('data',blob)
-      frm.append('files', this.files)
+      frm.append('data',blob);      
+      for (let file of this.files) {
+        frm.append('files', file);
+      }
       axios.post(`/api/v1/rooms`, frm,
           {
             withCredentials: true,
@@ -144,6 +155,14 @@ export default {
       }).finally(() => {
         console.log("test");
       })
+    },
+    
+    previewImage: function (file) {
+      try {
+        return URL.createObjectURL(file);
+      } catch {
+        console.log("not image!")
+      }
     },
   },
   mounted() {

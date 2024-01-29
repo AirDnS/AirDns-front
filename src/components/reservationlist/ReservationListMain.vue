@@ -29,6 +29,9 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-if="table?.length == 0">
+              <td colspan="6" class="text-center"> 데이터가 없습니다.</td>
+            </tr>
             <tr
               v-for="item in table"
               :key="item.roomsId"
@@ -103,7 +106,7 @@
           </tbody>
         </template>
       </v-table>
-			<!-- <v-pagination class="pagination mb-2 mt-6" size="small" v-model="pageable.pageNumber" :length="pageable.pageSize" @update:modelValue="getReservationList"></v-pagination> -->
+			<v-pagination class="pagination mb-2 mt-6" size="small" v-model="page.pageNumber" :length="page.totalPages" @update:modelValue="getRoomList"></v-pagination>
     </v-card-text>
   </v-card>
 
@@ -115,9 +118,9 @@ import router from "@/routers";
 export default {
   data() {
     return {
-      pageable: {
-        pageNumber: 0,
-        pageSize: 5,
+      page: {
+        pageNumber: 1,
+        totalPages: 1,
       },
       select: "예약중",
       items: ["예약중", "전체"],
@@ -129,15 +132,19 @@ export default {
   },
   methods: {
     getReservationList: function () {
-      // const params = {
-      //   page: this.pageable.pageNumber
-      // }        
-      // , {params}
-      axios.get(`/api/v1/reservation`, {withCredentials: true})
+      axios.get(`/api/v1/reservation`, {
+        withCredentials: true, 
+        params: {
+          page: this.page.pageNumber - 1
+        }})
           .then((result) => {
-            console.log(result.data.data);
-            this.table = result.data.data;
-            // this.pageable = result.data.data.pageable;
+            this.table = result.data.data.content;
+            console.log(this.page.pageNumber);
+            this.page.pageNumber = result.data.data.pageable.pageNumber + 1;
+            this.page.totalPages = result.data.data.totalPages;
+            
+            console.log(this.table);
+
             this.table.forEach(element => {
               if (new Date(element.checkOut) > Date.now()) {
                 element.status = "예약중";

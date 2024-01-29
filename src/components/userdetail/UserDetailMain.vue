@@ -52,7 +52,6 @@
       </v-col>
     </v-row>
     <v-footer>
-      <v-btn @click="goBack" class="bordered-button">뒤로 가기</v-btn>
       <v-btn @click="updateProfileOnBackend" class="bordered-button">유저 정보 수정</v-btn>
       <v-btn @click="updateRoleOnBackend" class="bordered-button">권한 변경</v-btn>
     </v-footer>
