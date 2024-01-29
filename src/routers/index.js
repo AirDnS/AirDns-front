@@ -23,6 +23,7 @@ import RoomEdit from "@/components/room/RoomEdit.vue";
 import LogoutRedirect from "@/components/Logout/LogoutRedirect.vue";
 import UpdateUserInfoMain from "@/components/updateuserinfo/UpdateUserInfoMain.vue";
 import UpdateUserInfoHeader from "@/components/updateuserinfo/UpdateUserInfoHeader.vue";
+import LoginDetail from "@/components/login/LoginDetail.vue";
 
 const routes = [
     {
@@ -39,6 +40,14 @@ const routes = [
         name: "LoginPage", // router name
         components: {
             default: LoginMain,
+            header : LoginHeader
+        }
+    },
+    {
+        path: "/loginDetail",
+        name: "LoginDetailPage", // router name
+        components: {
+            default: LoginDetail,
             header : LoginHeader
         }
     },
