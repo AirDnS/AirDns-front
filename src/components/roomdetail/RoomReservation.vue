@@ -18,6 +18,7 @@
 <script>
 import router from "@/routers";
 import CustomDatePicker from "@/components/unit/CustomDatePicker.vue"
+import axios from "@/axios";
 
 export default {
   components: {
@@ -79,17 +80,31 @@ export default {
         cancelButtonText: "취소"
       }).then((swalResult) => {
         if (swalResult.isConfirmed) {
-          const map = {
-            roomsId: this.roomsId,
-            checkInTime: this.checkInTime,
-            checkOutTime: this.checkInTime
+
+          const params = {
+            checkInTime: this.reservationParams.startDate,
+            checkOutTime: this.reservationParams.endDate
           };
 
-          router.push({
-            name: 'ReservationChecking',
-            state: map
-          });
+          axios.post(`/api/v1/rooms/${this.roomsId}/reservation`, params, {withCredentials: true})
+            .then((result) => {
+              router.push({
+                name: 'redirectToCheckout',
+                state: {
+                  data: result.data.data
+                }
+              })
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .finally(() => {
+              console.log("test");
+            })
+          
+
         }
+        
       });
     },
     showReservatedList() {
