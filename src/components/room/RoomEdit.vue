@@ -117,11 +117,13 @@
                   <v-switch
                       color="primary"
                       v-model="roomData.isClosed"
-                      @update:indeterminate="updateRoomIsClosed">
-                    <template v-slot:label v-if="!isChangedIsClosed">
+                      :false-value="true" 
+                      :true-value="false"
+                      @update:modelValue="updateRoomIsClosed">
+                    <template v-slot:label v-if="isChangingIsClosed">
                       변경 중
                       <v-progress-circular
-                          :indeterminate="!isChangedIsClosed"
+                          :indeterminate="isChangingIsClosed"
                           size="24"
                           class="ms-2"
                       ></v-progress-circular>
@@ -165,7 +167,7 @@
                               v-else
                               key="1"
                           >
-                            {{ roomData.imageUrl.length }} 개 이미지
+                            {{ roomData.image.length }} 개 이미지
                           </span>
                         </v-fade-transition>
                       </v-col>
@@ -175,9 +177,9 @@
                 <v-expansion-panel-text>
 
                   <v-row>
-                    <template v-for="v in roomData.imageUrl" :key="v">
-                      <v-col>
-                        <v-img :src="`${v}`" width="500px" height="280px" class="room-image">
+                    <template v-for="v in roomData.image" :key="v.id">
+                      <v-col  style="flex-grow: 0;">
+                        <v-img :src="`${v.imageUrl}`" width="500px" height="280px" class="room-image">
                           <v-btn class="float-right" icon="mdi-minus-circle" variant="text"
                                  @click="removeImage(v)"></v-btn>
                         </v-img>
@@ -247,7 +249,7 @@
 
                   <v-row>
                     <template v-for="v in files" :key="v">
-                      <v-col>
+                      <v-col style="flex-grow: 0;">
                         <v-img :src="previewImage(v)" width="500px" height="280px" class="room-image"></v-img>
                       </v-col>
                     </template>
@@ -266,7 +268,9 @@
         <v-window-item value="option-3">
           <v-card flat>
 
-            <ReservationListMain></ReservationListMain>
+            <ReservationListRoom
+              :roomsId="this.roomsId"
+            ></ReservationListRoom>
           </v-card>
         </v-window-item>
         <v-window-item value="option-4">
@@ -322,36 +326,25 @@
 <script>
 import Multiselect from "@vueform/multiselect";
 import axios from "@/axios";
-import router from "@/routers";
-import ReservationListMain from "@/components/reservationlist/ReservationListMain.vue";
+import ReservationListRoom from "@/components/reservationlist/ReservationListRoom.vue";
 import CustomDatePicker from "@/components/unit/CustomDatePicker.vue"
 
 export default {
   components: {
     Multiselect,
-    ReservationListMain,
+    ReservationListRoom,
     CustomDatePicker
   },
   data: function () {
     return {
+      roomsId: null,
       panel: [0],
       tab: 'option-1',
-      isChangedIsClosed: true,
+      isChangingIsClosed: false,
       dialog: false,
-      accessToken: {
-        accessToken: ""
-      },
       roomData: {},
-      data: {
-        name: "",
-        price: "",
-        address: "",
-        size: "",
-        desc: "",
-        equipment: [],
-      },
       files: [],
-      removeImages: [],
+      removeImagesIds: [],
       equipmentSelect: {
         mode: 'tags',
         label: 'name',
@@ -376,10 +369,15 @@ export default {
       await axios.get(`/api/v1/rooms/${this.roomsId}`)
           .then((result) => {
             this.roomData = result.data.data;
-            this.imageList = result.data.data.imageUrl;
+            const equipment = this.roomData.equipment;
+            this.roomData.equipment = [];
+            console.log(equipment);
+            equipment.forEach((cate) => {
+                cate.options.forEach((equip) => {
+                  this.roomData.equipment.push(equip.id);
+                })
+            })
 
-            console.log(this.disabledDates);
-            console.log(this.disabledDateTimes);
             console.log(this.roomData);
           })
           .catch((error) => {
@@ -390,24 +388,11 @@ export default {
           })
     },
     updateRoom: function () {
-      this.accessToken = localStorage.getItem('accessToken')
-      this.files = this.$refs.images.files[0]
-      const frm = new FormData();
-      const json = JSON.stringify(this.data);
-      const blob = new Blob([json], {type: "application/json"});
-      console.log(this.files);
-      frm.append('data', blob)
-      frm.append('files', this.files)
-      axios.post(`/api/v1/rooms`, frm,
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "multipart/form-data",
-            }
-          }).then((res) => {
+      const params = this.roomData;
+      axios.patch(`/api/v1/rooms/${this.roomsId}`, params, {withCredentials: true})
+      .then((res) => {
         window.alert("성공")
         console.log(res);
-        router.push({name: "HomePage"})
       }).catch((error) => {
         window.alert("실패")
         console.log(error)
@@ -416,13 +401,14 @@ export default {
       })
     },
     updateRoomIsClosed: function () {
-      this.isChangedIsClosed = false;
+      console.log("update is closed")
+      this.isChangingIsClosed = true;
       let params = {
         isClosed: this.roomData.isClosed
       }
-      axios.patch(`/api/v1/rooms/${this.roomsId}/changeClosed`, params, {withCredentials: true})
+      axios.patch(`/api/v1/rooms/${this.roomsId}/updateIsClosed`, params, {withCredentials: true})
           .then(() => {
-            this.isChangedIsClosed = true;
+            this.isChangingIsClosed = false;
           })
           .catch((error) => {
             console.log(error);
@@ -433,16 +419,24 @@ export default {
     },
     saveImage: function () {
       let params = {
-        removeImages: this.removeImages
+        removeImages: this.removeImagesIds
       };
       const frm = new FormData();
-      const blob = new Blob([params], {type: "application/json"});
-      console.log(this.files);
+      const blob = new Blob([JSON.stringify(params)], {type: "application/json"});
       frm.append('data', blob)
-      frm.append('files', this.files)
-      axios.patch(`/api/v1/rooms/${this.roomsId}/changeClosed`, frm)
+      for (let file of this.files) {
+        frm.append('files', file);
+      }
+      axios.patch(`/api/v1/rooms/${this.roomsId}/updateImages`, frm,
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            }
+          })
           .then(() => {
-            this.isChangedIsClosed = true;
+            this.getRoomDetail();
+            this.files = [];
           })
           .catch((error) => {
             console.log(error);
@@ -453,12 +447,11 @@ export default {
 
     },
     removeImage: function (image) {
-      this.roomData.imageUrl = this.roomData.imageUrl.filter((item) => item != image);
-      this.removeImages.push(image);
+      this.roomData.image = this.roomData.image.filter((item) => item.id != image.id);
+      this.removeImagesIds.push(image.id);
     },
 
     previewImage: function (file) {
-      console.log(file);
       try {
         return URL.createObjectURL(file);
       } catch {
@@ -474,7 +467,7 @@ export default {
       let params = this.selectRestTimes;
       axios.post(`/api/v1/rooms/${this.roomsId}/addRestTime`, params, {withCredentials: true})
           .then(() => {
-            this.isChangedIsClosed = true;
+            this.isChangingIsClosed = false;
           })
           .catch((error) => {
             console.log(error);

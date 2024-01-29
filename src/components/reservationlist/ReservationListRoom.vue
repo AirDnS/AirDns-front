@@ -21,7 +21,6 @@
           <thead>
             <tr>
               <th class="text-no-wrap font-weight-medium text-subtitle-1 text-center">Id</th>
-              <th class="text-no-wrap font-weight-medium text-subtitle-1">방 이름</th>
               <th class="text-no-wrap font-weight-medium text-subtitle-1 text-center">체크인</th>
               <th class="text-no-wrap font-weight-medium text-subtitle-1 text-center">체크아웃</th>
               <th class="text-no-wrap font-weight-medium text-subtitle-1 text-center">상태</th>
@@ -30,7 +29,7 @@
           </thead>
           <tbody>
             <tr v-if="table?.length == 0">
-              <td colspan="6" class="text-center"> 데이터가 없습니다.</td>
+              <td colspan="5" class="text-center"> 데이터가 없습니다.</td>
             </tr>
             <tr
               v-for="item in table"
@@ -39,20 +38,6 @@
               class="month-item"
             >
               <td class="text-center">{{ item.id }}</td>
-              <td>
-                <h4 class="font-weight-bold text-no-wrap">
-                  {{ item.roomName }}
-                </h4>
-                <h6
-                  class="
-                    text-no-wrap
-                    font-weight-regular
-                    text-no-wrap text-body-2 text-grey-darken-1
-                  "
-                >
-                  {{ item.address }}
-                </h6>
-              </td>
               <td>
                 <h5
                   class="
@@ -116,6 +101,7 @@ import axios from '@/axios';
 import router from "@/routers";
 
 export default {
+  props: ['roomsId'],
   data() {
     return {
       page: {
@@ -132,7 +118,7 @@ export default {
   },
   methods: {
     getReservationList: function () {
-      axios.get(`/api/v1/reservation`, {
+      axios.get(`/api/v1/reservation/rooms/${this.roomsId}`, {
         withCredentials: true, 
         params: {
           page: this.page.pageNumber - 1
@@ -193,6 +179,12 @@ export default {
               this.getReservationList();
             })
             .catch((error) => {
+              if (error.response.status == 403) {
+                this.$swal({
+                  icon: "error",
+                  title: "권한이 없습니다."
+                });
+              }
               console.log(error);
             })
             .finally(() => {

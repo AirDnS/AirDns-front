@@ -20,6 +20,9 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-if="table?.length == 0">
+              <td colspan="7" class="text-center"> 데이터가 없습니다.</td>
+            </tr>
             <tr
               v-for="item in table"
               :key="item.roomsId"
@@ -72,8 +75,15 @@
                 {{ item.size }}
                 </h5>
               </td>
-              <td>
-                {{ item.isClose }}
+              <td class="text-center">
+                <v-chip
+                  class="ma-2"
+                  :color="item.statuscolor"
+                  size="small"
+                  label
+                  >
+                {{ item.status }}
+                </v-chip>
               </td>
               <td class="icon-column">
                 <v-menu location="bottom">
@@ -101,7 +111,7 @@
         </template>
         
       </v-table>
-			<v-pagination class="pagination mb-2 mt-6" size="small" v-model="pageable.pageNumber" :length="pageable.pageSize" @update:modelValue="getRoomList"></v-pagination>
+			<v-pagination class="pagination mb-2 mt-6" size="small" v-model="page.pageNumber" :length="page.totalPages" @update:modelValue="getRoomList"></v-pagination>
     </v-card-text>
   </v-card>
 </template>
@@ -112,24 +122,37 @@ import router from "@/routers";
 export default {
   data() {
     return {
-      pageable: {
-        pageNumber: 0,
-        pageSize: 5,
+      page: {
+        pageNumber: 1,
+        totalPages: 1,
       },
 			table: []
     }
   },
   methods: {
     getRoomList: function () {
-      const params = {
-        page: this.pageable.pageNumber
-      }        
 
-      axios.get(`/api/v1/rooms`, {params})
+      axios.get(`/api/v1/rooms/host`, {
+        withCredentials: true,
+        params: {
+          page: this.page.pageNumber - 1
+        }})
           .then((result) => {
             this.table = result.data.data.content;
-            this.pageable = result.data.data.pageable;
-            console.log(this.pageable);
+            this.page.pageNumber = result.data.data.pageable.pageNumber + 1;
+            this.page.totalPages = result.data.data.totalPages;
+            
+            console.log(this.table);
+
+            this.table.forEach(element => {
+              if (element.isClosed == true) {
+                element.status = "비활성";
+                element.statuscolor = "disable";
+              } else {
+                element.status = "활성";
+                element.statuscolor = "info";
+              }
+            });
           })
           .catch((error) => {
             console.log(error);
