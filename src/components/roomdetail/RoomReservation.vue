@@ -26,8 +26,9 @@ export default {
   data() {
     return {
       roomsId: null,
-      checkInTime: null,
-      checkOutTime: null,
+      roomsName: null,
+      // checkInTime: null,
+      // checkOutTime: null,
       price: null,
       reservatedTimeList: [],
       reservationParams: {}
@@ -39,14 +40,18 @@ export default {
       console.log(this.roomsId);
     });
     
+    this.emitter.on("roomsName", (data) => {
+      this.roomsName = data;
+      console.log(this.roomsId);
+    });
+    
     this.emitter.on("price", (data) => {
       this.price = data;
       console.log(this.price);
     });
     
     this.emitter.on("reservatedTimeList", (data) => {
-      this.checkInTime = data.startDate;
-      this.checkOutTime = data.endDate;
+      this.reservatedTimeList = data;
     });
 
   },
@@ -56,15 +61,35 @@ export default {
     },
     goReservationChecking() {
       
-      const map = {
-        roomsId: this.roomsId,
-        checkInTime: this.checkInTime,
-        checkOutTime: this.checkInTime
-      };
+      this.$swal.fire({
+        title: this.roomsName + " 예약",
+        html: "<div class='reservation-info-text-wrapper'><div class='reservation-info-text'>"
+          + "체크인ㅤㅤ" + this.reservationParams.startDate 
+          + "<br>체크아웃ㅤ" + this.reservationParams.endDate
+          + "<br>총ㅤ금액ㅤ" 
+          + (this.price * this.getDifferenceBetweenDate(
+            this.reservationParams.startDate , this.reservationParams.endDate
+            ))
+          + " ₩ </div></div>",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "예약하기",
+        cancelButtonText: "취소"
+      }).then((swalResult) => {
+        if (swalResult.isConfirmed) {
+          const map = {
+            roomsId: this.roomsId,
+            checkInTime: this.checkInTime,
+            checkOutTime: this.checkInTime
+          };
 
-      router.push({
-        name: 'ReservationChecking',
-        state: map
+          router.push({
+            name: 'ReservationChecking',
+            state: map
+          });
+        }
       });
     },
     showReservatedList() {
@@ -73,10 +98,20 @@ export default {
         html: this.reservatedTimeList.join("<br>").replaceAll(",", " ~ "),
         icon: "infomation"
       });
+    },
+
+    getDifferenceBetweenDate(date1, date2) {
+      return (new Date(date2) - new Date(date1))/(1000*60*60);
     }
   }
 }
 </script>
 <style>
-
+.reservation-info-text-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.reservation-info-text {
+  text-align: left;
+}
 </style>
