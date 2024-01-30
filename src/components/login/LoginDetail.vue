@@ -114,7 +114,6 @@ export default {
         }
       }).then((res) => {
         var userInfo = new Object();
-        console.log(res.data);
         userInfo.id = res.data.data.id;
         userInfo.name = res.data.data.name;
         userInfo.nickname = res.data.data.nickname;
