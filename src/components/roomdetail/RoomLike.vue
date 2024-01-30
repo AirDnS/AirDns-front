@@ -6,23 +6,59 @@
           variant="text"
           icon="mdi-thumb-up"
           color="blue-lighten-2"
+          v-on:click="createLike"
       ></v-btn>
-      <div>1</div>
+      <div>{{ likes }}</div>
     </div>
-    <div class="hate-button">
-      <v-btn
-          class="ma-2"
-          variant="text"
-          icon="mdi-thumb-down"
-          color="red-lighten-2"
-      ></v-btn>
-      <div>2</div>
-    </div>
-
   </div>
 </template>
 <script>
-export default {}
+import axios from "@/axios";
+
+export default {
+  data() {
+    return {
+      likes: "",
+      params: {}
+    }
+  },
+  props: ["childVaule"],
+  methods: {
+    createLike: function () {
+      axios.post(`/api/v1/rooms/${this.childVaule}/likes`, this.params, {withCredentials: true})
+          .then(() => {
+          })
+          .catch((err) => {
+                console.log(err)
+                window.alert("이미 좋아요를 했습니다")
+              }
+          )
+          .finally(() => {
+            this.readLike()
+          })
+    },
+    readLike: function () {
+      axios.get(`/api/v1/rooms/${this.childVaule}/likes`)
+          .then((res) => {
+            this.likes = res.data.data.likeCount;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+    }
+  },
+
+  created() {
+    this.readLike()
+  },
+
+  watch: {
+    likes: function (data) {
+      this.likes = data;
+    }
+  }
+}
+
 </script>
 
 <style scoped>
@@ -31,6 +67,7 @@ export default {}
   justify-content: space-around;
   padding: 0px 80px;
 }
+
 .like-button {
   display: flex;
   flex-direction: row;

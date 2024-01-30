@@ -137,7 +137,7 @@ export default {
 
       let reviewsId = this.modReviewsId;
 
-      axios.patch(`/api/v1/rooms/${this.roomsId}/review/${reviewsId}`, params, this.authHeader())
+      axios.patch(`/api/v1/rooms/${this.roomsId}/review/${reviewsId}`, params, {withCredentials:true})
           .then(() => {
             this.getReview();
           })

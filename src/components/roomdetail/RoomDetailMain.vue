@@ -48,7 +48,7 @@
           <v-card-text>
             <RoomReservation>
             </RoomReservation>
-            <RoomLike></RoomLike>
+            <RoomLike v-bind:childVaule="roomsId"></RoomLike>
           </v-card-text>
         </v-card>
     </v-col>
