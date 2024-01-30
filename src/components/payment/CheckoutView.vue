@@ -35,20 +35,23 @@ export default {
       paymentMethodWidget: null,
       clientKey: "test_ck_Ba5PzR0ArnWdaxZloyQ18vmYnNeD",
       customerKey: nanoid(),
-      amount: 5000,
+      amount: null,
     };
   },
   methods: {
     async requestPayment() {
       try {
         if (this.paymentWidget){
+          var regex = /[^0-9]/g;
+          var result = this.data.userContact.replace(regex, "");
           await this.paymentWidget.requestPayment({
             orderId: nanoid(),
             orderName: this.data.reservationName,
             customerName: this.data.userName,
             customerEmail: this.data.userEmail,
-            customerMobilePhone: this.data.userContact,
-            successUrl: `${window.location.origin}/success`,
+            reservationId: this.data.id,
+            customerMobilePhone: result,
+            successUrl: `${window.location.origin}/success?orderName=${encodeURIComponent(this.data.reservationName)}&reservationId=${this.data.id}`,
             failUrl: `${window.location.origin}/fail`,
           });
         }
@@ -67,7 +70,6 @@ export default {
   },
   async mounted() {
     this.paymentWidget = await loadPaymentWidget(this.clientKey, ANONYMOUS);
-
     this.paymentMethodWidget = this.paymentWidget.renderPaymentMethods("#payment-method", { value: this.amount }, { variantKey: "DEFAULT" });
     this.paymentWidget.renderAgreement("#agreement", { variantKey: "AGREEMENT" });
   },
@@ -79,9 +81,14 @@ export default {
 };
 </script>
 <style>
-.result-wrapper{
-  width: 100px;
-  margin-left: 10px;
-  color: blue;
+.box_section {
+  width: 650px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgb(0 0 0 / 1%), 0 6px 6px rgb(0 0 0 / 6%);
+  padding: 40px 30px 50px 30px;
+  margin: auto;
+  margin-top: 100px;
+  color: #333D4B;
 }
 </style>
