@@ -1,55 +1,60 @@
 <template>
   <div class="payment-info">
-    <h2> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; PAYMENT COMPLETED</h2>
-    <p>PAYMENT KEY = {{ this.$route.query.paymentKey }}<br/></p>
-    <p>RESERVATION ID = {{ this.$route.query.orderId }}<br/></p>
-    <p>결제 금액 = {{ this.$route.query.amount }}</p>
-  </div>
-  <div class="info-check">
-    <v-btn
-        color="#ffffff"
-        type="submit"
-        block
-        class="mt-2"
-        v-on:click="b"
-    >다른 예약 진행하기</v-btn>
-    <v-btn
-        color="#696969"
-        type="submit"
-        block
-        class="mt-2"
-        v-on:click="c"
-    >예약 상세 정보</v-btn>
+    <div class="message centered">
+      <img
+          width="35"
+          src="https://static.toss.im/3d-emojis/u1F389_apng.png"
+          class="centered-image"/>
+      <p>예약이 완료되었습니다!</p>
+      <button @click="$router.push('/reservationlist')" class="custom-button" id="payment-button" style="margin-top: 30px">예약 내역 확인하기</button>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "@/axios";
+import reservationListMain from "@/components/reservationlist/ReservationListMain.vue";
+import ReservationListRoom from "@/components/reservationlist/ReservationListRoom.vue";
 
 export default {
+  computed: {
+    ReservationListRoom() {
+      return ReservationListRoom
+    },
+    reservationListMain() {
+      return reservationListMain
+    }
+  },
   data() {
     return {
       requestData: {
+        orderName: "",
         paymentKey: "",
         orderId: "",
         amount: "",
+        paymentType: "",
+        reservationId: "",
       },
     };
   },
   methods: {
     confirmPayment() {
+      this.requestData.orderName = this.$route.query.orderName;
       this.requestData.paymentKey = this.$route.query.paymentKey;
       this.requestData.orderId = this.$route.query.orderId;
       this.requestData.amount = this.$route.query.amount;
+      this.requestData.paymentType = this.$route.query.paymentType;
+      this.requestData.reservationId = this.$route.query.reservationId;
 
       axios
       .post(
-          `/api/v1/payments/confirm`,
+          // eslint-disable-next-line no-undef
+          `/api/v1/reservation/${this.$route.query.reservationId}/payment`,
           this.requestData,
           {
+            withCredentials:true,
             headers: {
               "Content-Type": "application/json",
-              Authorization: localStorage.getItem("accessToken"),
             },
           }
       )
@@ -73,20 +78,31 @@ export default {
 
 <style>
 .payment-info {
-  padding: 10px 10px 10px 10px;
-  width: 500px;
-  margin-left: 20px;
-  display: block;
-  justify-content: center;
+  width: 650px;
+  background-color: white;
   border-radius: 10px;
-  border: 1px solid #696969;
-  flex-direction: column;
+  box-shadow: 0 10px 20px rgb(0 0 0 / 1%), 0 6px 6px rgb(0 0 0 / 6%);
+  padding: 40px 30px 50px 30px;
+  margin: auto;
+  margin-top: 100px;
+  color: #333D4B;
 }
+ .centered {
+   text-align: center;
+ }
 
-.info-check{
-  margin-top: 20px;
-  margin-left: 90px;
-  bottom: 28%;
-  width: 350px;
+.centered-image {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 10px;
+}
+.custom-button{
+  font-size: 12px;
+  color: #333D4B;
+  background-color: white;
+  border: 1px solid gray;
+  border-radius: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
 }
 </style>
