@@ -1,5 +1,4 @@
 <template>
-  <v-card flat class="w-100 h-100">
     <v-card-text>
       <div class="d-sm-flex align-center">
         <div>
@@ -91,9 +90,8 @@
           </tbody>
         </template>
       </v-table>
-			<v-pagination class="pagination mb-2 mt-6" size="small" v-model="page.pageNumber" :length="page.totalPages" @update:modelValue="getRoomList"></v-pagination>
+			<v-pagination class="pagination mb-2 mt-6" size="small" v-model="page.pageNumber" :length="page.totalPages" @update:modelValue="getReservationList"></v-pagination>
     </v-card-text>
-  </v-card>
 
 </template>
 <script>

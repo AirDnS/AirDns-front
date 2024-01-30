@@ -20,6 +20,9 @@
       </v-card-actions>
     </v-card>
   </v-container>
+  <!-- <v-pagination class="pagination mb-2 mt-6" size="small" v-model="page.pageNumber" :length="page.totalPages" @update:modelValue="getRoomList"></v-pagination> -->
+
+  <v-pagination v-model="page.pageNumber" :length="page.totalPages" @update:modelValue="getRoomList"></v-pagination>
 </template>
 
 <script>
@@ -31,6 +34,10 @@ import router from "@/routers";
 export default {
   data() {
     return {
+      page: {
+        pageNumber: 1,
+        totalPages: 1,
+      },
       roomList: "null",
       imageUrl: "",
       example12: {
@@ -48,9 +55,15 @@ export default {
   },
   methods: {
     getRoomList: function () {
-      axios.get(`/api/v1/rooms`)
+      axios.get(`/api/v1/rooms`, {
+        params: {
+          page: this.page.pageNumber - 1
+        }})
           .then((result) => {
             this.roomList = result.data.data.content;
+            this.page.pageNumber = result.data.data.pageable.pageNumber + 1;
+            this.page.totalPages = result.data.data.totalPages;
+
             console.log(this.roomList);
           })
           .catch((error) => {

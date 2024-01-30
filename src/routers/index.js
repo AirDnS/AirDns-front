@@ -1,7 +1,6 @@
 import {createRouter, createWebHistory} from "vue-router";
 import HomeMain from "@/components/home/HomeMain.vue";
 import HomeHeader from "@/components/home/HomeHeader.vue";
-import HomeFooter from "@/components/home/HomeFooter.vue";
 import LoginMain from "@/components/login/LoginMain.vue";
 import LoginHeader from "@/components/login/LoginHeader.vue";
 import RoomDetailMain from "@/components/roomdetail/RoomDetailMain.vue";
@@ -31,8 +30,7 @@ const routes = [
         name:"HomePage",
         components: {
             default : HomeMain,
-            header : HomeHeader,
-            footer : HomeFooter
+            header : HomeHeader
         }
     },
     {
