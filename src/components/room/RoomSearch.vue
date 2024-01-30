@@ -1,87 +1,91 @@
 <template>
   <div class="search-field">
-  <v-card class="search-card">
-    <div class = "one">
-      <v-dialog v-model="priceFlag" persistent>
-        <template v-slot:activator="{ props }">
-          <v-btn  v-bind="props"> price </v-btn>
-        </template>
-        <v-card class = "test-modal">
-          <v-range-slider
-              class="slider"
-              thumb-label="always"
-              ticks
-              :max="priceMax"
-              :min="priceMin"
-              step="1000"
-              v-model="priceValue"
-          ></v-range-slider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green-darken-1" variant="text" @click="priceFlag = false">
-              exit
-            </v-btn>
-            <v-btn color="green-darken-1" variant="text" @click="priceFlag = false">
-              save
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
-    <div class = "two">
-      <v-dialog v-model="sizeFlag">
-        <template v-slot:activator="{ props }">
-          <v-btn  v-bind="props"> size </v-btn>
-        </template>
-        <v-card class = "test-modal">
-          <v-range-slider
-              class="slider"
-              thumb-label="always"
-              ticks
-              :max="sizeMax"
-              :min="sizeMin"
-              step="1"
-              v-model="sizeValue"
-          ></v-range-slider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green-darken-1" variant="text" @click="sizeFlag = false">
-              exit
-            </v-btn>
-            <v-btn color="green-darken-1" variant="text" @click="sizeFlag = false">
-              save
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
-    <div class = "three">
-      <v-dialog v-model="equipmentFlag" persistent>
-        <template v-slot:activator="{ props }">
-          <v-btn  v-bind="props"> equipment </v-btn>
-        </template>
-        <v-card class = "test-modal">
-          <Multiselect
-              v-model="equipment"
-              v-bind="example12"
-          ></Multiselect>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green-darken-1" variant="text" @click="equipmentFlag = false">
-              exit
-            </v-btn>
-            <v-btn color="green-darken-1" variant="text" @click="equipmentFlag = false">
-              save
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
-    <v-text-field  class = "four"  v-model="text" height="70px">
-    </v-text-field>
-    <v-btn variant="outlined" v-on:click="sendRoomList" class="five" > 검색
-    </v-btn>
-  </v-card>
+    <v-card class="search-card">
+      <div class="one">
+        <v-dialog v-model="priceFlag">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props"> price</v-btn>
+          </template>
+          <v-card class="test-modal">
+            <v-range-slider
+                class="slider"
+                thumb-label="always"
+                ticks
+                :max="priceMax"
+                :min="priceMin"
+                step="1000"
+                v-model="elements.priceValue"
+            ></v-range-slider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green-darken-1" variant="text" @click="priceFlag = false">
+                exit
+              </v-btn>
+              <v-btn color="green-darken-1" variant="text" @click="priceFlag = false">
+                save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
+      <div class="two">
+        <v-dialog v-model="sizeFlag">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props"> size</v-btn>
+          </template>
+          <v-card class="test-modal">
+            <v-range-slider
+                class="slider"
+                thumb-label="always"
+                ticks
+                :max="sizeMax"
+                :min="sizeMin"
+                step="1"
+                v-model="elements.sizeValue"
+            ></v-range-slider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green-darken-1" variant="text" @click="sizeFlag = false">
+                exit
+              </v-btn>
+              <v-btn color="green-darken-1" variant="text" @click="sizeFlag = false">
+                save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
+      <div class="three">
+        <v-dialog v-model="equipmentFlag">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props"> equipment</v-btn>
+          </template>
+          <v-card class="test-modal">
+            <Multiselect
+                v-model="elements.equipment"
+                v-bind="example12"
+            ></Multiselect>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green-darken-1" variant="text" @click="equipmentFlag = false">
+                exit
+              </v-btn>
+              <v-btn color="green-darken-1" variant="text" @click="equipmentFlag = false">
+                save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
+      <v-text-field class="four" v-model="elements.text" height="70px">
+      </v-text-field>
+      <div class="search-btn-box">
+        <v-btn variant="outlined" v-on:click="sendRoomList" class="five"> 검색
+        </v-btn>
+        <v-btn density="comfortable" v-on:click="resetFilter" icon="mdi-undo-variant" class="trash-btn">
+        </v-btn>
+      </div>
+    </v-card>
   </div>
 </template>
 <script>
@@ -94,15 +98,13 @@ export default {
   },
   data() {
     return {
-      priceFlag : false,
-      sizeFlag : false,
-      equipmentFlag : false,
-      priceMin : 0,
-      priceMax : 50000,
-      priceValue: [0, 50000],
-      sizeMin : 0,
-      sizeMax : 50,
-      sizeValue: [0, 50],
+      priceFlag: false,
+      sizeFlag: false,
+      equipmentFlag: false,
+      priceMin: 0,
+      priceMax: 50000,
+      sizeMin: 0,
+      sizeMax: 50,
       example12: {
         mode: 'tags',
         label: 'name',
@@ -114,20 +116,21 @@ export default {
         searchable: true,
         options: []
       },
-      equipment: [],
+      elements: {
+        text: "",
+        priceValue: [0, 50000],
+        sizeValue: [0, 50],
+        equipment: [],
+      },
       sendItem: {},
-      text : "",
     }
   },
-  methods : {
+  methods: {
     sendRoomList: function () {
-      const keyword = this.text;
-      const priceArr = this.priceValue.join(',');
-      const sizeArr = this.sizeValue.join(',');
-      const equipmentArr = this.equipment.join(',');
-      console.log(priceArr)
-      console.log(sizeArr)
-      console.log(equipmentArr)
+      const keyword = this.elements.text;
+      const priceArr = this.elements.priceValue.join(',');
+      const sizeArr = this.elements.sizeValue.join(',');
+      const equipmentArr = this.elements.equipment.join(',');
       axios.get(`/api/v1/rooms`, {
         params: {
           keyword: keyword,
@@ -139,7 +142,7 @@ export default {
           .then((result) => {
             console.log(result)
             this.sendItem = result.data.data.content;
-            this.emitter.emit("send",this.sendItem);
+            this.emitter.emit("send", this.sendItem);
           })
           .catch((error) => {
             window.alert(error)
@@ -155,10 +158,23 @@ export default {
             localStorage.setItem("equipment", JSON.stringify(this.example12));
           })
     },
+    resetFilter() {
+      axios.get(`/api/v1/rooms`, {})
+          .then((result) => {
+            this.sendItem = result.data.data.content;
+            this.emitter.emit("send", this.sendItem);
+          })
+          .catch((error) => {
+            window.alert(error)
+          })
+          .then(() => {
+            console.log("test")
+          })
+    }
   },
   created() {
     this.getEquipment();
-  }
+  },
 }
 </script>
 
@@ -170,12 +186,14 @@ export default {
   height: 70px;
   justify-content: center;
 }
+
 .search-card {
   display: grid;
   width: 1000px;
   grid-template-columns: repeat(6, 1fr);
   grid-gap: 10px;
 }
+
 .one {
   grid-column: 1/2;
 }
@@ -192,6 +210,7 @@ export default {
   margin-top: 10px;
   grid-column: 4/6;
 }
+
 .five {
   margin-top: 20px;
   grid-column: 6/7;
@@ -207,6 +226,15 @@ export default {
   margin-top: 40px;
   padding-right: 20px;
   padding-left: 20px;
+}
+
+.search-btn-box {
+  display: flex;
+  justify-content: center;
+}
+.trash-btn {
+  margin-top: 18px;
+  margin-left: 10px;
 }
 
 </style>
