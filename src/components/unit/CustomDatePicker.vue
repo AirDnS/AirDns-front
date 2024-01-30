@@ -40,7 +40,7 @@
 <script>
 
 export default {
-  props: ['reservatedTimeList'],
+  props: ['reservatedTimeList', 'restScheduleList'],
   data: function () {
     return {
       selectedDate: null,
@@ -57,32 +57,48 @@ export default {
       this.allowTimes = [];
       this.selectRange = [];
       this.selectedDateMessage = "";
+      this.setDisabledDate();
       this.calSelectDateMessage();
 
-      let date = this.disabledDateTimes[selectedDate];
-      if (date == null || date.length == 0) {
-        for ( let i = 6; i < 23; i++) {
-          this.allowTimes.push(i);
+      let hourIndex = 6;
+      let disableIndex = 0;
+      let currentDate = new Date(); 
+      let disabledTime = this.disabledDateTimes[selectedDate];
+
+      if (selectedDate == currentDate.getFullYear() + "-" 
+          + String(currentDate.getMonth() + 1).padStart(2, "0") + "-" 
+          + String(currentDate.getDate()).padStart(2, "0") ) {
+
+        hourIndex = currentDate.getHours() + 1;
+      }
+      
+      if (disabledTime == null || disabledTime.length == 0) {
+        for ( ; hourIndex < 23; hourIndex++) {
+          this.allowTimes.push(hourIndex);
         }
         return;
       }
-
-      // 정렬되어있음, 순서대로 비교
-      let index = 0;
-      for ( let i = 6; i < 23; i++) {
-        if (index >= date.length) {
-          this.allowTimes.push(i);
-          continue;
-        }
-
-        if (date[index][0] <= i && i < date[index][1]) {
-          continue;
-        } else {
-          this.allowTimes.push(i);
-          if (date[index][1] <= i) {
-            index++;
+      
+      for ( ; disableIndex < disabledTime.length; disableIndex++) {
+          if (disabledTime[disableIndex][1] > hourIndex) {
+            break;
           }
         }
+
+      // 정렬되어있음, 순서대로 비교
+      for ( ; hourIndex < 23; hourIndex++) {
+        if (disableIndex >= disabledTime.length) {
+          this.allowTimes.push(hourIndex);
+          continue;
+        }
+
+        if (disabledTime[disableIndex][0] <= hourIndex && hourIndex <= disabledTime[disableIndex][1]) {
+          hourIndex = disabledTime[disableIndex][1]-1;
+          disableIndex++;
+          continue;
+        }
+
+        this.allowTimes.push(hourIndex);
       }
       
     },
@@ -132,11 +148,13 @@ export default {
 
     },
     setDisabledDate() {
+      console.log(this.reservatedTimeList);
+      console.log(this.restScheduleList);
       if (this.reservatedTimeList == null) {
         return;
       }
 
-      this.reservatedTimeList.forEach((rsArr) => {
+      this.reservatedTimeList?.forEach((rsArr) => {
               let startdate = new Date(rsArr[0]);
               let enddate = new Date(rsArr[1]);
               if (this.disabledDateTimes[this.getDateString(startdate)] == null) {
@@ -144,6 +162,17 @@ export default {
               } 
               this.disabledDateTimes[this.getDateString(startdate)].push([this.getTimeString(startdate), this.getTimeString(enddate)]);
             })
+
+            
+      this.restScheduleList?.forEach((rsArr) => {
+              let startdate = new Date(rsArr[0]);
+              let enddate = new Date(rsArr[1]);
+              if (this.disabledDateTimes[this.getDateString(startdate)] == null) {
+                this.disabledDateTimes[this.getDateString(startdate)] = [];
+              } 
+              this.disabledDateTimes[this.getDateString(startdate)].push([this.getTimeString(startdate), this.getTimeString(enddate)]);
+            })
+            
 
       for (let key of Object.keys(this.disabledDateTimes)) {
         let value = this.disabledDateTimes[key];
@@ -170,21 +199,27 @@ export default {
         this.disabledDates.push(key);
 
       }
+
+      console.log(this.disabledDateTimes);
+      console.log(this.disabledDates);
     },
 
     sendDate() {
-      this.$emit('select', {
-        "startDate": this.selectedDate + " " + String(this.selectRange[0]).padStart(2, "0") + ":00",
-        "endDate": this.selectedDate + " " + String(this.selectRange[1]+1).padStart(2, "0") + ":00"
-      })
+      let res = {};
+      if (this.selectRange[0]) {
+        res = {
+          "startDate": this.selectedDate + " " + String(this.selectRange[0]).padStart(2, "0") + ":00",
+          "endDate": this.selectedDate + " " + String(this.selectRange[1]+1).padStart(2, "0") + ":00"
+        }
+      }
 
+      this.$emit('select', res)
     }
 
   },
-  created() {
+  mounted() {
     this.selectedDate = this.getDateString(new Date());
     this.selectDate(this.selectedDate); 
-    this.setDisabledDate();
   }
 }
 </script>

@@ -266,57 +266,15 @@
           </v-card>
         </v-window-item>
         <v-window-item value="option-3">
-          <v-card flat>
-
             <ReservationListRoom
               :roomsId="this.roomsId"
             ></ReservationListRoom>
-          </v-card>
         </v-window-item>
         <v-window-item value="option-4">
-          <v-dialog
-              v-model="dialog"
-              persistent
-              width="auto"
-          >
-            <template v-slot:activator="{ props }">
-              <v-btn
-                  color="primary"
-                  v-bind="props"
-              >
-                휴무 추가
-              </v-btn>
-            </template>
-            <v-card class="pa-5">
-              <v-card-title>
-                <span class="text-h5 mt-5">휴무 시간 선택</span>
-              </v-card-title>
-
-              <CustomDatePicker
-                  :reservatedTimeList="this.roomData.reservatedTimeList"
-                  @select="selectRestDate"
-              ></CustomDatePicker>
-
-              <v-card-actions class="pa-0">
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="blue-darken-1"
-                    variant="text"
-                    @click="dialog = false"
-                >
-                  닫기
-                </v-btn>
-                <v-btn
-                    color="blue-darken-1"
-                    variant="text"
-                    @click="addRestDate"
-                >
-                  추가
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
+            <RestScheduleListRoom
+              :roomsId="this.roomsId"
+              :reservatedTimeList="this.roomData.reservatedTimeList"
+            ></RestScheduleListRoom>
         </v-window-item>
       </v-window>
     </div>
@@ -327,13 +285,13 @@
 import Multiselect from "@vueform/multiselect";
 import axios from "@/axios";
 import ReservationListRoom from "@/components/reservationlist/ReservationListRoom.vue";
-import CustomDatePicker from "@/components/unit/CustomDatePicker.vue"
+import RestScheduleListRoom from "@/components/restschedule/RestScheduleListRoom.vue";
 
 export default {
   components: {
     Multiselect,
     ReservationListRoom,
-    CustomDatePicker
+    RestScheduleListRoom
   },
   data: function () {
     return {
@@ -341,7 +299,6 @@ export default {
       panel: [0],
       tab: 'option-1',
       isChangingIsClosed: false,
-      dialog: false,
       roomData: {},
       files: [],
       removeImagesIds: [],
@@ -457,24 +414,6 @@ export default {
       } catch {
         console.log("not image!")
       }
-    },
-    selectRestDate(data) {
-      this.selectRestTimes = data;
-    },
-    addRestDate: function () {
-
-      this.dialog = false;
-      let params = this.selectRestTimes;
-      axios.post(`/api/v1/rooms/${this.roomsId}/addRestTime`, params, {withCredentials: true})
-          .then(() => {
-            this.isChangingIsClosed = false;
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-          .finally(() => {
-            console.log("test");
-          })
     }
 
   },

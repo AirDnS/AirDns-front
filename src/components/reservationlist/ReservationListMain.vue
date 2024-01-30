@@ -106,7 +106,7 @@
           </tbody>
         </template>
       </v-table>
-			<v-pagination class="pagination mb-2 mt-6" size="small" v-model="page.pageNumber" :length="page.totalPages" @update:modelValue="getRoomList"></v-pagination>
+			<v-pagination class="pagination mb-2 mt-6" size="small" v-model="page.pageNumber" :length="page.totalPages" @update:modelValue="getReservationList"></v-pagination>
     </v-card-text>
   </v-card>
 
