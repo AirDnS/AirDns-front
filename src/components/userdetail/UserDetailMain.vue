@@ -4,8 +4,20 @@
       <v-row justify="center">
         <v-col cols="12" md="6" class="margin-bottom">
           <v-text-field
-              v-model="user.nickname"
+              v-model="user.name"
               label="이름"
+              variant="solo"
+              readonly
+              dense
+              style="width: 100%; margin-right: 20px;"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col cols="12" md="6" class="margin-bottom">
+          <v-text-field
+              v-model="user.nickname"
+              label="닉네임"
               variant="solo"
               readonly
               dense
@@ -65,6 +77,7 @@ export default {
   data() {
     return {
       user: {
+        name: "",
         nickname: "",
         email: "",
         address: "",
