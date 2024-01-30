@@ -1,5 +1,6 @@
 <template>
     <CustomDatePicker 
+      v-if="reservatedTimeList != null && restScheduleList != null"
       :reservatedTimeList="this.reservatedTimeList"
       :restScheduleList="this.restScheduleList"
       @select="selectReservationDate"
@@ -35,8 +36,8 @@ export default {
       // checkInTime: null,
       // checkOutTime: null,
       price: null,
-      reservatedTimeList: [],
-      restScheduleList: [],
+      reservatedTimeList: null,
+      restScheduleList: null,
       reservationParams: {}
     }
   },

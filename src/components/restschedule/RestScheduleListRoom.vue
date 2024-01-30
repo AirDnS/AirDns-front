@@ -89,6 +89,7 @@
             </v-card-title>
 
             <CustomDatePicker
+                v-if="this.reservatedTimeList != null && this.restScheduleList != null"
                 :reservatedTimeList="this.reservatedTimeList"
                 :restScheduleList="this.restScheduleList"
                 @select="selectRestDate"
