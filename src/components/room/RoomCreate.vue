@@ -133,17 +133,13 @@ export default {
         ],
         price: [
           v => !!v || '가격을 입력해주세요.',
-          v => {
-            const pattern = /^[0-9]+$/
-            return pattern.test(v) || "숫자만 입력 가능합니다."
-          }
+          v => !isNaN(v) || "숫자만 입력 가능합니다.",
+          v => v <= 50000 || "50000 이하로 입력해주세요.",
         ],
         size: [
           v => !!v || '평수를 입력해주세요.',
-          v => {
-            const pattern = /^[0-9]+$/
-            return pattern.test(v) || "숫자만 입력 가능합니다."
-          }
+          v => !isNaN(v) || "숫자만 입력 가능합니다.",
+          v => v <= 50 || "50 이하로 입력해주세요.",
         ],
         files: [
           v => !v || !!v.length || '방 사진을 업로드해주세요.',
