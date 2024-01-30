@@ -33,17 +33,3 @@ app.config.globalProperties.$axios = axios
 app.config.globalProperties.emitter = emitter
 app.component('VueDatePicker', VueDatePicker);
 app.mount('#app')
-
-// axios.interceptors.request.use(config => {
-//     const token = localStorage.getItem('accessToken');
-//     if (token) {
-//       config.headers['Authorization'] = `${token}`;
-//     }
-//     return config;
-//   });
-
-
-app.config.globalProperties.authHeader = function () {
-  const token = localStorage.getItem('accessToken'); 
-  return { headers: {'Authorization': token} };
-};
