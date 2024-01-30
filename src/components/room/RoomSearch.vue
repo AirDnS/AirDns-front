@@ -2,7 +2,7 @@
   <div class="search-field">
     <v-card class="search-card">
       <div class="one">
-        <v-dialog v-model="priceFlag">
+        <v-dialog v-model="priceFlag" width="500">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props"> price</v-btn>
           </template>
@@ -29,7 +29,7 @@
         </v-dialog>
       </div>
       <div class="two">
-        <v-dialog v-model="sizeFlag">
+        <v-dialog v-model="sizeFlag" width="500">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props"> size</v-btn>
           </template>
@@ -56,15 +56,18 @@
         </v-dialog>
       </div>
       <div class="three">
-        <v-dialog v-model="equipmentFlag">
+        <v-dialog v-model="equipmentFlag" width="500">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props"> equipment</v-btn>
           </template>
-          <v-card class="test-modal">
-            <Multiselect
-                v-model="elements.equipment"
-                v-bind="example12"
-            ></Multiselect>
+          <v-card class="test-modal" height="300">
+            <div class="ma-5">
+              <Multiselect
+                  v-model="elements.equipment"
+                  v-bind="example12"
+              ></Multiselect>
+
+            </div>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="green-darken-1" variant="text" @click="equipmentFlag = false">
