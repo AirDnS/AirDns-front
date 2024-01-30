@@ -28,7 +28,7 @@
           </v-textarea>
         </div>
         
-        <template v-slot:append>
+        <template v-slot:append v-if="loginUserId == data.usersId">
           <v-btn
             color="grey-lighten-1"
             icon="mdi-pencil"
@@ -49,6 +49,7 @@
     </v-card>
     
     <v-row
+      v-show="hasUser"
       class="mx-3">
       <v-textarea 
       label="후기"
@@ -80,11 +81,13 @@ import axios from "@/axios";
 export default {
   data() {
     return {
-      roomsId: "null",
+      roomsId: null,
+      loginUserId: null,
       reviewData: [],
       addReviewContent: "",
       modReviewsId: null,
       modReviewContent: "",
+      hasUser: false,
     }
   },
   methods: {
@@ -141,8 +144,11 @@ export default {
           .then(() => {
             this.getReview();
           })
-          .catch((error) => {
-            console.log(error);
+          .catch(() => {
+            this.$swal.fire({
+                title: "실패했습니다.",
+                icon: "error"
+              });
           })
           .finally(() => {
           })
@@ -167,8 +173,11 @@ export default {
               console.log( result.data.message );
               this.getReview();
             })
-            .catch((error) => {
-              console.log(error);
+            .catch(() => {
+              this.$swal.fire({
+                title: "실패했습니다.",
+                icon: "error"
+              });
             })
             .finally(() => {
             })
@@ -180,6 +189,11 @@ export default {
     const {data} = history.state;
     this.roomsId = data;
     this.getReview();
+    
+    if (localStorage.getItem('userInfo') != null) {
+      this.hasUser = true;
+      this.loginUserId = JSON.parse(localStorage.getItem('userInfo'))["id"];
+    }
   }
 }
 </script>
