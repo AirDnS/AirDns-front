@@ -1,7 +1,6 @@
 <template>
   <v-sheet class="pa-12" rounded>
     <v-card class="mx-auto px-6 py-8" max-width="540px">
-      <v-form @submit.prevent="postCreateRoom">
         <v-text-field
             v-model="data.name"
             label="방 이름"
@@ -15,10 +14,16 @@
             row-height="25"
             shaped
         ></v-textarea>
+        <div class="postcodeBox">
+          <v-text-field type="text" v-model="data.address" placeholder="주소" readonly></v-text-field>
+          <v-btn class="post-btn" id="postcode" @click="openPostcode">검색
+          </v-btn>
+        </div>
         <v-text-field
-            v-model="data.address"
-            label="방 주소"
+            v-model="addressDetail"
+            label="상세 주소 "
             variant="outlined"
+            placeholder="상세주소를 입력해주세요"
         ></v-text-field>
         <v-text-field
             v-model="data.price"
@@ -32,7 +37,7 @@
             variant="outlined"
             placeholder="평수 기준으로 입력해주세요"
         ></v-text-field>
-               <!-- <div class="output">Data: {{ data.equipment }}</div> -->
+        <!-- <div class="output">Data: {{ data.equipment }}</div> -->
         <Multiselect
             v-model="data.equipment"
             v-bind="example12"
@@ -46,7 +51,7 @@
             type="file"
             accept="image/*"
             @change="previewImage">
-        >
+          >
           <template v-slot:selection="{ fileNames }">
             <template v-for="(fileName, index) in fileNames" :key="fileName">
               <v-chip
@@ -55,7 +60,6 @@
                   label
                   size="small"
                   class="me-2"
-                  
               >
                 {{ fileName }}
               </v-chip>
@@ -65,26 +69,35 @@
               +{{ files.length - 2 }} 파일
               </span>
             </template>
-            
+
           </template>
         </v-file-input>
         <v-row>
-              <template v-for="v in files" :key="v">
-                <v-col>
-                  <v-img :src="previewImage(v)" width="500px" height="280px" class="room-image"></v-img>
-                </v-col>
-              </template>
-            </v-row>
+          <template v-for="v in files" :key="v">
+            <v-col>
+              <v-img :src="previewImage(v)" width="500px" height="280px" class="room-image"></v-img>
+            </v-col>
+          </template>
+        </v-row>
         <br>
-        <v-btn
-            block
-            color="primary"
-            size="large"
-            type="submit"
-            variant="elevated">
-          등록하기
-        </v-btn>
-      </v-form>
+        <div class="btn-box">
+          <div>
+            <v-btn
+                class="create-btn"
+                color="primary"
+                v-on:click="postCreateRoom"
+                variant="elevated">
+              등록하기
+            </v-btn>
+            <v-btn
+                class="home-btn"
+                v-on:click="goHome"
+                color="error"
+                variant="elevated">
+              취소하기
+            </v-btn>
+          </div>
+        </div>
     </v-card>
   </v-sheet>
 </template>
@@ -103,6 +116,7 @@ export default {
       accessToken: {
         accessToken: ""
       },
+      addressDetail: "",
       data: {
         name: "",
         price: "",
@@ -124,6 +138,10 @@ export default {
         searchable: true,
         options: []
       },
+      themeObj: {
+        searchBgColor: "#0B65C8", //검색창 배경색
+        queryTextColor: "#FFFFFF" //검색창 글자색
+      },
     }
   },
   methods: {
@@ -133,9 +151,10 @@ export default {
     },
     postCreateRoom: function () {
       const frm = new FormData();
+      this.data.address = this.data.address + " " + this.addressDetail
       const json = JSON.stringify(this.data);
-      const blob = new Blob([json], { type: "application/json" });
-      frm.append('data',blob);      
+      const blob = new Blob([json], {type: "application/json"});
+      frm.append('data', blob);
       for (let file of this.files) {
         frm.append('files', file);
       }
@@ -148,7 +167,7 @@ export default {
           }).then((res) => {
         window.alert("성공")
         console.log(res);
-        router.push({name:"HomePage"})
+        router.push({name: "HomePage"})
       }).catch((error) => {
         window.alert("실패")
         console.log(error)
@@ -156,7 +175,22 @@ export default {
         console.log("test");
       })
     },
-    
+    openPostcode() {
+      new window.daum.Postcode({
+        width: 500,
+        height: 600,
+        theme: this.themeObj,
+        oncomplete: (data) => {
+          this.data.address = data.roadAddress;
+        }
+      }).open({
+        left: (window.screen.width / 2) - (500 / 2),
+        top: (window.screen.height / 2) - (600 / 2),
+      });
+    },
+    goHome() {
+      router.push({name: "HomePage"})
+    },
     previewImage: function (file) {
       try {
         return URL.createObjectURL(file);
@@ -171,4 +205,23 @@ export default {
 }
 </script>
 
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style>
+.postcodeBox {
+  display: flex;
+}
+
+.btn-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.create-btn{
+  margin-right: 10px;
+}
+
+.home-btn{
+  margin-left: 10px;
+}
+
+</style>
