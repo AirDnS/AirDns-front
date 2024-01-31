@@ -102,8 +102,7 @@ export default {
     }
   },
   created() {
-    const {data} = history.state;
-    this.roomsId = data;
+    this.roomsId = this.$route.params.roomsId;
     this.getRoomDetail();
   }
 

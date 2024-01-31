@@ -1,44 +1,60 @@
 <template>
-  <v-container class="room_list v-on:" style="min-width: max-content;">
-    <v-card class="room_card" v-for="(v, i) in roomList" :key="i">
-      <v-img 
-        aspect-ritio="2"
-        :src="v.image != null && v.image.length > 0 
-          ? v.image[0].imageUrl 
-          : require('@/assets/noimage.jpg')"
-        ></v-img>
-      <v-card-text>
-        <div>
-          <h2 class="title primary--text mb-2">{{ v.name }}</h2>
-          <p class="mb-0">{{ v.address }}</p>
-        </div>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn width="300px" variant="outlined" color="red white--text" v-on:click="goRoomDetail(`${v.roomsId}`)">상세 정보
-          확인
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-container>
-  <!-- <v-pagination class="pagination mb-2 mt-6" size="small" v-model="page.pageNumber" :length="page.totalPages" @update:modelValue="getRoomList"></v-pagination> -->
+  <div class="box-container room_search_bar">
+    <RoomSearch
+    @search="getRoomList"
+    ></RoomSearch>
+  </div>
 
-  <v-pagination v-model="page.pageNumber" :length="page.totalPages" @update:modelValue="getRoomList"></v-pagination>
+  <v-infinite-scroll @load="load" style="height: 100%;" :empty-text="'ㅤ'">
+    <div class="room_list">
+      <v-hover  v-for="v in roomList" :key="v.roomsId"
+          v-slot="{ isHovering, props }"
+        >
+        <v-card class="room_card"
+          :elevation="isHovering ? 8 : 2"
+          :class="{ 'on-hover': isHovering }"
+          v-bind="props"
+          v-on:click="goRoomDetail(`${v.roomsId}`)"
+          >
+          <v-img 
+          cover
+          :aspect-ratio="1"
+            :src="v.image != null && v.image.length > 0 
+              ? v.image[0].imageUrl 
+              : require('@/assets/noimage.jpg')"
+            ></v-img>
+          <v-card-text>
+            <div>
+              <h2 class="title primary--text mb-2 text-truncate">{{ v.name }}</h2>
+              <p class="text-truncate">{{ v.address }}</p>
+              <h3 class="mt-3 mb-0 text-truncate" v-if="v.price">{{ "₩ " + $filters.formatNumber(v.price) }}</h3>
+            </div>
+          </v-card-text>
+        </v-card>
+
+      </v-hover>
+    </div>
+    </v-infinite-scroll>
+  
 </template>
 
 <script>
-
 import axios from "@/axios";
 import router from "@/routers";
-// import router from "@/routers";
+import { computed } from "vue";
+import { useStore } from "vuex";
+
+import RoomSearch from "@/components/room/RoomSearch.vue";
 
 export default {
+  components: {
+    "RoomSearch": RoomSearch
+  },
   data() {
     return {
-      page: {
-        pageNumber: 1,
-        totalPages: 1,
-      },
-      roomList: "null",
+      cursor: null,
+      pageSize: 9,
+      roomList: [],
       imageUrl: "",
       example12: {
         mode: 'tags',
@@ -53,38 +69,71 @@ export default {
       },
     }
   },
-  methods: {
-    getRoomList: function () {
-      axios.get(`/api/v1/rooms`, {
-        params: {
-          page: this.page.pageNumber - 1
-        }})
-          .then((result) => {
-            this.roomList = result.data.data.content;
-            this.page.pageNumber = result.data.data.pageable.pageNumber + 1;
-            this.page.totalPages = result.data.data.totalPages;
+  setup() {
+    const store = useStore();
+    const searchFilter = computed(() => store.state.searchFilter);
 
-            console.log(this.roomList);
+    return {searchFilter};
+  },
+  methods: {
+    getRoomList: async function (isPageReset) {
+      const cond = this.searchFilter || {};
+      if (isPageReset == true) {
+        this.roomList = [];
+      }
+      
+        try {
+          const result = await axios.get(`/api/v1/rooms`, {
+            params: {
+              cursor: this.cursor,
+              pageSize: this.pageSize,
+              keyword: cond.keyword,
+              price: cond.priceArr,
+              size: cond.sizeArr,
+              equipment: cond.equipmentArr,
+            }})
+
+            if (result.data.data.length == this.pageSize) {
+              this.cursor = result.data.data.at(-1).roomsId;
+            } else {
+              this.cursor = -1;
+            }
+            
+          return new Promise(resolve => {
+            resolve(result.data.data)
           })
-          .catch((error) => {
-            console.log(error);
-          })
-          .finally(() => {
-            console.log("test");
-          })
+        } catch (err) {
+          console.log("error : " + err);
+        }
+
+    },
+    async load ({ done}) {
+      // Perform API call
+      const res = await this.getRoomList();
+
+      if (res == null || res.length < 0 || this.cursor === -1) {
+        done('empty')
+        return;
+      }
+
+      this.roomList.push(...res)
+
+      done('ok')
     },
     goRoomDetail: function (roomsId) {
-      router.push({
-        name: 'RoomDetail',
-        state: {
-          data: roomsId,
-        }
-      })
+      const routeData = router.resolve({
+          name: 'RoomDetail',
+          params: {
+            roomsId: roomsId
+          }
+        })
+      window.open(routeData.href, '_blank');
+
     },
   },
-  created() {
-    this.getRoomList();
-  },
+  // created() {
+  //   this.getRoomList();
+  // },
   mounted() {
     this.emitter.on("send", (sendItem) => {
       this.roomList = sendItem;
@@ -93,16 +142,43 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.v-card.on-hover.v-theme--dark {
+  background-color: rgba(#FFF, 0.8)
+}
+
+.v-card.on-hover.v-theme--dark > .v-card__text {
+  color: #000
+}
+
+.room_search_bar {
+
+  width: 1150px;
+  margin: auto;
+  
+  font-size: 40px;
+  text-align: center;
+}
+
 .room_list {
+  padding: 20px 40px 0px 40px;
+  /* display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px; */
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 250px 250px;
-  gap: 15px;
+  grid-template-columns: repeat(6, minmax(200px, 350px));
+  justify-content: center;
+  gap: 30px;
 }
 
 .room_card {
-  display: grid;
-  grid-template-rows: 120px 80px 50px;
+  max-width: 350px;
 }
+
+@media screen and (max-width: 550px) { .room_list { grid-template-columns: repeat(1, minmax(200px, 350px)); } }
+@media screen and (min-width: 550px) and (max-width: 830px) { .room_list { grid-template-columns: repeat(2, minmax(200px, 350px)); } }
+@media screen and (min-width: 830px) and (max-width: 1240px) { .room_list { grid-template-columns: repeat(3, minmax(200px, 350px));  } }
+@media screen and (min-width: 1240px) and (max-width: 1650px) { .room_list { grid-template-columns: repeat(4, minmax(200px, 350px)); } }
+@media screen and (min-width: 1650px) and (max-width: 2060px) { .room_list { grid-template-columns: repeat(5, minmax(200px, 350px)); } }
 </style>

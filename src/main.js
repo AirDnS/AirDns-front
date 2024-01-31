@@ -1,4 +1,5 @@
 import {createApp} from 'vue'
+import {createStore} from 'vuex'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import {loadFonts} from './plugins/webfontloader'
@@ -21,8 +22,20 @@ import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
 
 loadFonts()
 
+const store = createStore({
+    state:{
+        searchFilter: {}
+    },
+    mutations: {
+      setSearchFilter(state, map) {
+        state.searchFilter = map;
+      }
+    }
+  })  
+
 const emitter = mitt();
 const app = createApp(App)
+app.use(store)
 app.use(routers)
 app.use(vuetify)
 app.use(VueCookies)
@@ -33,3 +46,10 @@ app.config.globalProperties.$axios = axios
 app.config.globalProperties.emitter = emitter
 app.component('VueDatePicker', VueDatePicker);
 app.mount('#app')
+
+
+app.config.globalProperties.$filters = {
+    formatNumber(number) {
+        return Intl.NumberFormat().format(number);
+    }
+}
