@@ -170,12 +170,13 @@ export default {
       })
     },
     goRoomPage(roomsId) {
-      router.push({
-        name: 'RoomDetail',
-        state: {
-          data: roomsId,
-        }
-      })
+      const routeData = router.resolve({
+          name: 'RoomDetail',
+          params: {
+            roomsId: roomsId
+          }
+        })
+      window.open(routeData.href, '_blank');
     },
     deleteRoom(roomsId) {
       this.$swal.fire({

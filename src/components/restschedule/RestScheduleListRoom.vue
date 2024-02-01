@@ -207,12 +207,13 @@ export default {
         });
         },
         goRoomPage(roomsId) {
-            router.push({
+            const routeData = router.resolve({
                 name: 'RoomDetail',
-                state: {
-                    data: roomsId,
+                params: {
+                    roomsId: roomsId
                 }
-            })
+                })
+            window.open(routeData.href, '_blank');
         },
         selectRestDate(data) {
             this.selectRestTimes = data;
