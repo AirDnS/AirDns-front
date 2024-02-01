@@ -152,9 +152,11 @@ export default {
   
   display: grid;
   grid-template-columns: repeat(6, minmax(200px, 350px));
-  grid-template-rows: 1fr 1fr 1fr;
   justify-content: center;
   gap: 30px;
+  /* 무한 스크롤용 옵션 */
+  grid-template-rows: 1fr 1fr 1fr;
+  min-height: calc( (100vh - 300px) / 3); 
 }
 
 .room_card {
