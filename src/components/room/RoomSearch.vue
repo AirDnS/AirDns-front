@@ -80,7 +80,7 @@
           </v-card>
         </v-dialog>
       </div>
-      <v-text-field class="four" v-model="elements.text" height="70px">
+      <v-text-field class="four" v-model="elements.text" height="70px" @keydown.enter="sendRoomList">
       </v-text-field>
       <div class="search-btn-box">
         <v-btn variant="outlined" v-on:click="sendRoomList" class="five"> 검색
@@ -130,29 +130,15 @@ export default {
   },
   methods: {
     sendRoomList: function () {
-      const keyword = this.elements.text;
-      const priceArr = this.elements.priceValue.join(',');
-      const sizeArr = this.elements.sizeValue.join(',');
-      const equipmentArr = this.elements.equipment.join(',');
-      axios.get(`/api/v1/rooms`, {
-        params: {
-          keyword: keyword,
-          price: priceArr,
-          size: sizeArr,
-          equipment: equipmentArr
-        }
-      })
-          .then((result) => {
-            console.log(result)
-            this.sendItem = result.data.data.content;
-            this.emitter.emit("send", this.sendItem);
-          })
-          .catch((error) => {
-            window.alert(error)
-          })
-          .then(() => {
-            console.log("test")
-          })
+      
+      this.$store.commit("setSearchFilter", {
+        keyword: this.elements.text,
+        priceArr: this.elements.priceValue.join(','),
+        sizeArr: this.elements.sizeValue.join(','),
+        equipmentArr: this.elements.equipment.join(',')
+      });
+
+      this.$emit('search');
     },
     getEquipment: function () {
       axios.get('/api/v1/equipments')
@@ -162,17 +148,8 @@ export default {
           })
     },
     resetFilter() {
-      axios.get(`/api/v1/rooms`, {})
-          .then((result) => {
-            this.sendItem = result.data.data.content;
-            this.emitter.emit("send", this.sendItem);
-          })
-          .catch((error) => {
-            window.alert(error)
-          })
-          .then(() => {
-            console.log("test")
-          })
+      this.$store.commit("setSearchFilter", {});
+      this.$emit('search');
     }
   },
   created() {
@@ -183,7 +160,7 @@ export default {
 
 <style>
 .search-field {
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   flex-direction: row;
   height: 70px;

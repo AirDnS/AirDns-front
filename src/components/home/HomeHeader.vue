@@ -10,6 +10,7 @@
     <v-btn variant="outlined" class="login-btn" v-on:click="goCreateRoom" v-show="isHost">
       방등록
     </v-btn>
+    <v-btn variant="outlined" class="login-btn" v-on:click="updateRoleOnBackend" v-show="!isHost">대여 권한 얻기</v-btn>
     <v-btn variant="outlined" class="userDetail-btn" v-on:click="goUserDetail" v-show="hasUser">
       회원 정보
     </v-btn>
@@ -23,6 +24,7 @@
 </template>
 <script>
 import router from "@/routers";
+import axios from "@/axios";
 
 export default {
   data() {
@@ -66,7 +68,51 @@ export default {
       } else {
         window.alert("권한이 없습니다.")
       }
-    }
+    },
+    updateRoleOnBackend() {
+      axios.patch('/api/v1/users/role', {},{
+        withCredentials: true
+      })
+          .then(response => {
+
+            this.$swal.fire({
+              title: "권한을 획득하시겠습니까?",
+              text: "다시 되돌릴 수 없습니다!",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "네",
+              cancelButtonText: "아니오"
+            }).then((swalResult) => {
+              if (swalResult.isConfirmed) {
+
+                this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
+                this.userInfo.role = "HOST";
+                this.isUser = false;
+                localStorage.setItem("userInfo",JSON.stringify(this.userInfo));
+                console.log(response.data);
+
+                this.$swal.fire({
+                    title: "권한 변경에 성공했습니다!",
+                    icon: "success"
+                }).then(() => {
+                  router.go()
+                })
+                ;
+
+              }
+            });
+
+          })
+          .catch(error => {
+            this.$swal.fire({
+                title: "권한 변경에 실패했습니다.",
+                icon: "error"
+            });
+            console.error(error);
+          });
+    },
   }
 }
 </script>

@@ -15,7 +15,7 @@
     >예약하기</v-btn>
     <v-row>
       <v-col>
-        <p class="mb-3 text-no-wrap text-right text-body-2 text-grey-darken-1" v-if="price">시간당 가격 : {{ price }} ₩</p>
+        <p class="mb-3 text-no-wrap text-right text-body-2 text-grey-darken-1" v-if="price">시간당 가격 : ₩ {{ $filters.formatNumber(price) }}</p>
       </v-col>
     </v-row>
   </template>
@@ -76,11 +76,11 @@ export default {
         html: "<div class='reservation-info-text-wrapper'><div class='reservation-info-text'>"
           + "체크인ㅤㅤ" + this.reservationParams.startDate 
           + "<br>체크아웃ㅤ" + this.reservationParams.endDate
-          + "<br>총ㅤ금액ㅤ" 
-          + (this.price * this.getDifferenceBetweenDate(
+          + "<br>총ㅤ금액ㅤ₩ " 
+          + this.$filters.formatNumber(this.price * this.getDifferenceBetweenDate(
             this.reservationParams.startDate , this.reservationParams.endDate
             ))
-          + " ₩ </div></div>",
+          + "</div></div>",
         icon: "info",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",

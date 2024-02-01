@@ -65,7 +65,6 @@
   </v-row>
   <v-footer>
     <v-btn @click="updateProfileOnBackend" class="bordered-button">유저 정보 수정</v-btn>
-    <v-btn @click="updateRoleOnBackend" class="bordered-button" v-show="isUser">권한 변경</v-btn>
   </v-footer>
 </template>
 
@@ -108,50 +107,6 @@ export default {
     },
     updateProfileOnBackend() {
       router.push('updateuserinfo');
-    },
-    updateRoleOnBackend() {
-      axios.patch('/api/v1/users/role', {},{
-        withCredentials: true
-      })
-          .then(response => {
-
-            this.$swal.fire({
-              title: "호스트로 변경하시겠습니까?",
-              text: "호스트 권한은 되돌릴 수 없습니다!",
-              icon: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#3085d6",
-              cancelButtonColor: "#d33",
-              confirmButtonText: "네",
-              cancelButtonText: "아니오"
-            }).then((swalResult) => {
-              if (swalResult.isConfirmed) {
-
-                this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
-                this.userInfo.role = "HOST";
-                this.isUser = false;
-                localStorage.setItem("userInfo",JSON.stringify(this.userInfo));
-                console.log(response.data);
-
-                this.$swal.fire({
-                    title: "권한 변경에 성공했습니다!",
-                    icon: "success"
-                }).then(() => {
-                  router.go()
-                })
-                ;
-
-              }
-            });
-
-          })
-          .catch(error => {
-            this.$swal.fire({
-                title: "권한 변경에 실패했습니다.",
-                icon: "error"
-            });
-            console.error(error);
-          });
     },
   },
   watch: {

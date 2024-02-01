@@ -48,7 +48,7 @@ const routes = [
         }
     },
     {
-        path: "/detail",
+        path: "/detail/:roomsId",
         name: "RoomDetail",
         components: {
             default: RoomDetailMain,
