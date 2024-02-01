@@ -3,6 +3,7 @@
     @search="resetSearch"
     ></RoomSearch>
 
+    <perfect-scrollbar style="margin-top: 1px; height: calc(100vh - 160px);">
   <v-infinite-scroll @load="load"  :empty-text="'ㅤ'">
     <div class="room_list">
       <v-hover  v-for="v in roomList" :key="v.roomsId"
@@ -33,6 +34,7 @@
       </v-hover>
     </div>
     </v-infinite-scroll>
+    </perfect-scrollbar>
   
 </template>
 
@@ -53,6 +55,7 @@ export default {
       cursor: null,
       pageSize: 9,
       roomList: [],
+      isProcessed: false,
       example12: {
         mode: 'tags',
         label: 'name',
@@ -74,6 +77,10 @@ export default {
   },
   methods: {
     getRoomList: async function () {
+      if (this.isProcessed == true) {
+        return;
+      }
+      this.isProcessed = true;
       const cond = this.searchFilter || {};
       try {
         const result = await axios.get(`/api/v1/rooms`, {
@@ -94,6 +101,7 @@ export default {
           this.cursor = -1;
         }
 
+        this.isProcessed = false;
       } catch (err) {
         console.log("error : " + err);
       }
@@ -114,7 +122,7 @@ export default {
     resetSearch: async function () {
       this.roomList = [];
       this.cursor = null;
-      // await this.getRoomList();
+      await this.getRoomList();
     },
     goRoomDetail: function (roomsId) {
       const routeData = router.resolve({
@@ -155,8 +163,7 @@ export default {
   justify-content: center;
   gap: 30px;
   /* 무한 스크롤용 옵션 */
-  grid-template-rows: 1fr 1fr 1fr;
-  min-height: calc( (100vh - 300px) / 3); 
+  /* grid-template-rows: minmax(350px, 1fr) 1fr 1fr; */
 }
 
 .room_card {
