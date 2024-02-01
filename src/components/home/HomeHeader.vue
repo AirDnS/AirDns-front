@@ -10,7 +10,7 @@
     <v-btn variant="outlined" class="login-btn" v-on:click="goCreateRoom" v-show="isHost">
       방등록
     </v-btn>
-    <v-btn variant="outlined" class="login-btn" v-on:click="updateRoleOnBackend" v-show="!isHost">대여 권한 얻기</v-btn>
+    <v-btn variant="outlined" class="login-btn" v-on:click="updateRoleOnBackend" v-show="!isHost && hasUser">대여 권한 얻기</v-btn>
     <v-btn variant="outlined" class="userDetail-btn" v-on:click="goUserDetail" v-show="hasUser">
       회원 정보
     </v-btn>
