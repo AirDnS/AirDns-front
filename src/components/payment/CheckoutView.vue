@@ -5,27 +5,19 @@
       <div id="payment-method"></div>
       <!-- 이용약관 UI -->
       <div id="agreement"></div>
-      <!-- 쿠폰 체크박스 -->
-      <div style="padding-left: 25px">
-        <div class="checkable typography--p">
-          <label for="coupon-box" class="checkable__label typography--regular"
-          ><input @change="updateAmount" id="coupon-box" class="checkable__input" type="checkbox" aria-checked="true" /><span class="checkable__label-text">5,000원 쿠폰 적용</span></label
-          >
-        </div>
-      </div>
       <!-- 결제하기 버튼 -->
-      <div class="result wrapper">
-        <div class="result-wrapper">
-          <button @click="requestPayment" class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
-        </div>
+      <div class="result-wrapper">
+        <button @click="requestPayment" class="button" id="payment-button" style="margin-top: 30px">
+          결제하기
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { loadPaymentWidget, ANONYMOUS } from "@tosspayments/payment-widget-sdk";
-import { nanoid } from "nanoid";
+import {loadPaymentWidget, ANONYMOUS} from "@tosspayments/payment-widget-sdk";
+import {nanoid} from "nanoid";
 
 export default {
   data() {
@@ -41,7 +33,7 @@ export default {
   methods: {
     async requestPayment() {
       try {
-        if (this.paymentWidget){
+        if (this.paymentWidget) {
           var regex = /[^0-9]/g;
           var result = this.data.userContact.replace(regex, "");
           await this.paymentWidget.requestPayment({
@@ -51,7 +43,8 @@ export default {
             customerEmail: this.data.userEmail,
             reservationId: this.data.id,
             customerMobilePhone: result,
-            successUrl: `${window.location.origin}/success?orderName=${encodeURIComponent(this.data.reservationName)}&reservationId=${this.data.id}`,
+            successUrl: `${window.location.origin}/success?orderName=${encodeURIComponent(
+                this.data.reservationName)}&reservationId=${this.data.id}`,
             failUrl: `${window.location.origin}/fail`,
           });
         }
@@ -59,19 +52,12 @@ export default {
         console.error(error);
       }
     },
-    async updateAmount() {
-      const coupon = document.getElementById("coupon-box");
-      if (coupon.checked) {
-        this.paymentMethodWidget.updateAmount(this.amount - 5000);
-      } else {
-        this.paymentMethodWidget.updateAmount(this.amount);
-      }
-    },
   },
   async mounted() {
     this.paymentWidget = await loadPaymentWidget(this.clientKey, ANONYMOUS);
-    this.paymentMethodWidget = this.paymentWidget.renderPaymentMethods("#payment-method", { value: this.amount }, { variantKey: "DEFAULT" });
-    this.paymentWidget.renderAgreement("#agreement", { variantKey: "AGREEMENT" });
+    this.paymentMethodWidget = this.paymentWidget.renderPaymentMethods("#payment-method",
+        {value: this.amount}, {variantKey: "DEFAULT"});
+    this.paymentWidget.renderAgreement("#agreement", {variantKey: "AGREEMENT"});
   },
   created() {
     const {data} = history.state;
@@ -90,5 +76,28 @@ export default {
   margin: auto;
   margin-top: 100px;
   color: #333D4B;
+}
+.button{
+  color: #f9fafb;
+  background-color: #3182f6;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 18px;
+  white-space: nowrap;
+  text-align: center;
+  cursor: pointer;
+  border: 0 solid transparent;
+  user-select: none;
+  transition: background 0.2s ease, color 0.1s ease;
+  text-decoration: none;
+  border-radius: 7px;
+  padding: 10px 13px;
+}
+
+.result-wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
