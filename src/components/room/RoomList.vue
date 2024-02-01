@@ -1,9 +1,7 @@
 <template>
-  <div class="box-container room_search_bar">
     <RoomSearch
     @search="resetSearch"
     ></RoomSearch>
-  </div>
 
   <v-infinite-scroll @load="load"  :empty-text="'ㅤ'">
     <div class="room_list">
@@ -147,15 +145,6 @@ export default {
 
 .v-card.on-hover.v-theme--dark > .v-card__text {
   color: #000
-}
-
-.room_search_bar {
-
-  width: 1150px;
-  margin: auto;
-  
-  font-size: 40px;
-  text-align: center;
 }
 
 .room_list {

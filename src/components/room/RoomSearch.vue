@@ -1,10 +1,14 @@
 <template>
   <div class="search-field">
-    <v-card class="search-card">
-      <div class="one">
+    <v-card class="search-card" color="grey-lighten-5">
+      <div class="search-button">
         <v-dialog v-model="priceFlag" width="500">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props"> price</v-btn>
+            <v-btn v-bind="props"> 
+              {{ elements.priceValue[0] != priceMin || elements.priceValue[1] != priceMax 
+                ? "₩ " + this.elements.priceValue.join(' ~ ₩ ') 
+                : "가격 선택"}}
+            </v-btn>
           </template>
           <v-card class="test-modal">
             <v-range-slider
@@ -28,10 +32,14 @@
           </v-card>
         </v-dialog>
       </div>
-      <div class="two">
+      <div class="search-button">
         <v-dialog v-model="sizeFlag" width="500">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props"> size</v-btn>
+            <v-btn v-bind="props">
+              {{ elements.sizeValue[0] != sizeMin || elements.sizeValue[1] != sizeMax 
+                ? this.elements.sizeValue.join(' 평 ~ ') + " 평"
+                : "평수 선택"}}
+            </v-btn>
           </template>
           <v-card class="test-modal">
             <v-range-slider
@@ -55,18 +63,18 @@
           </v-card>
         </v-dialog>
       </div>
-      <div class="three">
+      <div class="search-button">
         <v-dialog v-model="equipmentFlag" width="500">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props"> equipment</v-btn>
+            <v-btn v-bind="props" class="text-truncate"> {{ this.equipmentLabel.length != 0 ? this.equipmentLabel : "장비선택" }}</v-btn>
           </template>
           <v-card class="test-modal" height="300">
             <div class="ma-5">
               <Multiselect
                   v-model="elements.equipment"
                   v-bind="example12"
+                  @change="changeEquipment"
               ></Multiselect>
-
             </div>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -80,14 +88,18 @@
           </v-card>
         </v-dialog>
       </div>
-      <v-text-field class="four" v-model="elements.text" height="70px" @keydown.enter="sendRoomList">
-      </v-text-field>
-      <div class="search-btn-box">
-        <v-btn variant="outlined" v-on:click="sendRoomList" class="five"> 검색
-        </v-btn>
-        <v-btn density="comfortable" v-on:click="resetFilter" icon="mdi-undo-variant" class="trash-btn">
-        </v-btn>
-      </div>
+      <div class="search-input-area">
+        <v-text-field 
+          clearable 
+          hide-details="auto"
+          density="compact"
+          variant="solo"
+          class="search-input" 
+          v-model="elements.text" 
+          @keydown.enter="sendRoomList">
+        </v-text-field>
+        <v-btn icon="mdi mdi-magnify" rounded="sm" variant="text" elevation="1" density="comfortable"  v-on:click="sendRoomList"></v-btn>
+        <v-btn icon="mdi mdi-undo-variant" rounded="sm" variant="text" elevation="1" density="comfortable" v-on:click="resetFilter" ></v-btn>      </div>
     </v-card>
   </div>
 </template>
@@ -108,6 +120,7 @@ export default {
       priceMax: 50000,
       sizeMin: 0,
       sizeMax: 50,
+      equipmentLabel: "",
       example12: {
         mode: 'tags',
         label: 'name',
@@ -129,6 +142,10 @@ export default {
     }
   },
   methods: {
+    changeEquipment: function (value, select) {
+      console.log(value);
+      this.equipmentLabel = select.ariaLabel;
+    },
     sendRoomList: function () {
       
       this.$store.commit("setSearchFilter", {
@@ -148,6 +165,13 @@ export default {
           })
     },
     resetFilter() {
+      this.elements = {
+        text: "",
+        priceValue: [0, 50000],
+        sizeValue: [0, 50],
+        equipment: [],
+      };
+      this.equipmentLabel = "";
       this.$store.commit("setSearchFilter", {});
       this.$emit('search');
     }
@@ -159,41 +183,32 @@ export default {
 </script>
 
 <style>
-.search-field {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: row;
-  height: 70px;
-  justify-content: center;
-}
-
 .search-card {
-  display: grid;
-  width: 1000px;
-  grid-template-columns: repeat(6, 1fr);
-  grid-gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.one {
-  grid-column: 1/2;
+.search-button {
+  margin: 10px;
+  /* max-width: 200px; */
 }
 
-.two {
-  grid-column: 2/3;
+.search-input-area {
+  margin: 10px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  flex-grow: 1;
 }
 
-.three {
-  grid-column: 3/4;
-}
-
-.four {
-  margin-top: 10px;
-  grid-column: 4/6;
-}
-
-.five {
-  margin-top: 20px;
-  grid-column: 6/7;
+.search-input {
+  min-width: 200px;
+  width: 100%;
+  margin-right: 5px;
 }
 
 .test-modal {
@@ -208,13 +223,5 @@ export default {
   padding-left: 20px;
 }
 
-.search-btn-box {
-  display: flex;
-  justify-content: center;
-}
-.trash-btn {
-  margin-top: 18px;
-  margin-left: 10px;
-}
 
 </style>
