@@ -138,9 +138,7 @@ export default {
         equipmentArr: this.elements.equipment.join(',')
       });
 
-
-      this.$emit('search', true);
-
+      this.$emit('search');
     },
     getEquipment: function () {
       axios.get('/api/v1/equipments')
@@ -150,17 +148,8 @@ export default {
           })
     },
     resetFilter() {
-      axios.get(`/api/v1/rooms`, {})
-          .then((result) => {
-            this.sendItem = result.data.data.content;
-            this.emitter.emit("send", this.sendItem);
-          })
-          .catch((error) => {
-            window.alert(error)
-          })
-          .then(() => {
-            console.log("test")
-          })
+      this.$store.commit("setSearchFilter", {});
+      this.$emit('search');
     }
   },
   created() {

@@ -1,11 +1,11 @@
 <template>
   <div class="box-container room_search_bar">
     <RoomSearch
-    @search="getRoomList"
+    @search="resetSearch"
     ></RoomSearch>
   </div>
 
-  <v-infinite-scroll @load="load" style="height: 100%;" :empty-text="'ㅤ'">
+  <v-infinite-scroll @load="load"  :empty-text="'ㅤ'">
     <div class="room_list">
       <v-hover  v-for="v in roomList" :key="v.roomsId"
           v-slot="{ isHovering, props }"
@@ -19,8 +19,8 @@
           <v-img 
           cover
           :aspect-ratio="1"
-            :src="v.image != null && v.image.length > 0 
-              ? v.image[0].imageUrl 
+            :src="v.image != null
+              ? v.image
               : require('@/assets/noimage.jpg')"
             ></v-img>
           <v-card-text>
@@ -55,7 +55,6 @@ export default {
       cursor: null,
       pageSize: 9,
       roomList: [],
-      imageUrl: "",
       example12: {
         mode: 'tags',
         label: 'name',
@@ -76,49 +75,48 @@ export default {
     return {searchFilter};
   },
   methods: {
-    getRoomList: async function (isPageReset) {
+    getRoomList: async function () {
       const cond = this.searchFilter || {};
-      if (isPageReset == true) {
-        this.roomList = [];
-      }
-      
-        try {
-          const result = await axios.get(`/api/v1/rooms`, {
-            params: {
-              cursor: this.cursor,
-              pageSize: this.pageSize,
-              keyword: cond.keyword,
-              price: cond.priceArr,
-              size: cond.sizeArr,
-              equipment: cond.equipmentArr,
-            }})
+      try {
+        const result = await axios.get(`/api/v1/rooms`, {
+          params: {
+            cursor: this.cursor,
+            pageSize: this.pageSize,
+            keyword: cond.keyword,
+            price: cond.priceArr,
+            size: cond.sizeArr,
+            equipment: cond.equipmentArr,
+          }})
+          
+        this.roomList.push(...result.data.data);
 
-            if (result.data.data.length == this.pageSize) {
-              this.cursor = result.data.data.at(-1).roomsId;
-            } else {
-              this.cursor = -1;
-            }
-            
-          return new Promise(resolve => {
-            resolve(result.data.data)
-          })
-        } catch (err) {
-          console.log("error : " + err);
+        if (result.data.data.length == this.pageSize) {
+          this.cursor = result.data.data.at(-1).roomsId;
+        } else {
+          this.cursor = -1;
         }
+
+      } catch (err) {
+        console.log("error : " + err);
+      }
 
     },
     async load ({ done}) {
-      // Perform API call
-      const res = await this.getRoomList();
-
-      if (res == null || res.length < 0 || this.cursor === -1) {
+      if (this.cursor === -1) {
         done('empty')
         return;
       }
 
-      this.roomList.push(...res)
+      // Perform API call
+      await this.getRoomList();
+
 
       done('ok')
+    },
+    resetSearch: async function () {
+      this.roomList = [];
+      this.cursor = null;
+      // await this.getRoomList();
     },
     goRoomDetail: function (roomsId) {
       const routeData = router.resolve({
@@ -162,12 +160,10 @@ export default {
 
 .room_list {
   padding: 20px 40px 0px 40px;
-  /* display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px; */
+  
   display: grid;
   grid-template-columns: repeat(6, minmax(200px, 350px));
+  grid-template-rows: 1fr 1fr 1fr;
   justify-content: center;
   gap: 30px;
 }
