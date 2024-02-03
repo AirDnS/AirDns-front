@@ -17,19 +17,24 @@
               row-height="25"
               shaped
           ></v-textarea>
-          <div class="postcodeBox">
-            <v-text-field
-              :rules="[v =>  !!v || '주소를 입력해주세요.']"
-              type="text"
-              v-model="data.address"
-              placeholder="주소"
-              readonly></v-text-field>
-            <v-btn class="post-btn" id="postcode" @click="openPostcode">검색
-            </v-btn>
+          <div class="map_wrap">
+            <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+            <div class="hAddr">
+                <!-- <span id="centerAddr"></span> -->
+                <v-hover>
+                <template v-slot:default="{ isHovering, props }">
+                  <v-btn 
+                  v-bind="props"
+                  :color="isHovering ? 'light-blue-accent-4' : undefined"
+                  class="post-btn" 
+                  id="postcode" @click="openPostcode">{{ isHovering ? '위치 검색' : mapdata.centerAddr }}</v-btn>
+                </template>
+              </v-hover>
+            </div>
           </div>
           <v-text-field
               :rules="[v =>  !!v || '상세 주소를 입력해주세요.']"
-              v-model="addressDetail"
+              v-model="data.addressDetail"
               label="상세 주소 "
               variant="outlined"
               placeholder="상세주소를 입력해주세요"
@@ -48,7 +53,6 @@
               variant="outlined"
               placeholder="평수 기준으로 입력해주세요"
           ></v-text-field>
-          <!-- <div class="output">Data: {{ data.equipment }}</div> -->
           <Multiselect
               v-model="data.equipment"
               v-bind="example12"
@@ -159,14 +163,16 @@ export default {
         //   return pattern.test(value) || "잘못된 핸드폰 번호 입력입니다."
         // }
       },
-      addressDetail: "",
       data: {
         name: "",
         price: "",
         address: "",
+        addressDetail: "",
         size: "",
         desc: "",
         equipment: [],
+        latitude: null,
+        longitude: null,
       },
       files: [],
       optionsId: [],
@@ -185,20 +191,34 @@ export default {
         searchBgColor: "#0B65C8", //검색창 배경색
         queryTextColor: "#FFFFFF" //검색창 글자색
       },
+      mapdata: {
+        map: null,
+        geocoder: null,
+        marker: null,
+        centerAddr: "",
+        default_coor_x: 33.450701, 
+        default_coor_y: 126.570667
+      }
     }
   },
   methods: {
     getEquipment: function () {
       this.example12.options = JSON.parse(localStorage.getItem("equipment")).options;
-      console.log(JSON.parse(localStorage.getItem("equipment")).options);
     },
     postCreateRoom: async function () {
       const { valid } = await this.$refs.form.validate();
       if (!valid)
         return;
 
+      if (this.data.latitude == null) {
+        this.$swal.fire({
+            title: "주소를 선택해주세요!",
+            icon: "error"
+        });
+        return;
+      }
+
       const frm = new FormData();
-      this.data.address = this.data.address + " " + this.addressDetail
       const json = JSON.stringify(this.data);
       const blob = new Blob([json], {type: "application/json"});
       frm.append('data', blob);
@@ -222,19 +242,6 @@ export default {
         console.log("test");
       })
     },
-    openPostcode() {
-      new window.daum.Postcode({
-        width: 500,
-        height: 600,
-        theme: this.themeObj,
-        oncomplete: (data) => {
-          this.data.address = data.roadAddress;
-        }
-      }).open({
-        left: (window.screen.width / 2) - (500 / 2),
-        top: (window.screen.height / 2) - (600 / 2),
-      });
-    },
     goHome() {
       router.push({name: "HomePage"})
     },
@@ -245,9 +252,156 @@ export default {
         console.log("not image!")
       }
     },
+    openPostcode() {
+      /* eslint-disable */ 
+      new window.daum.Postcode({
+        width: 500,
+        height: 600,
+        theme: this.themeObj,
+        oncomplete: (data) => {
+          var addr = data.address; // 최종 주소 변수
+
+          var map = this.mapdata.map;
+          var geocoder = this.mapdata.geocoder;
+          var marker = this.mapdata.marker;
+          var mapContainer = this.mapdata.mapContainer;
+          var infowindow = this.mapdata.infowindow;
+          var data = this.data;
+          
+          // 주소 정보를 해당 필드에 넣는다.
+          this.data.address = addr;
+          // 주소로 상세 정보를 검색
+          geocoder.addressSearch(data.address, function(results, status) {
+              // 정상적으로 검색이 완료됐으면
+              if (status === daum.maps.services.Status.OK) {
+
+                  var result = results[0]; //첫번째 결과의 값을 활용
+
+                  data.latitude = result.y;
+                  data.longitude = result.x;
+
+                  // 해당 주소에 대한 좌표를 받아서
+                  var coords = new daum.maps.LatLng(result.y, result.x);
+                  // 지도를 보여준다.
+                  mapContainer.style.display = "block";
+                  map.relayout();
+                  // 지도 중심을 변경한다.
+                  map.setCenter(coords);
+                  // 마커를 결과값으로 받은 위치로 옮긴다.
+                  // marker.setPosition(coords)
+                  
+                  var detailAddr = !!result.road_address ? '<div>도로명주소 : ' + result.road_address.address_name + '</div>' : '';
+                  detailAddr += '<div>지번 주소 : ' + result.address.address_name + '</div>';
+                  
+                  var content = '<div class="bAddr">' +
+                                  '<span class="bAddr-title">법정동 주소정보</span>' + 
+                                  detailAddr + 
+                              '</div>';
+
+                  // 마커를 클릭한 위치에 표시합니다 
+                  marker.setPosition(coords);
+                  marker.setMap(map);
+
+                  // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
+                  infowindow.setContent(content);
+                  infowindow.open(map, marker);
+              }
+          });
+        }
+      }).open({
+        left: (window.screen.width / 2) - (500 / 2),
+        top: (window.screen.height / 2) - (600 / 2),
+      });
+    },
+    loadMap: function () {
+      /* eslint-disable */ 
+      var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+          mapOption = { 
+              center: new kakao.maps.LatLng(this.mapdata.default_coor_x, this.mapdata.default_coor_y), // 지도의 중심좌표
+              level: 3 // 지도의 확대 레벨
+          };
+
+      // 지도를 생성합니다
+      var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+      //주소-좌표 변환 객체를 생성
+      var geocoder = new daum.maps.services.Geocoder();
+
+      var marker = new kakao.maps.Marker(), // 클릭한 위치를 표시할 마커입니다      
+      infowindow = new kakao.maps.InfoWindow({zindex:1}); // 클릭한 위치에 대한 주소를 표시할 인포윈도우입니다
+      
+      this.mapdata.map = map;
+      this.mapdata.geocoder = geocoder;
+      this.mapdata.marker = marker;
+      this.mapdata.mapContainer = mapContainer;
+      this.mapdata.infowindow = infowindow;
+      
+      var mapdata = this.mapdata;
+      var data = this.data;
+
+      // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
+      searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+
+      // 지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
+      kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+        data.latitude = mouseEvent.latLng.getLat();
+        data.longitude = mouseEvent.latLng.getLng();
+
+          searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
+              if (status === kakao.maps.services.Status.OK) {
+                  var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
+                  detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
+                  
+                  var content = '<div class="bAddr">' +
+                                  '<span class="bAddr-title">법정동 주소정보</span>' + 
+                                  detailAddr + 
+                              '</div>';
+
+                              console.log(mouseEvent.latLng);
+
+                  // 마커를 클릭한 위치에 표시합니다 
+                  marker.setPosition(mouseEvent.latLng);
+                  marker.setMap(map);
+
+                  // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
+                  infowindow.setContent(content);
+                  infowindow.open(map, marker);
+              }   
+          });
+      });
+      
+      // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
+      kakao.maps.event.addListener(map, 'idle', function() {
+          searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+      });
+
+      function searchAddrFromCoords(coords, callback) {
+          // 좌표로 행정동 주소 정보를 요청합니다
+          geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
+      }
+
+      function searchDetailAddrFromCoords(coords, callback) {
+          // 좌표로 법정동 상세 주소 정보를 요청합니다
+          geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+      }
+
+      // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
+      function displayCenterInfo(result, status) {
+          if (status === kakao.maps.services.Status.OK) {
+              for(var i = 0; i < result.length; i++) {
+                  // 행정동의 region_type 값은 'H' 이므로
+                  if (result[i].region_type === 'H') {
+                    mapdata.centerAddr = result[i].address_name;
+                      break;
+                  }
+              }
+          }    
+      }
+    }
   },
   mounted() {
     this.getEquipment();
+    this.loadMap();
   }
 }
 </script>
@@ -274,4 +428,9 @@ export default {
   margin-left: 10px;
 }
 
+.map_wrap {position:relative;width:100%;height:350px; margin-bottom: 10px;}
+.hAddr {position:absolute;left:10px;top:0px;z-index:1;padding:5px;}
+.post-btn {
+  min-width: 250px;
+}
 </style>
