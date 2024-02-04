@@ -138,6 +138,7 @@ export default {
             price: cond.priceArr,
             size: cond.sizeArr,
             equipment: cond.equipmentArr,
+            searchDistance: 100,
             latitude: this.searchWithMap ? this.data.latitude || this.mapdata.center_coor_lat || null : null ,
             longitude: this.searchWithMap ? this.data.longitude || this.mapdata.center_coor_lng || null : null
           }})
@@ -153,6 +154,14 @@ export default {
         if (this.searchWithMap == true) {
           this.removeMarkers();
           this.drawMarkers();
+          this.cursor = -1;
+
+          if (result.data.data.length > 99) {
+            this.$swal.fire({
+                title: "데이터 수가 많아 일부만 됩니다.",
+                icon: "warning"
+            });
+          }
         }
 
         this.isProcessed = false;
