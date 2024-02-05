@@ -127,8 +127,6 @@ export default {
       this.isProcessed = true;
       const cond = this.searchFilter || {};
       
-      console.log(this.data.latitude);
-
       try {
         const result = await axios.get(`/api/v1/rooms`, {
           params: {
@@ -138,11 +136,13 @@ export default {
             price: cond.priceArr,
             size: cond.sizeArr,
             equipment: cond.equipmentArr,
-            searchDistance: 100,
+            searchDistance: this.searchWithMap ? 2**(this.mapdata.map.getLevel()-7) * 10 : null ,
             latitude: this.searchWithMap ? this.data.latitude || this.mapdata.center_coor_lat || null : null ,
             longitude: this.searchWithMap ? this.data.longitude || this.mapdata.center_coor_lng || null : null
           }})
           
+        console.log(2**(this.mapdata.map.getLevel()-7) * 10);
+
         this.roomList.push(...result.data.data);
 
         if (result.data.data.length == this.pageSize) {
@@ -321,8 +321,6 @@ export default {
                                   '<span class="bAddr-title">법정동 주소정보</span>' + 
                                   detailAddr + 
                               '</div>';
-
-                              console.log(mouseEvent.latLng);
 
                   // 마커를 클릭한 위치에 표시합니다 
                   marker.setPosition(mouseEvent.latLng);
