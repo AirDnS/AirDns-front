@@ -279,6 +279,7 @@ export default {
 
                   data.latitude = result.y;
                   data.longitude = result.x;
+                  data.address = result.address.address_name;
 
                   // 해당 주소에 대한 좌표를 받아서
                   var coords = new daum.maps.LatLng(result.y, result.x);
@@ -351,6 +352,8 @@ export default {
               if (status === kakao.maps.services.Status.OK) {
                   var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
                   detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
+                  
+                  data.address = result[0].address.address_name;
                   
                   var content = '<div class="bAddr">' +
                                   '<span class="bAddr-title">법정동 주소정보</span>' + 
