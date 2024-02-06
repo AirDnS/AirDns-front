@@ -136,17 +136,16 @@ export default {
             price: cond.priceArr,
             size: cond.sizeArr,
             equipment: cond.equipmentArr,
-            searchDistance: this.searchWithMap ? 2**(this.mapdata.map.getLevel()-7) * 10 : null ,
+            searchLevel: this.mapdata.map.getLevel(),
+            // searchDistance: this.searchWithMap ? 2**(this.mapdata.map.getLevel()-7) * 10 : null ,
             latitude: this.searchWithMap ? this.data.latitude || this.mapdata.center_coor_lat || null : null ,
             longitude: this.searchWithMap ? this.data.longitude || this.mapdata.center_coor_lng || null : null
           }})
-          
-        console.log(2**(this.mapdata.map.getLevel()-7) * 10);
 
-        this.roomList.push(...result.data.data);
+        this.roomList.push(...result.data.data.content);
 
-        if (result.data.data.length == this.pageSize) {
-          this.cursor = result.data.data.at(-1).roomsId;
+        if (result.data.data.content.length == this.pageSize) {
+          this.cursor = result.data.data.content.at(-1).roomsId;
         } else {
           this.cursor = -1;
         }
@@ -154,9 +153,17 @@ export default {
         if (this.searchWithMap == true) {
           this.removeMarkers();
           this.drawMarkers();
+          if (result.data.data.content.length > 0) {
+            this.setMapSearchCondition(result.data.data.searchLevel);
+          } else {
+            this.$swal.fire({
+                title: "지도 내 검색된 데이터가 없습니다.",
+                icon: "info"
+            });
+          }
           this.cursor = -1;
 
-          if (result.data.data.length > 99) {
+          if (result.data.data.content.length > 99) {
             this.$swal.fire({
                 title: "데이터 수가 많아 일부만 됩니다.",
                 icon: "warning"
@@ -392,6 +399,13 @@ export default {
         marker.setMap(null);
       }
       this.mapdata.roomMarkers = [];
+    },
+    setMapSearchCondition(level) {
+      var moveLatLon = new kakao.maps.LatLng(
+        this.searchWithMap ? this.data.latitude || this.mapdata.center_coor_lat || null : null,
+        this.searchWithMap ? this.data.longitude || this.mapdata.center_coor_lng || null : null);
+      this.mapdata.map.setLevel(level);
+      this.mapdata.map.panTo(moveLatLon)
     }
 
   },
